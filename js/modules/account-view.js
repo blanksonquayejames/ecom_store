@@ -9,7 +9,7 @@ import { sounds } from './audio.js';
 import { ui } from './ui.js';
 
 export function renderAccountView(container) {
-  const { user, orders, currency, wishlist } = store.state;
+  const { user, orders, currency } = store.state;
 
   container.innerHTML = `
     <div class="account-page-wrapper animate-fade-in">
@@ -43,10 +43,6 @@ export function renderAccountView(container) {
           <button class="account-tab-btn is-active" data-tab="tab-orders">
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="7" width="20" height="14" rx="2" ry="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg>
             Order History (${orders.length})
-          </button>
-          <button class="account-tab-btn" data-tab="tab-wishlist">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
-            Private Wishlist (${wishlist.length})
           </button>
           <button class="account-tab-btn" data-tab="tab-address">
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
@@ -114,43 +110,7 @@ export function renderAccountView(container) {
             `}
           </div>
 
-          <!-- TAB 2: Wishlist -->
-          <div class="account-tab-pane" id="tab-wishlist">
-            <div class="account-wishlist-grid" id="account-wishlist-grid">
-              ${wishlist.length === 0 ? `
-                <div class="empty-wishlist-notice">
-                  <p>Your private wishlist is empty. Tap the heart icon on any product to save it here.</p>
-                </div>
-              ` : `
-                <div class="products-grid">
-                  ${wishlist.map(wId => {
-                    const prod = store.state.products.find(p => p.id === wId);
-                    if (!prod) return '';
-                    return `
-                      <div class="product-card">
-                        <div class="card-img-container" data-view-pdp="${prod.id}">
-                          <img src="${prod.heroImage}" alt="${prod.name}" class="product-img" />
-                        </div>
-                        <div class="card-content">
-                          <h3 class="card-title">${prod.name}</h3>
-                          <div class="card-price-wrap">
-                            <span class="card-price">${convertPrice(prod.price, currency).formatted}</span>
-                          </div>
-                          <div class="card-footer mt-3">
-                            <button class="btn btn-primary-sm w-100 wish-move-cart-btn" data-id="${prod.id}">
-                              Move to Cart
-                            </button>
-                          </div>
-                        </div>
-                      </div>
-                    `;
-                  }).join('')}
-                </div>
-              `}
-            </div>
-          </div>
-
-          <!-- TAB 3: Saved Addresses -->
+          <!-- TAB 2: Saved Addresses -->
           <div class="account-tab-pane" id="tab-address">
             <div class="addresses-grid">
               
@@ -241,31 +201,4 @@ function attachAccountEvents(container) {
     });
   });
 
-  // Move wishlist item to cart
-  container.querySelectorAll('.wish-move-cart-btn').forEach(btn => {
-    btn.addEventListener('click', () => {
-      const prodId = btn.dataset.id;
-      const prod = store.state.products.find(p => p.id === prodId);
-      if (prod) {
-        store.addToCart(prod);
-        store.toggleWishlist(prodId);
-        ui.showToast({
-          title: 'Moved to Cart',
-          message: `${prod.name} moved from wishlist to cart.`,
-          type: 'success',
-          actionText: 'View Cart',
-          onAction: () => ui.toggleDrawer('cart-drawer', true)
-        });
-        renderAccountView(container);
-      }
-    });
-  });
-
-  // PDP Links inside wishlist
-  container.querySelectorAll('[data-view-pdp]').forEach(el => {
-    el.addEventListener('click', () => {
-      const id = el.dataset.viewPdp;
-      store.setView('pdp', id);
-    });
-  });
 }

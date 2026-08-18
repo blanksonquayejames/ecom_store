@@ -10,9 +10,7 @@ import { sounds } from './audio.js';
 
 export function renderProductDetailPage(container, productId) {
   const product = store.state.products.find(p => p.id === productId) || store.state.products[0];
-  const { currency, wishlist, compareList } = store.state;
-  const isWishlisted = wishlist.includes(product.id);
-  const isCompared = compareList.includes(product.id);
+  const { currency } = store.state;
 
   let selectedColor = product.colors && product.colors[0] ? product.colors[0].name : 'Default';
   let selectedOption = product.storageOptions && product.storageOptions[0] ? product.storageOptions[0] : 'Standard';
@@ -56,12 +54,6 @@ export function renderProductDetailPage(container, productId) {
               <div class="pdp-image-badges">
                 ${product.isNew ? '<span class="badge badge-new">NEW EDITION</span>' : ''}
                 ${discountPercent > 0 ? `<span class="badge badge-sale">-${discountPercent}% OFF</span>` : ''}
-              </div>
-
-              <div class="pdp-floating-wishlist">
-                <button class="action-circle-btn pdp-wishlist-btn ${isWishlisted ? 'is-active' : ''}" id="pdp-wishlist-btn">
-                  <svg width="18" height="18" viewBox="0 0 24 24" fill="${isWishlisted ? '#ef4444' : 'none'}" stroke="${isWishlisted ? '#ef4444' : 'currentColor'}" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
-                </button>
               </div>
             </div>
 
@@ -177,14 +169,6 @@ export function renderProductDetailPage(container, productId) {
 
               <button class="btn btn-gold btn-lg" id="pdp-buy-now-btn">
                 Buy Now
-              </button>
-            </div>
-
-            <!-- Compare Trigger -->
-            <div class="pdp-compare-row">
-              <button class="pdp-compare-link ${isCompared ? 'is-active' : ''}" id="pdp-compare-btn">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
-                <span>${isCompared ? 'Remove from Comparison' : 'Compare with other models'}</span>
               </button>
             </div>
 
@@ -430,45 +414,6 @@ function attachPdpEvents(container, product, state) {
       if (qtyVal) qtyVal.textContent = q;
     }
   });
-
-  // Wishlist toggle
-  const wishBtn = container.querySelector('#pdp-wishlist-btn');
-  if (wishBtn) {
-    wishBtn.addEventListener('click', () => {
-      const added = store.toggleWishlist(product.id);
-      wishBtn.classList.toggle('is-active', added);
-      const svg = wishBtn.querySelector('svg');
-      if (svg) {
-        svg.setAttribute('fill', added ? '#ef4444' : 'none');
-        svg.setAttribute('stroke', added ? '#ef4444' : 'currentColor');
-      }
-      ui.showToast({
-        title: added ? 'Saved to Wishlist' : 'Removed from Wishlist',
-        message: added ? `${product.name} is saved to your private collection.` : `${product.name} removed.`,
-        type: added ? 'success' : 'info'
-      });
-    });
-  }
-
-  // Compare toggle
-  const compareBtn = container.querySelector('#pdp-compare-btn');
-  if (compareBtn) {
-    compareBtn.addEventListener('click', () => {
-      const res = store.toggleCompare(product.id);
-      if (!res.success) {
-        ui.showToast({ title: 'Comparison Limit', message: res.message, type: 'warning' });
-        return;
-      }
-      const isNowIn = store.isInCompare(product.id);
-      compareBtn.classList.toggle('is-active', isNowIn);
-      compareBtn.querySelector('span').textContent = isNowIn ? 'Remove from Comparison' : 'Compare with other models';
-      ui.showToast({
-        title: isNowIn ? 'Added to Comparator' : 'Removed from Comparator',
-        message: isNowIn ? `${product.name} added to comparison.` : `${product.name} removed.`,
-        type: 'info'
-      });
-    });
-  }
 
   // Add to Cart
   const addCartBtn = container.querySelector('#pdp-add-cart-btn');

@@ -12,7 +12,6 @@ import { renderProductDetailPage, renderQuickViewModal } from './modules/pdp-vie
 import { initCartDrawer, updateCartBadges } from './modules/cart-drawer.js';
 import { renderCheckoutView } from './modules/checkout-view.js';
 import { renderAccountView } from './modules/account-view.js';
-import { initCompareTray } from './modules/compare-view.js';
 
 document.addEventListener('DOMContentLoaded', () => {
   initApp();
@@ -25,9 +24,7 @@ function initApp() {
   // Initialize UI & Components
   ui.init();
   initCartDrawer();
-  initCompareTray();
   updateCartBadges();
-  updateWishlistBadges();
 
   // Setup Global Header & Navigation
   setupHeaderEvents();
@@ -42,10 +39,6 @@ function initApp() {
     if (productId) {
       renderQuickViewModal(productId);
     }
-  });
-
-  store.subscribe('wishlist_updated', () => {
-    updateWishlistBadges();
   });
 
   // Initial Route Render
@@ -142,14 +135,6 @@ function updateThemeIcon(theme) {
       iconSpan.innerHTML = `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>`;
     }
   }
-}
-
-function updateWishlistBadges() {
-  const count = store.state.wishlist.length;
-  document.querySelectorAll('.wishlist-count-badge').forEach(badge => {
-    badge.textContent = count;
-    badge.style.display = count > 0 ? 'inline-flex' : 'none';
-  });
 }
 
 function setupGlobalSearch() {

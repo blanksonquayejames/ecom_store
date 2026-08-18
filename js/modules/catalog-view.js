@@ -200,7 +200,7 @@ export function updateProductsList() {
 
   if (!grid) return;
 
-  const { products, filters, currency, wishlist, compareList } = store.state;
+  const { products, filters, currency } = store.state;
 
   // Filter products
   let filtered = products.filter(p => {
@@ -277,8 +277,6 @@ export function updateProductsList() {
   if (empty) empty.style.display = 'none';
 
   grid.innerHTML = filtered.map(p => {
-    const isWishlisted = wishlist.includes(p.id);
-    const isCompared = compareList.includes(p.id);
     const currentPriceObj = convertPrice(p.price, currency);
     const originalPriceObj = p.originalPrice ? convertPrice(p.originalPrice, currency) : null;
     const discountPercent = p.originalPrice ? Math.round(((p.originalPrice - p.price) / p.originalPrice) * 100) : 0;
@@ -291,16 +289,6 @@ export function updateProductsList() {
           ${p.isNew ? '<span class="badge badge-new">NEW EDITION</span>' : ''}
           ${discountPercent > 0 ? `<span class="badge badge-sale">-${discountPercent}%</span>` : ''}
           ${p.stock <= 5 ? '<span class="badge badge-low-stock">FEW LEFT</span>' : ''}
-        </div>
-
-        <!-- Action Floating Buttons -->
-        <div class="card-floating-actions">
-          <button class="action-circle-btn btn-wishlist-toggle ${isWishlisted ? 'is-active' : ''}" data-id="${p.id}" title="${isWishlisted ? 'Remove from Wishlist' : 'Add to Wishlist'}">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="${isWishlisted ? '#ef4444' : 'none'}" stroke="${isWishlisted ? '#ef4444' : 'currentColor'}" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
-          </button>
-          <button class="action-circle-btn btn-compare-toggle ${isCompared ? 'is-active' : ''}" data-id="${p.id}" title="${isCompared ? 'In Comparison' : 'Compare Specs'}">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
-          </button>
         </div>
 
         <!-- Product Image & Quick View Trigger -->
@@ -536,52 +524,6 @@ function attachCardEvents(grid) {
       if (e.target.closest('.btn-quick-view') || e.target.closest('.color-swatch-dot')) return;
       const prodId = el.dataset.viewPdp;
       store.setView('pdp', prodId);
-    });
-  });
-
-  // Wishlist Toggle
-  grid.querySelectorAll('.btn-wishlist-toggle').forEach(btn => {
-    btn.addEventListener('click', (e) => {
-      e.stopPropagation();
-      const prodId = btn.dataset.id;
-      const added = store.toggleWishlist(prodId);
-      const prod = store.state.products.find(p => p.id === prodId);
-      btn.classList.toggle('is-active', added);
-      const svg = btn.querySelector('svg');
-      if (svg) {
-        svg.setAttribute('fill', added ? '#ef4444' : 'none');
-        svg.setAttribute('stroke', added ? '#ef4444' : 'currentColor');
-      }
-      ui.showToast({
-        title: added ? 'Saved to Wishlist' : 'Removed from Wishlist',
-        message: added ? `${prod.name} is saved to your private collection.` : `${prod.name} was removed.`,
-        type: added ? 'success' : 'info'
-      });
-    });
-  });
-
-  // Compare Toggle
-  grid.querySelectorAll('.btn-compare-toggle').forEach(btn => {
-    btn.addEventListener('click', (e) => {
-      e.stopPropagation();
-      const prodId = btn.dataset.id;
-      const res = store.toggleCompare(prodId);
-      if (!res.success) {
-        ui.showToast({
-          title: 'Comparison Limit Reached',
-          message: res.message,
-          type: 'warning'
-        });
-        return;
-      }
-      const prod = store.state.products.find(p => p.id === prodId);
-      const isNowIn = store.isInCompare(prodId);
-      btn.classList.toggle('is-active', isNowIn);
-      ui.showToast({
-        title: isNowIn ? 'Added to Comparator' : 'Removed from Comparator',
-        message: isNowIn ? `${prod.name} added to comparison tray.` : `${prod.name} removed from comparison.`,
-        type: 'info'
-      });
     });
   });
 
