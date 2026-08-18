@@ -92,20 +92,6 @@ function setupHeaderEvents() {
     updateThemeIcon(store.state.theme);
   }
 
-  // Sound Mute Toggle Button
-  const soundBtn = document.getElementById('sound-toggle-btn');
-  if (soundBtn) {
-    soundBtn.addEventListener('click', () => {
-      const isMuted = sounds.toggleMute();
-      soundBtn.classList.toggle('is-muted', isMuted);
-      ui.showToast({
-        title: isMuted ? 'Sound FX Muted' : 'Tactile Sound FX Enabled',
-        message: isMuted ? 'Audio feedback is now silent.' : 'Luxury audio synthesis active.',
-        type: 'info'
-      });
-    });
-  }
-
   // Currency Dropdown
   const currSelect = document.getElementById('currency-selector');
   if (currSelect) {
@@ -126,15 +112,6 @@ function setupHeaderEvents() {
   // Bag / Cart Drawer Button
   document.getElementById('header-cart-btn')?.addEventListener('click', () => {
     ui.toggleDrawer('cart-drawer', true);
-  });
-
-  // Wishlist Header Button -> Go to Account Wishlist tab
-  document.getElementById('header-wishlist-btn')?.addEventListener('click', () => {
-    sounds.playClick();
-    store.setView('account');
-    setTimeout(() => {
-      document.querySelector('[data-tab="tab-wishlist"]')?.click();
-    }, 50);
   });
 
   // Account Header Button
