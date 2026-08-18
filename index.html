@@ -151,53 +151,6 @@
     <!-- Dynamically rendered compare pill items -->
   </div>
 
-  <!-- AI Shopping Stylist Modal & Floating Trigger -->
-  <button class="floating-ai-btn" id="floating-ai-stylist-btn" title="Consult Aura AI Stylist" aria-label="AI Concierge">
-    <span class="ai-btn-pulse"></span>
-    <span class="ai-sparkle-icon">✦</span>
-    <span class="ai-btn-text">AI Concierge</span>
-  </button>
-
-  <div class="modal modal-ai" id="ai-stylist-modal" role="dialog" aria-modal="true">
-    <div class="modal-dialog modal-md">
-      <div class="modal-ai-header">
-        <div class="ai-header-brand">
-          <div class="ai-orb-glow">✦</div>
-          <div>
-            <h3>Aura AI Shopping Concierge</h3>
-            <span class="ai-status">Quantum Neural Advisor • Online</span>
-          </div>
-        </div>
-        <button class="modal-close-btn" id="ai-stylist-close-btn">&times;</button>
-      </div>
-
-      <div class="modal-ai-body">
-        <div class="ai-chat-messages" id="ai-chat-messages">
-          <div class="chat-bubble chat-ai">
-            <div class="ai-avatar-badge">✦ AURA CONCIERGE</div>
-            <div class="bubble-content">
-              Welcome to Aura Luxe. I am your private shopping concierge. Whether you seek reference planar headphones, 8K spatial optics, or a tailored executive workspace, how may I assist you today?
-            </div>
-          </div>
-        </div>
-
-        <div class="ai-prompt-chips-row">
-          <button class="ai-prompt-chip">Gifts under $500</button>
-          <button class="ai-prompt-chip">Best audiophile planar headphones</button>
-          <button class="ai-prompt-chip">Minimalist desk synergy</button>
-          <button class="ai-prompt-chip">Spatial computing glasses</button>
-        </div>
-
-        <div class="ai-chat-input-bar">
-          <input type="text" id="ai-chat-input" placeholder="Ask about acoustic specs, gift curation, materials..." />
-          <button class="ai-send-btn" id="ai-send-btn" aria-label="Send">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
-          </button>
-        </div>
-      </div>
-    </div>
-  </div>
-
   <!-- Live Sales Activity Ticker -->
   <div class="live-sales-ticker" id="live-sales-ticker"></div>
 
@@ -247,7 +200,6 @@
           <ul>
             <li><a href="#" onclick="document.getElementById('header-account-btn').click()">Private Account Hub</a></li>
             <li><a href="#" onclick="document.getElementById('header-cart-btn').click()">Aura Vault Bag</a></li>
-            <li><a href="#" onclick="document.getElementById('floating-ai-stylist-btn').click()">AI Concierge Advisor</a></li>
             <li><a href="#">Zurich Vault Custody & Transit</a></li>
             <li><a href="#">3-Year Global Hardware Warranty</a></li>
           </ul>

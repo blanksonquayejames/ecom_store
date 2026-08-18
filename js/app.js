@@ -13,7 +13,6 @@ import { initCartDrawer, updateCartBadges } from './modules/cart-drawer.js';
 import { renderCheckoutView } from './modules/checkout-view.js';
 import { renderAccountView } from './modules/account-view.js';
 import { initCompareTray } from './modules/compare-view.js';
-import { initAIStylist } from './modules/ai-stylist.js';
 
 document.addEventListener('DOMContentLoaded', () => {
   initApp();
@@ -27,7 +26,6 @@ function initApp() {
   ui.init();
   initCartDrawer();
   initCompareTray();
-  initAIStylist();
   updateCartBadges();
   updateWishlistBadges();
 
