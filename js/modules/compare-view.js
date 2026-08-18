@@ -119,7 +119,7 @@ export function renderCompareModal() {
                     <img src="${item.heroImage}" alt="${item.name}" class="comp-prod-img" />
                     <strong class="comp-prod-title">${item.name}</strong>
                     <div class="comp-prod-price">${convertPrice(item.price, currency).formatted}</div>
-                    <button class="btn btn-primary-sm mt-2 comp-add-btn" data-id="${item.id}">Add to Bag</button>
+                    <button class="btn btn-primary-sm mt-2 comp-add-btn" data-id="${item.id}">Add to Cart</button>
                   </div>
                 </th>
               `).join('')}
@@ -159,10 +159,10 @@ export function renderCompareModal() {
         store.addToCart(prod);
         ui.closeModal('compare-modal');
         ui.showToast({
-          title: 'Added to Bag',
-          message: `${prod.name} added to your bag.`,
+          title: 'Added to Cart',
+          message: `${prod.name} added to your cart.`,
           type: 'success',
-          actionText: 'View Bag',
+          actionText: 'View Cart',
           onAction: () => ui.toggleDrawer('cart-drawer', true)
         });
       }

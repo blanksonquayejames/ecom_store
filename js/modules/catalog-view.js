@@ -378,10 +378,10 @@ function attachCatalogEvents(container) {
       if (prod) {
         store.addToCart(prod);
         ui.showToast({
-          title: 'Added to Aura Vault Bag',
+          title: 'Added to Cart',
           message: `${prod.name} has been added.`,
           type: 'success',
-          actionText: 'View Bag',
+          actionText: 'View Cart',
           onAction: () => ui.toggleDrawer('cart-drawer', true)
         });
       }
@@ -609,10 +609,10 @@ function attachCardEvents(grid) {
         }, 1200);
 
         ui.showToast({
-          title: 'Added to Aura Vault Bag',
+          title: 'Added to Cart',
           message: `${prod.name} (${selectedColor || 'Default'}) added.`,
           type: 'success',
-          actionText: 'View Bag',
+          actionText: 'View Cart',
           onAction: () => ui.toggleDrawer('cart-drawer', true)
         });
       }

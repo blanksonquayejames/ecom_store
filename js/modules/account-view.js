@@ -138,7 +138,7 @@ export function renderAccountView(container) {
                           </div>
                           <div class="card-footer mt-3">
                             <button class="btn btn-primary-sm w-100 wish-move-cart-btn" data-id="${prod.id}">
-                              Move to Bag
+                              Move to Cart
                             </button>
                           </div>
                         </div>
@@ -217,9 +217,9 @@ function attachAccountEvents(container) {
         });
         ui.showToast({
           title: 'Items Re-added',
-          message: `All items from order ${orderId} added to your bag.`,
+          message: `All items from order ${orderId} added to your cart.`,
           type: 'success',
-          actionText: 'View Bag',
+          actionText: 'View Cart',
           onAction: () => ui.toggleDrawer('cart-drawer', true)
         });
       }
@@ -250,10 +250,10 @@ function attachAccountEvents(container) {
         store.addToCart(prod);
         store.toggleWishlist(prodId);
         ui.showToast({
-          title: 'Moved to Bag',
-          message: `${prod.name} moved from wishlist to bag.`,
+          title: 'Moved to Cart',
+          message: `${prod.name} moved from wishlist to cart.`,
           type: 'success',
-          actionText: 'View Bag',
+          actionText: 'View Cart',
           onAction: () => ui.toggleDrawer('cart-drawer', true)
         });
         renderAccountView(container);

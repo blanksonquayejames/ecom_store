@@ -172,7 +172,7 @@ export function renderProductDetailPage(container, productId) {
 
               <button class="btn btn-primary btn-lg flex-1" id="pdp-add-cart-btn">
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
-                <span>Add to Aura Bag</span>
+                <span>Add to Cart</span>
               </button>
 
               <button class="btn btn-gold btn-lg" id="pdp-buy-now-btn">
@@ -212,7 +212,7 @@ export function renderProductDetailPage(container, productId) {
                     <div class="bundle-orig-price">${convertPrice(bundleTotal, currency).formatted}</div>
                   </div>
                   <button class="btn btn-sm btn-white" id="pdp-add-bundle-btn">
-                    Add Bundle to Bag
+                    Add Bundle to Cart
                   </button>
                 </div>
               </div>
@@ -476,10 +476,10 @@ function attachPdpEvents(container, product, state) {
     addCartBtn.addEventListener('click', () => {
       store.addToCart(product, state.getSelectedColor(), state.getSelectedOption(), state.getQuantity());
       ui.showToast({
-        title: 'Added to Aura Vault Bag',
+        title: 'Added to Cart',
         message: `${state.getQuantity()}x ${product.name} (${state.getSelectedColor()})`,
         type: 'success',
-        actionText: 'View Bag',
+        actionText: 'View Cart',
         onAction: () => ui.toggleDrawer('cart-drawer', true)
       });
     });
@@ -503,10 +503,10 @@ function attachPdpEvents(container, product, state) {
         store.addToCart(bp, null, null, 1);
       });
       ui.showToast({
-        title: 'Bundle Added to Bag (10% Off)',
+        title: 'Bundle Added to Cart (10% Off)',
         message: `${product.name} + ${state.bundleProducts.map(p => p.name).join(' & ')} added.`,
         type: 'success',
-        actionText: 'View Bag',
+        actionText: 'View Cart',
         onAction: () => ui.toggleDrawer('cart-drawer', true)
       });
     });
@@ -615,7 +615,7 @@ export function renderQuickViewModal(productId) {
         
         <div class="quick-view-actions">
           <button class="btn btn-primary flex-1" id="quick-view-add-btn">
-            Add to Bag
+            Add to Cart
           </button>
           <button class="btn btn-secondary" id="quick-view-full-btn">
             View Full Specs
@@ -629,10 +629,10 @@ export function renderQuickViewModal(productId) {
     store.addToCart(product);
     ui.closeModal('quick-view-modal');
     ui.showToast({
-      title: 'Added to Bag',
-      message: `${product.name} added to your bag.`,
+      title: 'Added to Cart',
+      message: `${product.name} added to your cart.`,
       type: 'success',
-      actionText: 'View Bag',
+      actionText: 'View Cart',
       onAction: () => ui.toggleDrawer('cart-drawer', true)
     });
   });

@@ -127,7 +127,7 @@ function setupHeaderEvents() {
       title: 'Code SAVE20 Applied',
       message: '20% discount code added to your order summary.',
       type: 'success',
-      actionText: 'View Bag',
+      actionText: 'View Cart',
       onAction: () => ui.toggleDrawer('cart-drawer', true)
     });
   });

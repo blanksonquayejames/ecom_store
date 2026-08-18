@@ -82,10 +82,10 @@
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
         </button>
 
-        <!-- Cart Bag Button -->
-        <button class="header-cart-btn" id="header-cart-btn" aria-label="Shopping Bag">
+        <!-- Cart Button -->
+        <button class="header-cart-btn" id="header-cart-btn" aria-label="Shopping Cart">
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
-          <span class="cart-label">Bag</span>
+          <span class="cart-label">Cart</span>
           <span class="badge-count cart-count-badge" style="display: none;">0</span>
         </button>
 
@@ -98,14 +98,14 @@
     <!-- Rendered dynamically by Router (Catalog, PDP, Checkout, Account) -->
   </main>
 
-  <!-- Slide-Over Shopping Bag Drawer -->
+  <!-- Slide-Over Shopping Cart Drawer -->
   <div class="drawer drawer-right" id="cart-drawer" role="dialog" aria-modal="true">
     <div class="drawer-header">
       <div class="drawer-title-row">
-        <h2>Aura Vault Bag</h2>
+        <h2>Aura Cart</h2>
         <span class="drawer-count-badge" id="cart-drawer-count">(0 items)</span>
       </div>
-      <button class="drawer-close-btn cart-drawer-close" aria-label="Close Bag">&times;</button>
+      <button class="drawer-close-btn cart-drawer-close" aria-label="Close Cart">&times;</button>
     </div>
     <div class="drawer-body" id="cart-drawer-body">
       <!-- Dynamically rendered cart items & free shipping tracker -->
@@ -188,7 +188,7 @@
           <h4>Client Services</h4>
           <ul>
             <li><a href="#" onclick="document.getElementById('header-account-btn').click()">Private Account Hub</a></li>
-            <li><a href="#" onclick="document.getElementById('header-cart-btn').click()">Aura Vault Bag</a></li>
+            <li><a href="#" onclick="document.getElementById('header-cart-btn').click()">Aura Cart</a></li>
             <li><a href="#">Zurich Vault Custody & Transit</a></li>
             <li><a href="#">3-Year Global Hardware Warranty</a></li>
           </ul>
