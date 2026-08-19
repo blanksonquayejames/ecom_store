@@ -59,7 +59,7 @@ if ($null -eq $listener) {
 $url = "http://localhost:$activePort/"
 Write-Host ""
 Write-Host "==========================================================" -ForegroundColor Cyan
-Write-Host "  AURA LUXE Server is ACTIVE at: $url" -ForegroundColor Green
+Write-Host "  7TH JUNE COMPUTERS Server is ACTIVE at: $url" -ForegroundColor Green
 Write-Host "  Press Ctrl+C in terminal to stop server safely." -ForegroundColor Yellow
 Write-Host "==========================================================" -ForegroundColor Cyan
 Write-Host ""

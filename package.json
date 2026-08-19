@@ -1,0 +1,19 @@
+{
+  "name": "7th-june-computers",
+  "version": "1.0.0",
+  "description": "7th June Computers - Flagship Computing & Mastercraft Tech Essentials",
+  "scripts": {
+    "dev": "npx -y serve . -l 8080",
+    "start": "powershell -ExecutionPolicy Bypass -File ./server.ps1 -OpenBrowser",
+    "server": "powershell -ExecutionPolicy Bypass -File ./server.ps1 -OpenBrowser",
+    "preview": "npx -y serve . -l 8080"
+  },
+  "keywords": [
+    "ecommerce",
+    "luxury",
+    "audio",
+    "tech"
+  ],
+  "author": "",
+  "license": "MIT"
+}

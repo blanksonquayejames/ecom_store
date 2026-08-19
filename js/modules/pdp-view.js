@@ -21,13 +21,6 @@ export function renderProductDetailPage(container, productId) {
   const originalPriceObj = product.originalPrice ? convertPrice(product.originalPrice, currency) : null;
   const discountPercent = product.originalPrice ? Math.round(((product.originalPrice - product.price) / product.originalPrice) * 100) : 0;
 
-  // Bundle recommendations
-  const bundleProducts = (product.frequentlyBoughtTogether || [])
-    .map(bId => store.state.products.find(p => p.id === bId))
-    .filter(Boolean);
-
-  const bundleTotal = product.price + bundleProducts.reduce((s, p) => s + p.price, 0);
-  const bundleDiscountedTotal = Math.round(bundleTotal * 0.9); // 10% bundle discount
 
   container.innerHTML = `
     <div class="pdp-wrapper animate-fade-in">
@@ -172,35 +165,6 @@ export function renderProductDetailPage(container, productId) {
               </button>
             </div>
 
-            <!-- Frequently Bought Together Bundle Box -->
-            ${bundleProducts.length > 0 ? `
-              <div class="pdp-bundle-card">
-                <div class="bundle-header">
-                  <span class="bundle-tag">PERFECT SYNERGY BUNDLE</span>
-                  <span class="bundle-discount-badge">Save 10% Extra</span>
-                </div>
-                <div class="bundle-items-row">
-                  <div class="bundle-item-thumb">
-                    <img src="${product.heroImage}" alt="${product.name}" />
-                  </div>
-                  ${bundleProducts.map(bp => `
-                    <span class="bundle-plus">+</span>
-                    <div class="bundle-item-thumb" title="${bp.name}">
-                      <img src="${bp.heroImage}" alt="${bp.name}" />
-                    </div>
-                  `).join('')}
-                </div>
-                <div class="bundle-pricing-row">
-                  <div>
-                    <div class="bundle-total-price">${convertPrice(bundleDiscountedTotal, currency).formatted}</div>
-                    <div class="bundle-orig-price">${convertPrice(bundleTotal, currency).formatted}</div>
-                  </div>
-                  <button class="btn btn-sm btn-white" id="pdp-add-bundle-btn">
-                    Add Bundle to Cart
-                  </button>
-                </div>
-              </div>
-            ` : ''}
 
           </div>
 
@@ -341,8 +305,7 @@ export function renderProductDetailPage(container, productId) {
     getSelectedOption: () => selectedOption,
     setSelectedOption: (o) => { selectedOption = o; },
     getQuantity: () => quantity,
-    setQuantity: (q) => { quantity = q; },
-    bundleProducts
+    setQuantity: (q) => { quantity = q; }
   });
 }
 
@@ -439,23 +402,6 @@ function attachPdpEvents(container, product, state) {
     });
   }
 
-  // Bundle Add to Cart
-  const bundleAddBtn = container.querySelector('#pdp-add-bundle-btn');
-  if (bundleAddBtn) {
-    bundleAddBtn.addEventListener('click', () => {
-      store.addToCart(product, state.getSelectedColor(), state.getSelectedOption(), 1);
-      state.bundleProducts.forEach(bp => {
-        store.addToCart(bp, null, null, 1);
-      });
-      ui.showToast({
-        title: 'Bundle Added to Cart (10% Off)',
-        message: `${product.name} + ${state.bundleProducts.map(p => p.name).join(' & ')} added.`,
-        type: 'success',
-        actionText: 'View Cart',
-        onAction: () => ui.toggleDrawer('cart-drawer', true)
-      });
-    });
-  }
 
   // Tabs Switching
   container.querySelectorAll('.pdp-tab-btn').forEach(tabBtn => {
