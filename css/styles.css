@@ -163,7 +163,7 @@ body {
   line-height: 1.5;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  overflow-x: hidden;
+  overflow-x: clip;
   transition: background-color var(--transition-normal), color var(--transition-normal);
 }
 
@@ -5145,17 +5145,31 @@ img {
     display: none !important;
   }
 
-  /* Header Multi-Row Mobile Layout: Row 1 = Logo + Cart, Row 2 = Search Bar (Fixed at Top) */
+  /* Permanently Fixed Header on Mobile */
   .site-header {
-    position: sticky !important;
+    position: fixed !important;
     top: 0 !important;
-    z-index: 100 !important;
-    background: rgba(255, 255, 255, 0.96) !important;
+    left: 0 !important;
+    right: 0 !important;
+    width: 100% !important;
+    z-index: 1000 !important;
+    background: rgba(255, 255, 255, 0.98) !important;
     backdrop-filter: blur(16px);
     -webkit-backdrop-filter: blur(16px);
     border-bottom: 1px solid var(--border-subtle);
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.06);
     padding: 0;
+  }
+
+  /* Content Offset for Fixed Header */
+  #app-main-view,
+  .main-content-wrap {
+    padding-top: 106px !important;
+  }
+
+  body[data-view="account"] #app-main-view,
+  body[data-view="account"] .main-content-wrap {
+    padding-top: 60px !important;
   }
 
   .header-inner {
@@ -5247,7 +5261,7 @@ img {
 
   html,
   body {
-    overflow-x: hidden;
+    overflow-x: clip;
   }
 
   .container {
