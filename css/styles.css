@@ -5973,4 +5973,24 @@ img {
   object-fit: contain;
 }
 
+/* ==========================================================================
+   VIEW-SPECIFIC HEADER OVERRIDES (MOBILE & DESKTOP)
+   ========================================================================== */
+body[data-view="account"] #top-announcement-bar,
+body[data-view="account"] .announcement-bar,
+body[data-view="account"] .header-search-wrap,
+body[data-view="account"] .currency-selector-wrap,
+body[data-view="account"] #header-account-btn {
+  display: none !important;
+}
+
+body[data-view="account"] .site-header {
+  border-bottom: 1px solid var(--border-subtle);
+}
+
+body[data-view="account"] .header-inner {
+  justify-content: space-between;
+}
+
+
 

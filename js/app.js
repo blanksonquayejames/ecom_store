@@ -80,6 +80,7 @@ function handleRoute(page, productId) {
 
 function updateHeaderLayoutForView(page) {
   const isAccount = page === 'account';
+  document.body.setAttribute('data-view', page);
 
   const announcementBar = document.getElementById('top-announcement-bar') || document.querySelector('.announcement-bar');
   const searchWrap = document.querySelector('.header-search-wrap');
