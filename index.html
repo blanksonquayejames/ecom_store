@@ -66,6 +66,14 @@
                 <span>All Departments</span>
                 <span class="search-cat-check">✓</span>
               </li>
+              <li class="search-category-item" data-category="Laptops & Workstations" data-short-label="Laptops" role="option">
+                <span>Laptops & Workstations</span>
+                <span class="search-cat-check">✓</span>
+              </li>
+              <li class="search-category-item" data-category="Gaming PCs & Towers" data-short-label="Gaming PCs" role="option">
+                <span>Gaming PCs & Towers</span>
+                <span class="search-cat-check">✓</span>
+              </li>
               <li class="search-category-item" data-category="Keyboards & Keycaps" data-short-label="Keyboards" role="option">
                 <span>Keyboards & Keycaps</span>
                 <span class="search-cat-check">✓</span>
@@ -175,6 +183,80 @@
     </div>
   </div>
 
+  <!-- User Authentication Modal (Sign In / Register / Demo) -->
+  <div class="modal" id="auth-modal" role="dialog" aria-modal="true">
+    <div class="modal-dialog modal-md">
+      <button class="modal-close-btn" onclick="document.getElementById('auth-modal').classList.remove('is-open'); document.getElementById('global-backdrop').classList.remove('is-active'); document.body.classList.remove('no-scroll');">&times;</button>
+      <div class="auth-modal-wrap">
+        <div class="auth-modal-header text-center">
+          <img src="image/7th June logo.png" alt="7th June Logo" class="auth-logo-img" />
+          <h2 id="auth-modal-title">Welcome to 7th June Computers</h2>
+          <p class="auth-modal-sub">Sign in to track orders, save shipping addresses, and unlock VIP points.</p>
+        </div>
+
+        <div class="auth-tabs-row">
+          <button class="auth-tab-btn is-active" id="auth-tab-login">Sign In</button>
+          <button class="auth-tab-btn" id="auth-tab-register">Create Account</button>
+        </div>
+
+        <!-- Sign In Form -->
+        <form class="auth-form-body" id="auth-form-login">
+          <div class="form-group">
+            <label>Email Address</label>
+            <input type="email" class="custom-input" id="login-email" placeholder="julian.vance@7thjune.com" value="julian.vance@7thjune.com" required />
+          </div>
+          <div class="form-group">
+            <label>Password</label>
+            <input type="password" class="custom-input" id="login-pwd" placeholder="••••••••" value="password123" required />
+          </div>
+          <div class="auth-extra-row">
+            <label class="custom-checkbox">
+              <input type="checkbox" checked />
+              <span class="checkmark"></span>
+              <span>Remember me</span>
+            </label>
+            <a href="#" class="forgot-link" onclick="alert('Password reset link sent to your email.');">Forgot Password?</a>
+          </div>
+          <button type="submit" class="btn btn-primary w-100 mt-3 btn-lg">
+            Sign In to Account
+          </button>
+        </form>
+
+        <!-- Register Form -->
+        <form class="auth-form-body" id="auth-form-register" style="display: none;">
+          <div class="form-group">
+            <label>Full Legal Name</label>
+            <input type="text" class="custom-input" id="reg-name" placeholder="Kwame Mensah" required />
+          </div>
+          <div class="form-group">
+            <label>Email Address</label>
+            <input type="email" class="custom-input" id="reg-email" placeholder="kwame@domain.com" required />
+          </div>
+          <div class="form-group">
+            <label>Create Password</label>
+            <input type="password" class="custom-input" id="reg-pwd" placeholder="At least 8 characters" required />
+          </div>
+          <button type="submit" class="btn btn-primary w-100 mt-3 btn-lg">
+            Create VIP Account (+ 500 Pts)
+          </button>
+        </form>
+
+        <!-- Demo Profiles Quick Switch -->
+        <div class="auth-demo-divider">
+          <span>OR 1-CLICK QUICK ACCESS</span>
+        </div>
+        <div class="auth-demo-buttons">
+          <button type="button" class="btn btn-secondary btn-sm flex-1" id="demo-login-julian">
+            👑 VIP Profile (Julian)
+          </button>
+          <button type="button" class="btn btn-ghost btn-sm flex-1" id="demo-login-guest">
+            👤 Guest Shopper
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <!-- Live Sales Activity Ticker -->
   <div class="live-sales-ticker" id="live-sales-ticker"></div>
 
@@ -211,11 +293,11 @@
         <div class="footer-links-col">
           <h4>Flagship Collections</h4>
           <ul>
-            <li><a href="#" onclick="window.scrollTo({top:0, behavior:'smooth'})">Spatial Optics & Computing</a></li>
-            <li><a href="#" onclick="window.scrollTo({top:0, behavior:'smooth'})">Audiophile Planar Acoustics</a></li>
-            <li><a href="#" onclick="window.scrollTo({top:0, behavior:'smooth'})">Cybernetic Titanium Chronographs</a></li>
-            <li><a href="#" onclick="window.scrollTo({top:0, behavior:'smooth'})">Smart Living & Desk Synergy</a></li>
-            <li><a href="#" onclick="window.scrollTo({top:0, behavior:'smooth'})">Hand-Forged Damascus Essentials</a></li>
+            <li><a href="#" onclick="store.setFilter('category', 'Laptops & Workstations'); window.scrollTo({top:500, behavior:'smooth'})">Laptops & Workstations</a></li>
+            <li><a href="#" onclick="store.setFilter('category', 'Gaming PCs & Towers'); window.scrollTo({top:500, behavior:'smooth'})">Custom Gaming PCs & Towers</a></li>
+            <li><a href="#" onclick="store.setFilter('category', 'Keyboards & Keycaps'); window.scrollTo({top:500, behavior:'smooth'})">Magnetic Mechanical Keyboards</a></li>
+            <li><a href="#" onclick="store.setFilter('category', 'Mice & Precision'); window.scrollTo({top:500, behavior:'smooth'})">8K Precision Esports Mice</a></li>
+            <li><a href="#" onclick="store.setFilter('category', 'Monitors & Mounts'); window.scrollTo({top:500, behavior:'smooth'})">OLED Displays & Mounts</a></li>
           </ul>
         </div>
 

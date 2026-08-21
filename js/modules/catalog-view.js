@@ -221,10 +221,10 @@ export function renderCatalogView(container) {
                 <span class="filter-label">Max Price</span>
                 <span class="filter-val" id="price-range-val">${convertPrice(filters.maxPrice, currency).formatted}</span>
               </div>
-              <input type="range" class="custom-range" id="price-range-slider" min="30" max="500" step="10" value="${filters.maxPrice}" />
+              <input type="range" class="custom-range" id="price-range-slider" min="30" max="5000" step="50" value="${filters.maxPrice}" />
               <div class="range-bounds">
                 <span>${convertPrice(30, currency).formatted}</span>
-                <span>${convertPrice(500, currency).formatted}</span>
+                <span>${convertPrice(5000, currency).formatted}</span>
               </div>
             </div>
 
@@ -338,7 +338,7 @@ export function updateProductsList() {
   // Active filters count
   let activeFiltersCount = 0;
   if (filters.category !== 'All Products') activeFiltersCount++;
-  if (filters.maxPrice < 2500) activeFiltersCount++;
+  if (filters.maxPrice < 5000) activeFiltersCount++;
   if (filters.inStockOnly) activeFiltersCount++;
   if (filters.onSaleOnly) activeFiltersCount++;
   if (filters.minRating > 0) activeFiltersCount++;

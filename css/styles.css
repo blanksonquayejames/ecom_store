@@ -5757,3 +5757,220 @@ img {
   }
 }
 
+/* ==========================================================================
+   MOBILE MONEY (MoMo) & PAYMENT METHODS ENHANCEMENTS
+   ========================================================================== */
+.momo-form-card {
+  background: #FFFFFF;
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-lg);
+  padding: var(--space-lg);
+  box-shadow: var(--shadow-sm);
+  margin-bottom: var(--space-md);
+}
+
+.momo-network-pills {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--space-sm);
+  margin-top: 0.4rem;
+}
+
+.momo-network-pill {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.3rem;
+  padding: 0.75rem 0.5rem;
+  border: 2px solid var(--border-medium);
+  border-radius: var(--radius-md);
+  background: #F8FAFC;
+  cursor: pointer;
+  transition: var(--transition-fast);
+  text-align: center;
+}
+
+.momo-network-pill input {
+  display: none;
+}
+
+.momo-network-pill.is-selected {
+  border-color: #3B82F6;
+  background: #EFF6FF;
+  box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.2);
+}
+
+.momo-pill-logo {
+  font-weight: 800;
+  font-size: 0.875rem;
+  color: #1E3A8A;
+}
+
+.momo-pill-title {
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: #475569;
+}
+
+.phone-input-wrap {
+  display: flex;
+  align-items: center;
+  border: 1px solid var(--border-medium);
+  border-radius: var(--radius-md);
+  background: #FFFFFF;
+  overflow: hidden;
+}
+
+.phone-prefix {
+  background: #F1F5F9;
+  padding: 0.75rem 0.85rem;
+  font-size: 0.875rem;
+  font-weight: 700;
+  color: #1E3A8A;
+  border-right: 1px solid var(--border-medium);
+}
+
+.phone-input-wrap input {
+  border: none;
+  border-radius: 0;
+  flex: 1;
+}
+
+.momo-instructions-box {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+  background: #EFF6FF;
+  border: 1px solid #BFDBFE;
+  border-radius: var(--radius-md);
+  padding: var(--space-md);
+  margin-top: var(--space-md);
+}
+
+.momo-instruct-icon {
+  font-size: 1.5rem;
+}
+
+.momo-instruct-text strong {
+  display: block;
+  font-size: 0.875rem;
+  color: #1E3A8A;
+  margin-bottom: 0.2rem;
+}
+
+.momo-instruct-text p {
+  font-size: 0.8125rem;
+  color: #475569;
+  line-height: 1.4;
+}
+
+/* ==========================================================================
+   CUSTOMER AUTHENTICATION MODAL
+   ========================================================================== */
+.auth-modal-wrap {
+  padding: var(--space-2xl) var(--space-xl);
+  background: #FFFFFF;
+  border-radius: var(--radius-xl);
+}
+
+.auth-logo-img {
+  width: 56px;
+  height: 56px;
+  border-radius: 12px;
+  object-fit: contain;
+  margin: 0 auto var(--space-sm) auto;
+  display: block;
+}
+
+.auth-modal-header h2 {
+  font-family: var(--font-display);
+  font-size: 1.6rem;
+  font-weight: 800;
+  color: #1E3A8A;
+  margin-bottom: 0.2rem;
+}
+
+.auth-modal-sub {
+  font-size: 0.875rem;
+  color: #475569;
+  margin-bottom: var(--space-lg);
+}
+
+.auth-tabs-row {
+  display: flex;
+  border-bottom: 2px solid var(--border-subtle);
+  margin-bottom: var(--space-lg);
+}
+
+.auth-tab-btn {
+  flex: 1;
+  padding: 0.75rem;
+  font-size: 0.9375rem;
+  font-weight: 700;
+  color: var(--text-muted);
+  border-bottom: 2px solid transparent;
+  margin-bottom: -2px;
+  transition: var(--transition-fast);
+}
+
+.auth-tab-btn.is-active {
+  color: #3B82F6;
+  border-bottom-color: #3B82F6;
+}
+
+.auth-extra-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.8125rem;
+  margin: var(--space-sm) 0;
+}
+
+.forgot-link {
+  color: #3B82F6;
+  font-weight: 600;
+}
+
+.forgot-link:hover {
+  text-decoration: underline;
+}
+
+.auth-demo-divider {
+  display: flex;
+  align-items: center;
+  text-align: center;
+  margin: var(--space-xl) 0 var(--space-md) 0;
+}
+
+.auth-demo-divider::before, .auth-demo-divider::after {
+  content: '';
+  flex: 1;
+  border-bottom: 1px solid var(--border-subtle);
+}
+
+.auth-demo-divider span {
+  padding: 0 0.75rem;
+  font-size: 0.7rem;
+  font-weight: 800;
+  letter-spacing: 0.1em;
+  color: var(--text-muted);
+}
+
+.auth-demo-buttons {
+  display: flex;
+  gap: var(--space-md);
+}
+
+.account-user-actions {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.brand-logo-img {
+  width: 42px;
+  height: 42px;
+  border-radius: 8px;
+  object-fit: contain;
+}
+
+

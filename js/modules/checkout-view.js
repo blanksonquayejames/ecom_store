@@ -207,7 +207,11 @@ export function renderCheckoutView(container) {
 
               <!-- Payment Method Selector Tabs -->
               <div class="payment-tabs-nav">
-                <button class="pay-tab-btn is-active" data-method="Credit Card">
+                <button class="pay-tab-btn is-active" data-method="Mobile Money">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="5" y="2" width="14" height="20" rx="2" ry="2"/><line x1="12" y1="18" x2="12.01" y2="18"/></svg>
+                  Mobile Money (MoMo)
+                </button>
+                <button class="pay-tab-btn" data-method="Credit Card">
                   <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="1" y="4" width="22" height="16" rx="2" ry="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>
                   Credit / Debit Card
                 </button>
@@ -217,53 +221,122 @@ export function renderCheckoutView(container) {
                 </button>
                 <button class="pay-tab-btn" data-method="Crypto / Solana">
                   <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 2 7 12 12 22 7 12 2"/><polyline points="2 17 12 22 22 17"/><polyline points="2 12 12 17 22 12"/></svg>
-                  Solana / USDC
+                  Crypto / USDC
                 </button>
               </div>
 
-              <!-- Interactive 3D Card Preview -->
-              <div class="interactive-card-showcase" id="card-3d-wrap">
-                <div class="virtual-card">
-                  <div class="virtual-card-chip">
-                    <svg width="34" height="26" viewBox="0 0 34 26" fill="none"><rect width="34" height="26" rx="4" fill="#d4af37"/><path d="M0 9h34M0 17h34M12 0v26M22 0v26" stroke="#996515" stroke-width="1.5"/></svg>
-                    <span class="card-contactless">)))</span>
+              <!-- Container: Mobile Money (MoMo) -->
+              <div class="payment-method-panel" id="panel-momo">
+                <div class="momo-form-card">
+                  <div class="momo-network-select-group">
+                    <label>Select Mobile Money Network</label>
+                    <div class="momo-network-pills">
+                      <label class="momo-network-pill is-selected">
+                        <input type="radio" name="momo-network" value="MTN MoMo" checked />
+                        <span class="momo-pill-logo">🟡 MTN</span>
+                        <span class="momo-pill-title">MTN Mobile Money</span>
+                      </label>
+                      <label class="momo-network-pill">
+                        <input type="radio" name="momo-network" value="Telecel Cash" />
+                        <span class="momo-pill-logo">🔴 Telecel</span>
+                        <span class="momo-pill-title">Telecel Cash</span>
+                      </label>
+                      <label class="momo-network-pill">
+                        <input type="radio" name="momo-network" value="AT Money" />
+                        <span class="momo-pill-logo">🔵 AT</span>
+                        <span class="momo-pill-title">AT Money</span>
+                      </label>
+                    </div>
                   </div>
-                  <div class="virtual-card-number" id="preview-card-number">•••• •••• •••• 4242</div>
-                  <div class="virtual-card-bottom">
-                    <div class="virtual-card-holder">
-                      <span class="v-label">CARDHOLDER</span>
-                      <span class="v-val" id="preview-card-name">JULIAN VANCE</span>
+
+                  <div class="form-group mt-3">
+                    <label>Mobile Money Phone Number (Ghana)</label>
+                    <div class="phone-input-wrap">
+                      <span class="phone-prefix">🇬🇭 +233</span>
+                      <input type="tel" class="custom-input" id="input-momo-phone" placeholder="024 123 4567" value="024 555 7788" />
                     </div>
-                    <div class="virtual-card-expires">
-                      <span class="v-label">EXPIRES</span>
-                      <span class="v-val" id="preview-card-expiry">08/29</span>
+                  </div>
+
+                  <div class="form-group">
+                    <label>Registered Account Name</label>
+                    <input type="text" class="custom-input" id="input-momo-name" placeholder="Kwame Blankson" value="${formData.fullName || 'Kwame Blankson'}" />
+                  </div>
+
+                  <div class="momo-instructions-box">
+                    <div class="momo-instruct-icon">📲</div>
+                    <div class="momo-instruct-text">
+                      <strong>Instant Push USSD Authorization</strong>
+                      <p>When you click Authorize, a prompt will be sent instantly to your phone. Enter your 4-digit MoMo PIN to complete the transaction.</p>
                     </div>
-                    <div class="virtual-card-logo">AURA NOIR</div>
                   </div>
                 </div>
               </div>
 
-              <!-- Credit Card Fields -->
-              <div class="card-inputs-form">
-                <div class="form-group">
-                  <label>Card Number</label>
-                  <input type="text" class="custom-input" id="input-card-number" placeholder="4242 •••• •••• 4242" maxlength="19" value="4242 8890 1204 4242" />
+              <!-- Container: Credit Card & 3D Interactive Card -->
+              <div class="payment-method-panel" id="panel-card" style="display: none;">
+                <div class="interactive-card-showcase" id="card-3d-wrap">
+                  <div class="virtual-card">
+                    <div class="virtual-card-chip">
+                      <svg width="34" height="26" viewBox="0 0 34 26" fill="none"><rect width="34" height="26" rx="4" fill="#d4af37"/><path d="M0 9h34M0 17h34M12 0v26M22 0v26" stroke="#996515" stroke-width="1.5"/></svg>
+                      <span class="card-contactless">)))</span>
+                    </div>
+                    <div class="virtual-card-number" id="preview-card-number">•••• •••• •••• 4242</div>
+                    <div class="virtual-card-bottom">
+                      <div class="virtual-card-holder">
+                        <span class="v-label">CARDHOLDER</span>
+                        <span class="v-val" id="preview-card-name">JULIAN VANCE</span>
+                      </div>
+                      <div class="virtual-card-expires">
+                        <span class="v-label">EXPIRES</span>
+                        <span class="v-val" id="preview-card-expiry">08/29</span>
+                      </div>
+                      <div class="virtual-card-logo">7TH JUNE</div>
+                    </div>
+                  </div>
                 </div>
 
-                <div class="form-group">
-                  <label>Cardholder Name</label>
-                  <input type="text" class="custom-input" id="input-card-name" placeholder="JULIAN VANCE" value="JULIAN VANCE" />
-                </div>
+                <div class="card-inputs-form">
+                  <div class="form-group">
+                    <label>Card Number</label>
+                    <input type="text" class="custom-input" id="input-card-number" placeholder="4242 •••• •••• 4242" maxlength="19" value="4242 8890 1204 4242" />
+                  </div>
 
-                <div class="form-row">
-                  <div class="form-group flex-1">
-                    <label>Expiration (MM/YY)</label>
-                    <input type="text" class="custom-input" id="input-card-expiry" placeholder="08/29" maxlength="5" value="08/29" />
+                  <div class="form-group">
+                    <label>Cardholder Name</label>
+                    <input type="text" class="custom-input" id="input-card-name" placeholder="JULIAN VANCE" value="JULIAN VANCE" />
                   </div>
-                  <div class="form-group flex-1">
-                    <label>Security CVV</label>
-                    <input type="password" class="custom-input" id="input-card-cvv" placeholder="•••" maxlength="4" value="888" />
+
+                  <div class="form-row">
+                    <div class="form-group flex-1">
+                      <label>Expiration (MM/YY)</label>
+                      <input type="text" class="custom-input" id="input-card-expiry" placeholder="08/29" maxlength="5" value="08/29" />
+                    </div>
+                    <div class="form-group flex-1">
+                      <label>Security CVV</label>
+                      <input type="password" class="custom-input" id="input-card-cvv" placeholder="•••" maxlength="4" value="888" />
+                    </div>
                   </div>
+                </div>
+              </div>
+
+              <!-- Container: Apple Pay -->
+              <div class="payment-method-panel" id="panel-applepay" style="display: none;">
+                <div class="express-checkout-box">
+                  <p>Express 1-Click biometric checkout with Apple Pay / Touch ID.</p>
+                  <button class="btn btn-primary w-100 mt-2" id="express-apple-btn">
+                     Pay with Apple Pay
+                  </button>
+                </div>
+              </div>
+
+              <!-- Container: Crypto -->
+              <div class="payment-method-panel" id="panel-crypto" style="display: none;">
+                <div class="crypto-pay-box">
+                  <p>Send USDC (SPL or ERC-20) or SOL to 7th June Verified Treasury:</p>
+                  <div class="crypto-addr-chip">
+                    <code>7thJuneX942kLP991kMNa7812904812894</code>
+                  </div>
+                  <span class="crypto-notice">Instant on-chain confirmation in 400ms.</span>
                 </div>
               </div>
 
@@ -473,13 +546,34 @@ function attachCheckoutEvents(container, formData) {
     if (cardExpiryDisplay) cardExpiryDisplay.textContent = val || '08/29';
   });
 
-  // Payment Tabs
+  // Payment Tabs Switcher
   container.querySelectorAll('.pay-tab-btn').forEach(btn => {
     btn.addEventListener('click', () => {
       sounds.playClick();
       container.querySelectorAll('.pay-tab-btn').forEach(b => b.classList.remove('is-active'));
       btn.classList.add('is-active');
-      formData.paymentMethod = btn.dataset.method;
+      const method = btn.dataset.method;
+      formData.paymentMethod = method;
+
+      // Toggle Panels
+      const panelMomo = container.querySelector('#panel-momo');
+      const panelCard = container.querySelector('#panel-card');
+      const panelApple = container.querySelector('#panel-applepay');
+      const panelCrypto = container.querySelector('#panel-crypto');
+
+      if (panelMomo) panelMomo.style.display = method === 'Mobile Money' ? 'block' : 'none';
+      if (panelCard) panelCard.style.display = method === 'Credit Card' ? 'block' : 'none';
+      if (panelApple) panelApple.style.display = method === 'Apple Pay' ? 'block' : 'none';
+      if (panelCrypto) panelCrypto.style.display = method === 'Crypto / Solana' ? 'block' : 'none';
+    });
+  });
+
+  // Mobile Money Network Pills
+  container.querySelectorAll('.momo-network-pill').forEach(pill => {
+    pill.addEventListener('click', () => {
+      sounds.playClick();
+      container.querySelectorAll('.momo-network-pill').forEach(p => p.classList.remove('is-selected'));
+      pill.classList.add('is-selected');
     });
   });
 
@@ -509,12 +603,13 @@ function attachCheckoutEvents(container, formData) {
   const placeOrderBtn = container.querySelector('#chk-place-order-btn');
   if (placeOrderBtn) {
     placeOrderBtn.addEventListener('click', () => {
-      // Show loading processing state
       sounds.playClick();
       placeOrderBtn.disabled = true;
+
+      const isMomo = formData.paymentMethod === 'Mobile Money';
       placeOrderBtn.innerHTML = `
         <span class="spinner-border"></span>
-        <span>Securing Quantum Token & Placing Order...</span>
+        <span>${isMomo ? 'Sending MoMo USSD Prompt to Phone...' : 'Authorizing Secure Payment & Placing Order...'}</span>
       `;
 
       setTimeout(() => {

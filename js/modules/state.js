@@ -20,6 +20,7 @@ class Store {
     const savedOrders = localStorage.getItem('aura_orders');
     const savedPromo = localStorage.getItem('aura_promo');
     const savedSearches = localStorage.getItem('aura_searches');
+    const savedUser = localStorage.getItem('aura_user');
 
     return {
       products: PRODUCTS,
@@ -80,17 +81,17 @@ class Store {
           ]
         }
       ],
-      user: {
+      user: savedUser ? JSON.parse(savedUser) : {
         name: 'Julian Vance',
-        email: 'julian.vance@auraconcept.com',
-        tier: 'Platinum Concierge VIP',
+        email: 'julian.vance@7thjune.com',
+        tier: '7th June Platinum VIP',
         points: 2450,
         avatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=400&q=80'
       },
       filters: {
         category: 'All Products',
         query: '',
-        maxPrice: 500,
+        maxPrice: 5000,
         minRating: 0,
         inStockOnly: false,
         onSaleOnly: false,
@@ -343,6 +344,25 @@ class Store {
     return newOrder;
   }
 
+  // --- User Authentication ---
+  setUser(userData) {
+    this.state.user = { ...this.state.user, ...userData };
+    localStorage.setItem('aura_user', JSON.stringify(this.state.user));
+    this.notify('user_updated', this.state.user);
+  }
+
+  logout() {
+    this.state.user = {
+      name: 'Guest Shopper',
+      email: 'guest@7thjune.com',
+      tier: 'Guest Account',
+      points: 0,
+      avatar: 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&w=400&q=80'
+    };
+    localStorage.removeItem('aura_user');
+    this.notify('user_updated', this.state.user);
+  }
+
   // --- Navigation & View Controller ---
   setView(page, productId = null) {
     this.state.currentView = { page, productId };
@@ -365,7 +385,7 @@ class Store {
     this.state.filters = {
       category: 'All Products',
       query: '',
-      maxPrice: 2500,
+      maxPrice: 5000,
       minRating: 0,
       inStockOnly: false,
       onSaleOnly: false,

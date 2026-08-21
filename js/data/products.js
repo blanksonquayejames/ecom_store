@@ -597,7 +597,211 @@ export const PRODUCTS = [
         date: '1 week ago',
         verified: true,
         title: 'Massive productivity booster for coding & editing',
-        comment: 'I mapped all my VS Code terminal tasks, git commits, and music controls. Cannot work without it now.'
+    ]
+  },
+  {
+    id: 'prod-013',
+    name: 'Apple MacBook Pro 16" M3 Max Liquid Retina XDR',
+    tagline: '16-Core CPU, 40-Core GPU, 48GB Unified RAM & 1TB NVMe Storage',
+    category: 'Laptops & Workstations',
+    price: 3499,
+    originalPrice: 3899,
+    rating: 4.99,
+    reviewsCount: 312,
+    stock: 7,
+    isNew: true,
+    isTrending: true,
+    isBestSeller: true,
+    featured: true,
+    description: 'The ultimate powerhouse for software engineers, 3D artists, and creative pros. Equipped with Apple M3 Max silicon, extreme dynamic range 120Hz ProMotion display with 1600 nits peak brightness, studio-grade 6-speaker sound system with spatial audio, and up to 22 hours of battery life.',
+    heroImage: 'https://images.unsplash.com/photo-1517336714731-489689fd1ca8?auto=format&fit=crop&w=1000&q=85',
+    gallery: [
+      'https://images.unsplash.com/photo-1517336714731-489689fd1ca8?auto=format&fit=crop&w=1000&q=85',
+      'https://images.unsplash.com/photo-1611186871348-b1ce696e52c9?auto=format&fit=crop&w=1000&q=85'
+    ],
+    colors: [
+      { name: 'Space Black Anodized', hex: '#1c1c1e', img: 'https://images.unsplash.com/photo-1517336714731-489689fd1ca8?auto=format&fit=crop&w=1000&q=85' },
+      { name: 'Silver Machined Aluminum', hex: '#e2e8f0', img: 'https://images.unsplash.com/photo-1611186871348-b1ce696e52c9?auto=format&fit=crop&w=1000&q=85' }
+    ],
+    storageOptions: ['48GB RAM / 1TB SSD', '64GB RAM / 2TB SSD (+ $500)', '128GB RAM / 4TB SSD (+ $1400)'],
+    specs: {
+      'Processor': 'Apple M3 Max (16-Core CPU with 12 performance cores)',
+      'Graphics': '40-Core GPU with Hardware Ray Tracing',
+      'Display': '16.2" Liquid Retina XDR (3456x2234, 120Hz ProMotion)',
+      'Memory': '48GB Unified High-Bandwidth Memory (400GB/s)',
+      'Storage': '1TB Ultra-Fast NVMe SSD (Up to 7.4GB/s read)',
+      'Ports': '3x Thunderbolt 4 / USB 4, HDMI 2.1, SDXC Slot, MagSafe 3',
+      'Battery': '100Wh Lithium-Polymer (Up to 22 Hours Web/Video)'
+    },
+    features: [
+      'Hardware-accelerated ray tracing and dynamic caching architecture',
+      'Anti-reflective nano-texture display coating option',
+      'Magic Keyboard with Touch ID and Force Touch trackpad'
+    ],
+    frequentlyBoughtTogether: ['prod-005', 'prod-002'],
+    reviews: [
+      {
+        id: 'rev-14',
+        author: 'Julian Vance',
+        rating: 5,
+        date: '1 day ago',
+        verified: true,
+        title: 'Insane compiling speeds and battery life',
+        comment: 'Docker containers, Xcode builds, and video exports finish in seconds without even spinning the fans audibly.'
+      }
+    ]
+  },
+  {
+    id: 'prod-014',
+    name: 'Titan X Custom Liquid-Cooled Gaming Rig',
+    tagline: 'AMD Ryzen 9 7950X3D & NVIDIA RTX 4090 24GB with Hardline EKWB Loop',
+    category: 'Gaming PCs & Towers',
+    price: 4299,
+    originalPrice: 4799,
+    rating: 4.98,
+    reviewsCount: 178,
+    stock: 4,
+    isNew: true,
+    isTrending: true,
+    isBestSeller: true,
+    featured: true,
+    description: 'Mastercraft custom desktop engineered by 7th June PC technicians. Features hand-bent acrylic hardline watercooling, dual 360mm copper radiators, AMD 3D V-Cache flagship processor, RTX 4090 with active backplate cooling, and Lian Li O11 Dynamic EVO RGB chassis.',
+    heroImage: 'https://images.unsplash.com/photo-1587202372775-e229f172b9d7?auto=format&fit=crop&w=1000&q=85',
+    gallery: [
+      'https://images.unsplash.com/photo-1587202372775-e229f172b9d7?auto=format&fit=crop&w=1000&q=85',
+      'https://images.unsplash.com/photo-1591488320449-011701bb6704?auto=format&fit=crop&w=1000&q=85'
+    ],
+    colors: [
+      { name: 'Crystal Stealth Black', hex: '#0f172a', img: 'https://images.unsplash.com/photo-1587202372775-e229f172b9d7?auto=format&fit=crop&w=1000&q=85' },
+      { name: 'Arctic Glacier White', hex: '#f8fafc', img: 'https://images.unsplash.com/photo-1591488320449-011701bb6704?auto=format&fit=crop&w=1000&q=85' }
+    ],
+    storageOptions: ['64GB DDR5 / 2TB Gen5 SSD', '128GB DDR5 / 4TB Gen5 SSD (+ $650)'],
+    specs: {
+      'CPU': 'AMD Ryzen 9 7950X3D (16 Cores, 32 Threads, 144MB 3D V-Cache)',
+      'GPU': 'NVIDIA GeForce RTX 4090 24GB GDDR6X Liquid Cooled',
+      'Motherboard': 'ASUS ROG Crosshair X670E Hero WiFi 6E',
+      'RAM': '64GB G.Skill Trident Z5 RGB DDR5-6000MHz CL30',
+      'Storage': '2TB Samsung 990 PRO PCIe 4.0 NVMe (7,450 MB/s)',
+      'Cooling': 'Custom EK-Quantum Vector² Hardline Loop + 2x 360mm Rads',
+      'PSU': 'Seasonic Prime TX-1300W 80+ Titanium ATX 3.0'
+    },
+    features: [
+      'Stress-tested 48-hour burn-in with certified stability benchmarks',
+      'Sub-50°C temperatures under full 4K ultra ray-traced workloads',
+      'Custom sleeved braided cables in gold/carbon accents'
+    ],
+    frequentlyBoughtTogether: ['prod-001', 'prod-002'],
+    reviews: [
+      {
+        id: 'rev-15',
+        author: 'Alexander Drake',
+        rating: 5,
+        date: '4 days ago',
+        verified: true,
+        title: 'A true work of computing art',
+        comment: 'Runs Cyberpunk 2077 at 4K Path Tracing with zero drops. The hardline tubing bends are immaculate.'
+      }
+    ]
+  },
+  {
+    id: 'prod-015',
+    name: 'ASUS ROG Zephyrus G16 OLED Gaming Laptop',
+    tagline: 'Intel Core Ultra 9, RTX 4090 16GB, 240Hz 0.2ms ROG Nebula OLED',
+    category: 'Laptops & Workstations',
+    price: 2799,
+    originalPrice: 3099,
+    rating: 4.94,
+    reviewsCount: 195,
+    stock: 9,
+    isNew: true,
+    isTrending: true,
+    isBestSeller: false,
+    featured: false,
+    description: 'Ultra-slim CNC aluminum gaming laptop weighing just 1.85kg. Features the stunning 2.5K 240Hz ROG Nebula OLED display with G-SYNC, Slash Lighting LED matrix lid, Tri-Fan cooling with vapor chamber, and 100W USB-C fast charging.',
+    heroImage: 'https://images.unsplash.com/photo-1603302576837-37561b2e2302?auto=format&fit=crop&w=1000&q=85',
+    gallery: [
+      'https://images.unsplash.com/photo-1603302576837-37561b2e2302?auto=format&fit=crop&w=1000&q=85'
+    ],
+    colors: [
+      { name: 'Eclipse Gray CNC', hex: '#262626', img: 'https://images.unsplash.com/photo-1603302576837-37561b2e2302?auto=format&fit=crop&w=1000&q=85' },
+      { name: 'Platinum White CNC', hex: '#f5f5f5', img: 'https://images.unsplash.com/photo-1603302576837-37561b2e2302?auto=format&fit=crop&w=1000&q=85' }
+    ],
+    storageOptions: ['32GB LPDDR5X / 1TB SSD', '64GB LPDDR5X / 2TB SSD (+ $350)'],
+    specs: {
+      'CPU': 'Intel Core Ultra 9 185H (16 Cores, Intel AI Boost NPU)',
+      'GPU': 'NVIDIA GeForce RTX 4090 Laptop GPU 16GB GDDR6',
+      'Display': '16.0" 2.5K (2560x1600) 240Hz 0.2ms ROG Nebula OLED',
+      'RAM': '32GB LPDDR5X-7467MHz Dual Channel',
+      'Storage': '1TB PCIe 4.0 NVMe SSD + Extra M.2 slot',
+      'Weight': '1.85 kg (4.07 lbs) Ultra-Portable CNC Unibody',
+      'Battery': '90Wh with 100W Type-C Power Delivery'
+    },
+    features: [
+      'Slash Lighting customizable diagonal matrix on aluminum lid',
+      '0dB Ambient Silent Cooling for quiet productivity workloads',
+      'Dolby Atmos 6-speaker sound system with dual force-canceling woofers'
+    ],
+    frequentlyBoughtTogether: ['prod-002', 'prod-003'],
+    reviews: [
+      {
+        id: 'rev-16',
+        author: 'Sarah Chen',
+        rating: 5,
+        date: '6 days ago',
+        verified: true,
+        title: 'The OLED screen is jaw-dropping',
+        comment: 'Pure inky blacks and infinite contrast. It looks like a sleek ultrabook but games like a full desktop.'
+      }
+    ]
+  },
+  {
+    id: 'prod-016',
+    name: 'Dell XPS 16 InfinityEdge 4K+ OLED Workstation',
+    tagline: 'Intel Core Ultra 7, RTX 4070, Seamless Glass Touchpad & CNC Aluminum',
+    category: 'Laptops & Workstations',
+    price: 2499,
+    originalPrice: 2849,
+    rating: 4.93,
+    reviewsCount: 138,
+    stock: 8,
+    isNew: false,
+    isTrending: false,
+    isBestSeller: false,
+    featured: false,
+    description: 'Iconic minimalist design engineered from CNC machined aluminum and Gorilla Glass 3. Featuring the zero-lattice keyboard, capacitive touch function row, seamless haptic glass touchpad, and 4K+ InfinityEdge OLED touch panel with 100% DCI-P3 color reproduction.',
+    heroImage: 'https://images.unsplash.com/photo-1593642702821-c8da6771f0c6?auto=format&fit=crop&w=1000&q=85',
+    gallery: [
+      'https://images.unsplash.com/photo-1593642702821-c8da6771f0c6?auto=format&fit=crop&w=1000&q=85'
+    ],
+    colors: [
+      { name: 'Platinum Silver Aluminum', hex: '#d1d5db', img: 'https://images.unsplash.com/photo-1593642702821-c8da6771f0c6?auto=format&fit=crop&w=1000&q=85' },
+      { name: 'Graphite Anodized', hex: '#374151', img: 'https://images.unsplash.com/photo-1593642702821-c8da6771f0c6?auto=format&fit=crop&w=1000&q=85' }
+    ],
+    storageOptions: ['32GB LPDDR5X / 1TB SSD', '64GB LPDDR5X / 2TB SSD (+ $400)'],
+    specs: {
+      'CPU': 'Intel Core Ultra 7 155H (16 Cores, 22 Threads up to 4.8GHz)',
+      'GPU': 'NVIDIA GeForce RTX 4070 8GB GDDR6 (60W TGP)',
+      'Display': '16.3" 4K+ (3840x2400) InfinityEdge OLED Touch (400 nits)',
+      'RAM': '32GB LPDDR5X 7467MHz Dual-Channel',
+      'Storage': '1TB M.2 PCIe NVMe Solid State Drive',
+      'Chassis': 'CNC Machined Aluminum with Tone-on-Tone Glass Palm Rest',
+      'Connectivity': '3x Thunderbolt 4 with Power Delivery & DisplayPort, MicroSD'
+    },
+    features: [
+      'Seamless integrated glass haptic touchpad with precise haptic feedback',
+      'Zero-lattice keyboard with larger keycaps and 1mm key travel',
+      'Quad-speaker design with Waves Nx 3D Audio'
+    ],
+    frequentlyBoughtTogether: ['prod-005', 'prod-006'],
+    reviews: [
+      {
+        id: 'rev-17',
+        author: 'Kwame Mensah',
+        rating: 5,
+        date: '1 week ago',
+        verified: true,
+        title: 'Stunning industrial design and build quality',
+        comment: 'The touch panel and keyboard feel futuristic. Perfect for my engineering work and software design.'
       }
     ]
   }
@@ -605,6 +809,8 @@ export const PRODUCTS = [
 
 export const CATEGORIES = [
   'All Products',
+  'Laptops & Workstations',
+  'Gaming PCs & Towers',
   'Keyboards & Keycaps',
   'Mice & Precision',
   'Audio & Headsets',

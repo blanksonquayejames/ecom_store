@@ -1,12 +1,13 @@
 /**
- * AURA LUXE - Customer Account & Order History Hub
- * User profile, past orders tracking, Aura Privilege loyalty points, and digital receipt inspector.
+ * 7th JUNE COMPUTERS - Customer Account & Order History Hub
+ * User profile, past orders tracking, 7th June Elite loyalty points, and digital receipt inspector.
  */
 
 import { store } from './state.js';
 import { convertPrice } from './currency.js';
 import { sounds } from './audio.js';
 import { ui } from './ui.js';
+import { openAuthModal } from './auth-modal.js';
 
 export function renderAccountView(container) {
   const { user, orders, currency } = store.state;
@@ -23,18 +24,27 @@ export function renderAccountView(container) {
               <div class="tier-pill">${user.tier}</div>
               <h1 class="account-name">${user.name}</h1>
               <p class="account-email">${user.email}</p>
+              
+              <div class="account-user-actions mt-2">
+                <button class="btn btn-secondary btn-sm" id="account-switch-btn">
+                  Switch / Sign In
+                </button>
+                <button class="btn btn-ghost btn-sm" id="account-logout-btn">
+                  Sign Out
+                </button>
+              </div>
             </div>
           </div>
 
           <!-- Loyalty Card -->
           <div class="loyalty-card-box">
-            <div class="loyalty-card-tag">AURA NOIR PRIVILEGE</div>
+            <div class="loyalty-card-tag">7TH JUNE VIP REWARDS</div>
             <div class="loyalty-points-number">${user.points.toLocaleString()} <span class="pts-label">PTS</span></div>
             <p class="loyalty-points-sub">Equivalent to ${convertPrice(Math.floor(user.points / 10), currency).formatted} in store credit</p>
             <div class="loyalty-progress-track">
               <div class="loyalty-progress-fill" style="width: 75%;"></div>
             </div>
-            <div class="loyalty-tier-status">Next Tier: <strong>Black Obsidian Sovereign (3,000 pts)</strong></div>
+            <div class="loyalty-tier-status">Next Tier: <strong>Titanium Sovereign VIP (5,000 pts)</strong></div>
           </div>
         </div>
 
@@ -46,7 +56,7 @@ export function renderAccountView(container) {
           </button>
           <button class="account-tab-btn" data-tab="tab-address">
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
-            Saved Vault Addresses
+            Saved Delivery Addresses
           </button>
         </div>
 
@@ -58,6 +68,7 @@ export function renderAccountView(container) {
             ${orders.length === 0 ? `
               <div class="empty-orders-state">
                 <p>No past orders recorded in this session.</p>
+                <button class="btn btn-primary mt-3" onclick="store.setView('catalog')">Start Shopping</button>
               </div>
             ` : `
               <div class="orders-list">
@@ -116,25 +127,23 @@ export function renderAccountView(container) {
               
               <div class="address-card is-default">
                 <div class="address-tag-row">
-                  <span class="address-type">Primary Residence</span>
+                  <span class="address-type">Primary Office</span>
                   <span class="default-badge">DEFAULT</span>
                 </div>
-                <h4>Julian Vance</h4>
-                <p>742 Evergreen Terrace, Suite 400</p>
-                <p>San Francisco, CA 94107</p>
-                <p>United States</p>
-                <p>Phone: +1 (415) 890-4321</p>
+                <h4>${user.name}</h4>
+                <p>7th June Tech Tower, Suite 400</p>
+                <p>Airport Residential Area, Accra, Ghana</p>
+                <p>Phone: +233 24 555 7788</p>
               </div>
 
               <div class="address-card">
                 <div class="address-tag-row">
-                  <span class="address-type">Zurich Design Studio</span>
+                  <span class="address-type">Secondary Dispatch</span>
                 </div>
-                <h4>Julian Vance</h4>
-                <p>Bahnhofstrasse 12, Level 6</p>
-                <p>8001 Zurich</p>
-                <p>Switzerland</p>
-                <p>Phone: +41 44 211 00 00</p>
+                <h4>${user.name}</h4>
+                <p>742 Evergreen Terrace, Suite 800</p>
+                <p>San Francisco, CA 94107, USA</p>
+                <p>Phone: +1 (415) 890-4321</p>
               </div>
 
             </div>
@@ -161,6 +170,24 @@ function attachAccountEvents(container) {
       btn.classList.add('is-active');
       container.querySelector(`#${tabId}`)?.classList.add('is-active');
     });
+  });
+
+  // Switch / Sign In
+  container.querySelector('#account-switch-btn')?.addEventListener('click', () => {
+    sounds.playClick();
+    openAuthModal('login');
+  });
+
+  // Sign Out
+  container.querySelector('#account-logout-btn')?.addEventListener('click', () => {
+    sounds.playClick();
+    store.logout();
+    ui.showToast({
+      title: 'Signed Out',
+      message: 'You are now browsing as a guest.',
+      type: 'info'
+    });
+    renderAccountView(container);
   });
 
   // Re-order button
@@ -194,11 +221,10 @@ function attachAccountEvents(container) {
       if (order) {
         ui.showToast({
           title: `Receipt #${order.orderId}`,
-          message: `Encrypted receipt for ${order.shippingAddress.fullName} generated.`,
+          message: `Digital invoice for ${order.shippingAddress.fullName} generated.`,
           type: 'info'
         });
       }
     });
   });
-
 }

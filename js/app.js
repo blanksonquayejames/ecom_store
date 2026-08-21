@@ -12,6 +12,7 @@ import { renderProductDetailPage, renderQuickViewModal } from './modules/pdp-vie
 import { initCartDrawer, updateCartBadges } from './modules/cart-drawer.js';
 import { renderCheckoutView } from './modules/checkout-view.js';
 import { renderAccountView } from './modules/account-view.js';
+import { initAuthModal, openAuthModal } from './modules/auth-modal.js';
 
 document.addEventListener('DOMContentLoaded', () => {
   initApp();
@@ -24,6 +25,7 @@ function initApp() {
   // Initialize UI & Components
   ui.init();
   initCartDrawer();
+  initAuthModal();
   updateCartBadges();
 
   // Setup Global Header & Navigation
@@ -38,6 +40,12 @@ function initApp() {
   store.subscribe('quick_view_changed', (productId) => {
     if (productId) {
       renderQuickViewModal(productId);
+    }
+  });
+
+  store.subscribe('user_updated', () => {
+    if (store.state.currentView.page === 'account') {
+      handleRoute('account');
     }
   });
 
