@@ -597,6 +597,8 @@ export const PRODUCTS = [
         date: '1 week ago',
         verified: true,
         title: 'Massive productivity booster for coding & editing',
+        comment: 'I mapped all my VS Code terminal tasks, git commits, and music controls. Cannot work without it now.'
+      }
     ]
   },
   {

@@ -52,7 +52,7 @@ export function renderProductDetailPage(container, productId) {
               
               <div class="pdp-image-badges">
                 ${product.isNew ? '<span class="badge badge-new">NEW EDITION</span>' : ''}
-                ${discountPercent > 0 ? `<span class="badge badge-sale">-${discountPercent}% OFF</span>' : ''}
+                ${discountPercent > 0 ? `<span class="badge badge-sale">-${discountPercent}% OFF</span>` : ''}
               </div>
             </div>
 
