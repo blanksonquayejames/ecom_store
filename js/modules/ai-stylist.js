@@ -165,34 +165,50 @@ function generateAIResponse(query) {
   const q = query.toLowerCase();
   const prods = store.state.products;
 
-  if (q.includes('gift') || q.includes('under') || q.includes('budget') || q.includes('300') || q.includes('500')) {
-    const recs = prods.filter(p => p.price <= 500).slice(0, 2);
+  if (q.includes('gift') || q.includes('under') || q.includes('budget') || q.includes('100') || q.includes('150')) {
+    const recs = prods.filter(p => p.price <= 150).slice(0, 2);
     return {
-      text: "I have curated these exceptional mastercraft pieces under $500. They make unforgettable gifts with bespoke luxury packaging included:",
+      text: "Here are top-tier high-performance computer accessories under $150, delivering unbeatable value and build quality for any battle station or office desk:",
       recommendations: recs
     };
   }
 
-  if (q.includes('audio') || q.includes('sound') || q.includes('headphone') || q.includes('acoustic') || q.includes('music')) {
-    const recs = prods.filter(p => p.category === 'Audio & Sound').slice(0, 2);
+  if (q.includes('keyboard') || q.includes('switch') || q.includes('keycap') || q.includes('type') || q.includes('mechanical')) {
+    const recs = prods.filter(p => p.category === 'Keyboards & Keycaps').slice(0, 2);
     return {
-      text: "For true audiophile fidelity, I recommend our reference-grade planar magnetic headphones paired with the quantum DAC hub:",
+      text: "For ultimate typing acoustics and competitive gaming speed, I recommend our Hall-Effect magnetic Rapid Trigger keyboards and ultra-thick PBT keycaps:",
       recommendations: recs
     };
   }
 
-  if (q.includes('desk') || q.includes('workspace') || q.includes('keyboard') || q.includes('setup') || q.includes('living')) {
-    const recs = prods.filter(p => p.category === 'Smart Living').slice(0, 2);
+  if (q.includes('mouse') || q.includes('mice') || q.includes('aim') || q.includes('fps') || q.includes('sensor')) {
+    const recs = prods.filter(p => p.category === 'Mice & Precision').slice(0, 2);
     return {
-      text: "Here is the ultimate minimalist executive desk synergy, combining solid brass acoustic mechanical typing with Tuscan leather MagSafe fast charging:",
+      text: "For pixel-precise tracking and competitive aiming, check out our 49g magnesium alloy 8K wireless mouse and ergonomic precision mice:",
       recommendations: recs
     };
   }
 
-  if (q.includes('spatial') || q.includes('glass') || q.includes('vision') || q.includes('vr') || q.includes('ar') || q.includes('tech')) {
-    const recs = [prods.find(p => p.id === 'prod-001'), prods.find(p => p.id === 'prod-003')].filter(Boolean);
+  if (q.includes('audio') || q.includes('sound') || q.includes('headset') || q.includes('mic') || q.includes('microphone')) {
+    const recs = prods.filter(p => p.category === 'Audio & Headsets').slice(0, 2);
     return {
-      text: "Our flagship spatial optics deliver dual 8K micro-OLED immersion in an aerospace titanium frame. Here are our premier cybernetic wearables:",
+      text: "For pinpoint spatial audio and broadcast-grade streaming clarity, here are our flagship planar magnetic gaming headsets and USB-C condenser studio mics:",
+      recommendations: recs
+    };
+  }
+
+  if (q.includes('monitor') || q.includes('mount') || q.includes('arm') || q.includes('screen') || q.includes('light')) {
+    const recs = prods.filter(p => p.category === 'Monitors & Mounts').slice(0, 2);
+    return {
+      text: "To elevate your display ergonomics and eliminate desk clutter, these heavy-duty gas spring dual monitor arms and glare-free monitor lightbars are perfect:",
+      recommendations: recs
+    };
+  }
+
+  if (q.includes('desk') || q.includes('mat') || q.includes('dock') || q.includes('hub') || q.includes('setup') || q.includes('stream')) {
+    const recs = [prods.find(p => p.id === 'prod-005'), prods.find(p => p.id === 'prod-006')].filter(Boolean);
+    return {
+      text: "Here is the ultimate workstation desk foundation, combining our 16-in-1 Thunderbolt 4 docking station with military-grade Cordura desk pads:",
       recommendations: recs
     };
   }
@@ -200,7 +216,7 @@ function generateAIResponse(query) {
   // General recommendation
   const recs = prods.filter(p => p.featured || p.isBestSeller).slice(0, 2);
   return {
-    text: `Based on your interest in "${query}", I recommend our most acclaimed flagship selections handcrafted with uncompromising materials:`,
+    text: `Based on your request for "${query}", here are our highest-rated flagship computer accessories engineered for maximum precision and performance:`,
     recommendations: recs
   };
 }

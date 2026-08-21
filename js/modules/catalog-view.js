@@ -11,40 +11,133 @@ import { sounds } from './audio.js';
 
 export function renderCatalogView(container) {
   const { filters, currency } = store.state;
+  const initialSpotlight = store.state.products.find(p => p.id === 'prod-001') || store.state.products[0];
 
   container.innerHTML = `
-    <!-- Hero Showcase Section -->
-    <section class="hero-showcase">
-      <div class="hero-background-glow"></div>
-      <div class="hero-content">
-        <div class="hero-badge animate-fade-in">
-          <span class="hero-sparkle">✦</span>
-          <span>AURA QUANTUM SERIES 2026</span>
-        </div>
-        <h1 class="hero-title animate-slide-up">Next-Gen Luxury.<br><span class="gradient-text">Engineered Perfection.</span></h1>
-        <p class="hero-subtitle animate-slide-up">
-          Spatial optics, planar acoustic monitors, and aerospace titanium wearables crafted for visionary creators and modern connoisseurs.
-        </p>
-        <div class="hero-actions animate-slide-up">
-          <button class="btn btn-primary btn-lg" id="hero-explore-btn">
-            Explore Collection
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
-          </button>
-        </div>
-      </div>
-      <div class="hero-featured-card-wrapper animate-fade-in">
-        <div class="hero-featured-card" id="hero-featured-product">
-          <div class="hero-card-tag">FLARED SPOTLIGHT</div>
-          <div class="hero-card-img-wrap">
-            <img src="https://images.unsplash.com/photo-1593508512255-86ab42a8e620?auto=format&fit=crop&w=1000&q=85" alt="Aura Horizon Spatial Vision Glass" class="hero-card-img" />
+    <!-- Modern High-Tech Hero Showcase Section -->
+    <section class="hero-showcase" id="hero-showcase">
+      <div class="hero-mesh-glow hero-mesh-1"></div>
+      <div class="hero-mesh-glow hero-mesh-2"></div>
+      <div class="hero-tech-grid-overlay"></div>
+      
+      <div class="container hero-container-grid">
+        
+        <!-- Left: Typography, Value Proposition & Actions -->
+        <div class="hero-content">
+          <div class="hero-badge animate-fade-in">
+            <span class="hero-badge-pulse"></span>
+            <span class="hero-badge-icon">⚡</span>
+            <span>7TH JUNE COMPUTERS • NEXT-GEN 2026</span>
           </div>
-          <div class="hero-card-info">
-            <div class="hero-card-stars">★★★★★ <span>(4.95)</span></div>
-            <div class="hero-card-name">Aura Horizon Spatial Vision Glass</div>
-            <div class="hero-card-price">${convertPrice(1899, currency).formatted} <span class="old-price">${convertPrice(2299, currency).formatted}</span></div>
-            <button class="btn btn-sm btn-white hero-quick-add" data-id="prod-001">Quick Add to Cart</button>
+
+          <h1 class="hero-title animate-slide-up">
+            Extreme Precision.<br>
+            <span class="hero-gradient-text">Engineered for PC Mastery.</span>
+          </h1>
+
+          <p class="hero-subtitle animate-slide-up">
+            Magnetic Hall-Effect mechanical keyboards, 8K ultra-light gaming mice, audiophile planar headsets, and heavy-duty workstation mounts built for pure competitive speed.
+          </p>
+
+          <div class="hero-actions animate-slide-up">
+            <button class="btn btn-primary btn-lg hero-cta-btn" id="hero-explore-btn">
+              <span>Explore Accessories</span>
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+            </button>
+            <button class="btn btn-secondary btn-lg hero-ai-btn" id="hero-ai-concierge-btn">
+              <span class="hero-sparkle-gold">✦</span>
+              <span>AI Setup Configurator</span>
+            </button>
+          </div>
+
+          <!-- Hero Metrics & Trust Indicators -->
+          <div class="hero-metrics-strip animate-slide-up">
+            <div class="metric-item">
+              <div class="metric-val">4.98 ★</div>
+              <div class="metric-lbl">Pro Rating</div>
+            </div>
+            <div class="metric-sep"></div>
+            <div class="metric-item">
+              <div class="metric-val">24h</div>
+              <div class="metric-lbl">Fast Dispatch</div>
+            </div>
+            <div class="metric-sep"></div>
+            <div class="metric-item">
+              <div class="metric-val">3-Year</div>
+              <div class="metric-lbl">Hardware Care</div>
+            </div>
+            <div class="metric-sep"></div>
+            <div class="metric-item">
+              <div class="metric-val">100%</div>
+              <div class="metric-lbl">Tested & QA</div>
+            </div>
           </div>
         </div>
+
+        <!-- Right: Interactive Flagship Spotlight Showcase Card -->
+        <div class="hero-featured-card-wrapper animate-fade-in">
+          <div class="hero-featured-card" id="hero-spotlight-card">
+            
+            <!-- Top Spotlight Header -->
+            <div class="spotlight-top-bar">
+              <span class="spotlight-tag">✦ FLAGSHIP SPOTLIGHT</span>
+              <span class="spotlight-stock-badge"><span class="stock-pulse-dot"></span> In Stock & Ready</span>
+            </div>
+
+            <!-- Spotlight Visual Frame -->
+            <div class="hero-card-img-wrap" id="hero-spotlight-img-wrap">
+              <img src="${initialSpotlight.heroImage}" alt="${initialSpotlight.name}" class="hero-card-img" id="hero-spotlight-img" />
+              
+              <!-- Floating Specification Badges -->
+              <div class="hero-floating-badge badge-top-right" id="hero-float-spec1">
+                <span class="float-icon">⚡</span>
+                <span id="hero-float-spec1-text">Magnetic Hall-Effect • 8000Hz</span>
+              </div>
+              <div class="hero-floating-badge badge-bottom-left" id="hero-float-spec2">
+                <span class="float-icon">★</span>
+                <span id="hero-float-spec2-text">4.96 (184 Verified Reviews)</span>
+              </div>
+            </div>
+
+            <!-- Spotlight Information & Interactive Switcher -->
+            <div class="hero-card-info">
+              <div class="spotlight-meta-row">
+                <span class="hero-card-category" id="hero-spotlight-category">${initialSpotlight.category}</span>
+                
+                <!-- Quick Switcher Tabs (3 Flagship items) -->
+                <div class="hero-spotlight-switcher" aria-label="Switch Flagship Product">
+                  <button class="spotlight-switch-btn is-active" data-id="prod-001" title="ApexPro V3 Keyboard">01</button>
+                  <button class="spotlight-switch-btn" data-id="prod-002" title="ViperStrike 8K Mouse">02</button>
+                  <button class="spotlight-switch-btn" data-id="prod-003" title="Acoustix Pro Headset">03</button>
+                </div>
+              </div>
+
+              <h3 class="hero-card-name" id="hero-spotlight-title">${initialSpotlight.name}</h3>
+              <p class="hero-card-tagline" id="hero-spotlight-tagline">${initialSpotlight.tagline}</p>
+              
+              <div class="hero-card-price-row">
+                <div class="hero-card-price" id="hero-spotlight-price">
+                  <span class="current-price-val">${convertPrice(initialSpotlight.price, currency).formatted}</span>
+                  ${initialSpotlight.originalPrice ? `<span class="old-price">${convertPrice(initialSpotlight.originalPrice, currency).formatted}</span>` : ''}
+                </div>
+                <div class="spotlight-discount-badge" id="hero-spotlight-discount">Save 15%</div>
+              </div>
+
+              <!-- CTA Actions -->
+              <div class="hero-spotlight-actions">
+                <button class="btn btn-primary flex-1 hero-spotlight-add" id="hero-spotlight-add-btn" data-id="${initialSpotlight.id}">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
+                  <span>Quick Add to Cart</span>
+                </button>
+                <button class="btn btn-secondary hero-spotlight-view" id="hero-spotlight-view-btn" data-id="${initialSpotlight.id}">
+                  View Specs
+                </button>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
       </div>
     </section>
 
@@ -113,8 +206,13 @@ export function renderCatalogView(container) {
           <!-- Filter Sidebar -->
           <aside class="catalog-sidebar" id="catalog-sidebar">
             <div class="sidebar-header">
-              <h3 class="sidebar-title">Filters</h3>
-              <button class="sidebar-reset-btn" id="reset-all-filters">Reset All</button>
+              <div class="sidebar-title-wrap">
+                <h3 class="sidebar-title">Filters</h3>
+              </div>
+              <div class="sidebar-header-actions">
+                <button class="sidebar-reset-btn" id="reset-all-filters">Reset All</button>
+                <button class="sidebar-close-mobile-btn" id="sidebar-close-mobile-btn" aria-label="Close filter drawer">&times;</button>
+              </div>
             </div>
 
             <!-- Price Range Filter -->
@@ -123,10 +221,10 @@ export function renderCatalogView(container) {
                 <span class="filter-label">Max Price</span>
                 <span class="filter-val" id="price-range-val">${convertPrice(filters.maxPrice, currency).formatted}</span>
               </div>
-              <input type="range" class="custom-range" id="price-range-slider" min="150" max="2500" step="50" value="${filters.maxPrice}" />
+              <input type="range" class="custom-range" id="price-range-slider" min="30" max="500" step="10" value="${filters.maxPrice}" />
               <div class="range-bounds">
-                <span>${convertPrice(150, currency).formatted}</span>
-                <span>${convertPrice(2500, currency).formatted}</span>
+                <span>${convertPrice(30, currency).formatted}</span>
+                <span>${convertPrice(500, currency).formatted}</span>
               </div>
             </div>
 
@@ -350,19 +448,120 @@ export function updateProductsList() {
 }
 
 function attachCatalogEvents(container) {
-  // Hero Explore Button
+  // Hero Explore Collection Scroll
   const heroExploreBtn = container.querySelector('#hero-explore-btn');
   if (heroExploreBtn) {
     heroExploreBtn.addEventListener('click', () => {
+      sounds.playClick();
       document.getElementById('catalog-section')?.scrollIntoView({ behavior: 'smooth' });
     });
   }
 
-  // Hero Featured Add
-  const heroQuickAdd = container.querySelector('.hero-quick-add');
-  if (heroQuickAdd) {
-    heroQuickAdd.addEventListener('click', () => {
-      const prod = store.state.products.find(p => p.id === 'prod-001');
+  // Hero AI Concierge Trigger
+  const heroAiBtn = container.querySelector('#hero-ai-concierge-btn');
+  if (heroAiBtn) {
+    heroAiBtn.addEventListener('click', () => {
+      sounds.playClick();
+      const floatingAiBtn = document.querySelector('.floating-ai-btn');
+      if (floatingAiBtn) {
+        floatingAiBtn.click();
+      } else {
+        ui.showToast({
+          title: 'AI System Configurator',
+          message: 'Personalized workstation & computing recommendations ready.',
+          type: 'info'
+        });
+      }
+    });
+  }
+
+  // Hero Spotlight Interactive Switcher
+  const HERO_SPOTLIGHT_ITEMS = {
+    'prod-001': {
+      spec1: 'Magnetic Hall-Effect • 8000Hz',
+      spec2: '4.96 ★ (184 Reviews)',
+      discount: 'Save 15%'
+    },
+    'prod-002': {
+      spec1: '49g Magnesium Shell • PAW3950',
+      spec2: '4.98 ★ (235 Reviews)',
+      discount: 'Save 17%'
+    },
+    'prod-003': {
+      spec1: 'Planar Drivers • 50kHz Hi-Res',
+      spec2: '4.92 ★ (142 Reviews)',
+      discount: 'Save 15%'
+    }
+  };
+
+  let activeSpotlightId = 'prod-001';
+
+  container.querySelectorAll('.spotlight-switch-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      sounds.playClick();
+      const targetId = btn.dataset.id;
+      if (targetId === activeSpotlightId) return;
+
+      const targetProd = store.state.products.find(p => p.id === targetId);
+      if (!targetProd) return;
+
+      activeSpotlightId = targetId;
+
+      // Update Active Switcher Button
+      container.querySelectorAll('.spotlight-switch-btn').forEach(b => b.classList.remove('is-active'));
+      btn.classList.add('is-active');
+
+      // Update Card Visuals with smooth animation
+      const imgEl = container.querySelector('#hero-spotlight-img');
+      const titleEl = container.querySelector('#hero-spotlight-title');
+      const catEl = container.querySelector('#hero-spotlight-category');
+      const taglineEl = container.querySelector('#hero-spotlight-tagline');
+      const priceEl = container.querySelector('#hero-spotlight-price');
+      const discountEl = container.querySelector('#hero-spotlight-discount');
+      const spec1El = container.querySelector('#hero-float-spec1-text');
+      const spec2El = container.querySelector('#hero-float-spec2-text');
+      const addBtn = container.querySelector('#hero-spotlight-add-btn');
+      const viewBtn = container.querySelector('#hero-spotlight-view-btn');
+
+      if (imgEl) {
+        imgEl.style.opacity = '0';
+        setTimeout(() => {
+          imgEl.src = targetProd.heroImage;
+          imgEl.alt = targetProd.name;
+          imgEl.style.opacity = '1';
+        }, 150);
+      }
+
+      if (titleEl) titleEl.textContent = targetProd.name;
+      if (catEl) catEl.textContent = targetProd.category;
+      if (taglineEl) taglineEl.textContent = targetProd.tagline;
+      
+      const { currency } = store.state;
+      if (priceEl) {
+        priceEl.innerHTML = `
+          <span class="current-price-val">${convertPrice(targetProd.price, currency).formatted}</span>
+          ${targetProd.originalPrice ? `<span class="old-price">${convertPrice(targetProd.originalPrice, currency).formatted}</span>` : ''}
+        `;
+      }
+
+      const meta = HERO_SPOTLIGHT_ITEMS[targetId];
+      if (meta) {
+        if (spec1El) spec1El.textContent = meta.spec1;
+        if (spec2El) spec2El.textContent = meta.spec2;
+        if (discountEl) discountEl.textContent = meta.discount;
+      }
+
+      if (addBtn) addBtn.dataset.id = targetId;
+      if (viewBtn) viewBtn.dataset.id = targetId;
+    });
+  });
+
+  // Hero Spotlight Quick Add
+  const heroSpotlightAdd = container.querySelector('#hero-spotlight-add-btn');
+  if (heroSpotlightAdd) {
+    heroSpotlightAdd.addEventListener('click', () => {
+      const targetId = heroSpotlightAdd.dataset.id || activeSpotlightId;
+      const prod = store.state.products.find(p => p.id === targetId);
       if (prod) {
         store.addToCart(prod);
         ui.showToast({
@@ -373,6 +572,16 @@ function attachCatalogEvents(container) {
           onAction: () => ui.toggleDrawer('cart-drawer', true)
         });
       }
+    });
+  }
+
+  // Hero Spotlight View Specs
+  const heroSpotlightView = container.querySelector('#hero-spotlight-view-btn');
+  if (heroSpotlightView) {
+    heroSpotlightView.addEventListener('click', () => {
+      sounds.playClick();
+      const targetId = heroSpotlightView.dataset.id || activeSpotlightId;
+      store.setView('pdp', targetId);
     });
   }
 
@@ -482,13 +691,36 @@ function attachCatalogEvents(container) {
     });
   }
 
-  // Mobile Filter Drawer Toggle
+  // Mobile Filter Drawer Toggle & Backdrop
   const filterToggleBtn = container.querySelector('#filter-drawer-toggle');
+  const sidebarCloseBtn = container.querySelector('#sidebar-close-mobile-btn');
+  const sidebar = document.getElementById('catalog-sidebar');
+  const backdrop = document.getElementById('global-backdrop');
+
+  function closeMobileSidebar() {
+    if (sidebar) sidebar.classList.remove('is-mobile-open');
+    if (backdrop) backdrop.classList.remove('is-active');
+    document.body.classList.remove('no-scroll');
+  }
+
   if (filterToggleBtn) {
     filterToggleBtn.addEventListener('click', () => {
-      const sidebar = document.getElementById('catalog-sidebar');
-      if (sidebar) sidebar.classList.toggle('is-mobile-open');
+      sounds.playClick();
+      if (sidebar) sidebar.classList.add('is-mobile-open');
+      if (backdrop) backdrop.classList.add('is-active');
+      document.body.classList.add('no-scroll');
     });
+  }
+
+  if (sidebarCloseBtn) {
+    sidebarCloseBtn.addEventListener('click', () => {
+      sounds.playClick();
+      closeMobileSidebar();
+    });
+  }
+
+  if (backdrop) {
+    backdrop.addEventListener('click', closeMobileSidebar);
   }
 }
 

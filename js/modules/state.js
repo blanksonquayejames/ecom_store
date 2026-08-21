@@ -27,12 +27,12 @@ class Store {
         {
           id: 'cart-init-1',
           productId: 'prod-001',
-          name: 'Aura Horizon Spatial Vision Glass',
-          price: 1899,
-          originalPrice: 2299,
-          heroImage: 'https://images.unsplash.com/photo-1593508512255-86ab42a8e620?auto=format&fit=crop&w=1000&q=85',
-          selectedColor: 'Titanium Graphite',
-          selectedOption: '512 GB',
+          name: 'ApexPro V3 Magnetic Hall-Effect Keyboard',
+          price: 229,
+          originalPrice: 269,
+          heroImage: 'https://images.unsplash.com/photo-1587829741301-dc798b83add3?auto=format&fit=crop&w=1000&q=85',
+          selectedColor: 'Obsidian Black',
+          selectedOption: '75% Compact Layout',
           quantity: 1
         }
       ],
@@ -41,29 +41,29 @@ class Store {
       currency: savedCurrency || 'USD',
       theme: savedTheme || 'light',
       appliedPromo: savedPromo ? JSON.parse(savedPromo) : null,
-      recentSearches: savedSearches ? JSON.parse(savedSearches) : ['spatial glass', 'planar headphones', 'damascus'],
+      recentSearches: savedSearches ? JSON.parse(savedSearches) : ['hall effect keyboard', '8k mouse', 'monitor arm', 'desk mat'],
       orders: savedOrders ? JSON.parse(savedOrders) : [
         {
-          orderId: 'AUR-892419',
-          date: 'Aug 14, 2026',
+          orderId: '7TH-892419',
+          date: 'Aug 18, 2026',
           status: 'In Transit',
-          carrier: 'FedEx Luxury Courier',
+          carrier: 'FedEx Express Courier',
           trackingNumber: 'FX-84920412A',
           items: [
             {
-              name: 'Acoustics Apex Master Planar Headphones',
-              selectedColor: 'Walnut & Matte Black',
-              selectedOption: 'Standard 3.5mm Cable',
+              name: 'ViperStrike Ultra 8K Wireless Gaming Mouse',
+              selectedColor: 'Matte Stealth Black',
+              selectedOption: 'Standard 8K Receiver Edition',
               quantity: 1,
-              price: 980,
-              heroImage: 'https://images.unsplash.com/photo-1546435770-a3e426bf472b?auto=format&fit=crop&w=1000&q=85'
+              price: 149,
+              heroImage: 'https://images.unsplash.com/photo-1615663245857-ac93bb7c39e7?auto=format&fit=crop&w=1000&q=85'
             }
           ],
-          subtotal: 980,
+          subtotal: 149,
           discount: 0,
           shipping: 0,
-          tax: 78.40,
-          total: 1058.40,
+          tax: 11.92,
+          total: 160.92,
           shippingAddress: {
             fullName: 'Julian Vance',
             address: '742 Evergreen Terrace, Suite 400',
@@ -90,7 +90,7 @@ class Store {
       filters: {
         category: 'All Products',
         query: '',
-        maxPrice: 2500,
+        maxPrice: 500,
         minRating: 0,
         inStockOnly: false,
         onSaleOnly: false,

@@ -74,17 +74,6 @@ function setupHeaderEvents() {
     store.setView('catalog');
   });
 
-  // Theme Toggle Button
-  const themeBtn = document.getElementById('theme-toggle-btn');
-  if (themeBtn) {
-    themeBtn.addEventListener('click', () => {
-      sounds.playClick();
-      const newTheme = store.toggleTheme();
-      updateThemeIcon(newTheme);
-    });
-    updateThemeIcon(store.state.theme);
-  }
-
   // Currency Dropdown
   const currSelect = document.getElementById('currency-selector');
   if (currSelect) {
@@ -126,79 +115,186 @@ function setupHeaderEvents() {
   });
 }
 
-function updateThemeIcon(theme) {
-  const iconSpan = document.getElementById('theme-icon');
-  if (iconSpan) {
-    if (theme === 'dark') {
-      iconSpan.innerHTML = `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>`;
-    } else {
-      iconSpan.innerHTML = `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>`;
-    }
-  }
-}
 
 function setupGlobalSearch() {
   const searchInput = document.getElementById('global-search-input');
   const searchDropdown = document.getElementById('search-autocomplete-dropdown');
+  const categoryBtn = document.getElementById('search-category-btn');
+  const categoryMenu = document.getElementById('search-category-menu');
+  const categoryLabel = document.getElementById('search-category-label');
+  const searchSubmitBtn = document.getElementById('header-search-submit-btn');
+  const searchCategoryWrap = document.getElementById('search-category-dropdown-wrap');
 
-  if (!searchInput || !searchDropdown) return;
+  if (!searchInput) return;
 
-  searchInput.addEventListener('input', (e) => {
-    const val = e.target.value.trim();
-    if (val.length > 0) {
-      renderSearchSuggestions(val, searchDropdown);
-      searchDropdown.style.display = 'block';
-    } else {
-      searchDropdown.style.display = 'none';
-    }
-  });
+  // --- Department Dropdown Logic ---
+  if (categoryBtn && categoryMenu) {
+    // Toggle Category Menu
+    categoryBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      sounds.playClick();
+      const isExpanded = categoryBtn.getAttribute('aria-expanded') === 'true';
+      categoryBtn.setAttribute('aria-expanded', !isExpanded);
+      categoryMenu.style.display = isExpanded ? 'none' : 'block';
+      if (searchDropdown) searchDropdown.style.display = 'none';
+    });
 
-  searchInput.addEventListener('keydown', (e) => {
-    if (e.key === 'Enter') {
-      const val = searchInput.value.trim();
-      if (val) {
-        store.addRecentSearch(val);
-        store.setFilter('query', val);
-        searchDropdown.style.display = 'none';
-        if (store.state.currentView.page !== 'catalog') {
-          store.setView('catalog');
-        } else {
+    // Select Category Item
+    categoryMenu.querySelectorAll('.search-category-item').forEach(item => {
+      item.addEventListener('click', (e) => {
+        e.stopPropagation();
+        sounds.playClick();
+        const selectedCat = item.dataset.category || 'All Products';
+        const shortLabel = item.dataset.shortLabel || selectedCat;
+
+        // Update Button UI
+        if (categoryLabel) categoryLabel.textContent = shortLabel;
+        categoryMenu.querySelectorAll('.search-category-item').forEach(i => i.classList.remove('is-selected'));
+        item.classList.add('is-selected');
+
+        // Close Menu
+        categoryBtn.setAttribute('aria-expanded', 'false');
+        categoryMenu.style.display = 'none';
+
+        // Update Store Filter
+        store.setFilter('category', selectedCat);
+
+        // If there's an existing query in the search input, refresh autocomplete or trigger view
+        if (store.state.currentView.page === 'catalog') {
           updateProductsList();
+        } else if (searchInput.value.trim()) {
+          store.setView('catalog');
         }
+
+        // Re-render suggestions if input is active
+        if (searchInput.value.trim() && searchDropdown) {
+          renderSearchSuggestions(searchInput.value.trim(), searchDropdown);
+        }
+      });
+    });
+
+    // Sync search department label when category changes elsewhere (e.g. category pills)
+    store.subscribe('filters_updated', (filters) => {
+      const activeCat = filters.category || 'All Products';
+      const matchingItem = categoryMenu.querySelector(`[data-category="${activeCat}"]`);
+      if (matchingItem) {
+        const shortLabel = matchingItem.dataset.shortLabel || activeCat;
+        if (categoryLabel) categoryLabel.textContent = shortLabel;
+        categoryMenu.querySelectorAll('.search-category-item').forEach(i => i.classList.remove('is-selected'));
+        matchingItem.classList.add('is-selected');
+      } else if (categoryLabel) {
+        categoryLabel.textContent = activeCat === 'All Products' ? 'All' : activeCat;
+      }
+    });
+  }
+
+  // --- Search Execution Helper ---
+  function executeSearch() {
+    const val = searchInput.value.trim();
+    if (val) {
+      store.addRecentSearch(val);
+    }
+    store.setFilter('query', val);
+    if (searchDropdown) searchDropdown.style.display = 'none';
+    if (categoryMenu) {
+      categoryMenu.style.display = 'none';
+      categoryBtn?.setAttribute('aria-expanded', 'false');
+    }
+
+    if (store.state.currentView.page !== 'catalog') {
+      store.setView('catalog');
+    } else {
+      updateProductsList();
+      const catalogSection = document.getElementById('catalog-section');
+      if (catalogSection) {
+        catalogSection.scrollIntoView({ behavior: 'smooth' });
       }
     }
-  });
+  }
 
-  // Close dropdown on outside click
-  document.addEventListener('click', (e) => {
-    if (!searchInput.contains(e.target) && !searchDropdown.contains(e.target)) {
-      searchDropdown.style.display = 'none';
+  // Search Submit Button Click
+  if (searchSubmitBtn) {
+    searchSubmitBtn.addEventListener('click', () => {
+      sounds.playClick();
+      executeSearch();
+    });
+  }
+
+  // Search Input Enter Key
+  searchInput.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter') {
+      executeSearch();
     }
   });
 
-  // Focus open suggestions
-  searchInput.addEventListener('focus', () => {
-    if (searchInput.value.trim()) {
-      renderSearchSuggestions(searchInput.value.trim(), searchDropdown);
-      searchDropdown.style.display = 'block';
+  // Autocomplete Suggestions on Input
+  if (searchDropdown) {
+    searchInput.addEventListener('input', (e) => {
+      const val = e.target.value.trim();
+      if (val.length > 0) {
+        renderSearchSuggestions(val, searchDropdown);
+        searchDropdown.style.display = 'block';
+        if (categoryMenu) {
+          categoryMenu.style.display = 'none';
+          categoryBtn?.setAttribute('aria-expanded', 'false');
+        }
+      } else {
+        searchDropdown.style.display = 'none';
+      }
+    });
+
+    searchInput.addEventListener('focus', () => {
+      if (searchInput.value.trim()) {
+        renderSearchSuggestions(searchInput.value.trim(), searchDropdown);
+        searchDropdown.style.display = 'block';
+      }
+    });
+  }
+
+  // Close dropdowns on outside click
+  document.addEventListener('click', (e) => {
+    if (searchDropdown && !searchInput.contains(e.target) && !searchDropdown.contains(e.target)) {
+      searchDropdown.style.display = 'none';
+    }
+    if (categoryMenu && searchCategoryWrap && !searchCategoryWrap.contains(e.target)) {
+      categoryMenu.style.display = 'none';
+      categoryBtn?.setAttribute('aria-expanded', 'false');
     }
   });
 }
 
 function renderSearchSuggestions(query, dropdown) {
   const q = query.toLowerCase();
-  const matched = store.state.products.filter(p => 
-    p.name.toLowerCase().includes(q) || 
-    p.category.toLowerCase().includes(q) ||
-    p.tagline.toLowerCase().includes(q)
-  ).slice(0, 4);
+  const activeCategory = store.state.filters.category;
+  
+  // Filter products matching query & current department scope if any
+  let matched = store.state.products.filter(p => {
+    const matchesCategory = activeCategory === 'All Products' || p.category === activeCategory;
+    const matchesText = p.name.toLowerCase().includes(q) || 
+                        p.category.toLowerCase().includes(q) ||
+                        p.tagline.toLowerCase().includes(q);
+    return matchesCategory && matchesText;
+  });
 
+  // If no matches in active category, search across all categories as fallback
+  if (matched.length === 0 && activeCategory !== 'All Products') {
+    matched = store.state.products.filter(p => 
+      p.name.toLowerCase().includes(q) || 
+      p.category.toLowerCase().includes(q) ||
+      p.tagline.toLowerCase().includes(q)
+    );
+  }
+
+  matched = matched.slice(0, 4);
   const { currency } = store.state;
 
   dropdown.innerHTML = `
-    <div class="search-suggestions-header">Products Matching "${escapeHtml(query)}"</div>
+    <div class="search-suggestions-header">
+      <span>Products Matching "${escapeHtml(query)}"</span>
+      ${activeCategory !== 'All Products' ? `<span class="search-category-scope-tag">in ${activeCategory}</span>` : ''}
+    </div>
     ${matched.length === 0 ? `
-      <div class="no-search-match">No immediate product matches. Press Enter to perform comprehensive search.</div>
+      <div class="no-search-match">No direct product matches. Press Enter or click the search button to explore all results.</div>
     ` : `
       <div class="search-suggest-list">
         ${matched.map(item => `

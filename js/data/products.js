@@ -1,50 +1,51 @@
 /**
- * AURA LUXE - Product Catalog Dataset
- * High-definition luxury tech, audio, optics, and designer essentials.
+ * 7th JUNE COMPUTERS - Product Catalog Dataset
+ * High-performance computer accessories, gaming peripherals, mechanical keyboards,
+ * precision mice, audiophile headsets, monitor mounts, and workstation essentials.
  */
 
 export const PRODUCTS = [
   {
     id: 'prod-001',
-    name: 'Aura Horizon Spatial Vision Glass',
-    tagline: 'Dual 8K Micro-OLED Spatial Computing & Optical Glass',
-    category: 'Spatial Optics',
-    price: 1899,
-    originalPrice: 2299,
-    rating: 4.95,
-    reviewsCount: 142,
-    stock: 7,
+    name: 'ApexPro V3 Magnetic Hall-Effect Keyboard',
+    tagline: 'Rapid Trigger 0.1mm Actuation & CNC Anodized Aluminum Chassis',
+    category: 'Keyboards & Keycaps',
+    price: 229,
+    originalPrice: 269,
+    rating: 4.96,
+    reviewsCount: 184,
+    stock: 9,
     isNew: true,
     isTrending: true,
     isBestSeller: true,
     featured: true,
-    description: 'Experience pure spatial reality with ultra-dense 8K Micro-OLED displays, custom photonics, and aerospace-grade titanium chassis. Seamlessly blends high-precision augmented workspace with cinema-grade spatial immersion.',
-    heroImage: 'https://images.unsplash.com/photo-1593508512255-86ab42a8e620?auto=format&fit=crop&w=1000&q=85',
+    description: 'Engineered for competitive gamers and high-speed typing enthusiasts. Features custom magnetic Hall-Effect switches with adjustable 0.1mm to 4.0mm actuation, Rapid Trigger mode, gasket mounting, sound-dampening silicone foam, and per-key RGB backlighting.',
+    heroImage: 'https://images.unsplash.com/photo-1587829741301-dc798b83add3?auto=format&fit=crop&w=1000&q=85',
     gallery: [
-      'https://images.unsplash.com/photo-1593508512255-86ab42a8e620?auto=format&fit=crop&w=1000&q=85',
-      'https://images.unsplash.com/photo-1576793132646-60787e742880?auto=format&fit=crop&w=1000&q=85',
-      'https://images.unsplash.com/photo-1508739773434-c26b3d09e071?auto=format&fit=crop&w=1000&q=85'
+      'https://images.unsplash.com/photo-1587829741301-dc798b83add3?auto=format&fit=crop&w=1000&q=85',
+      'https://images.unsplash.com/photo-1595225476474-87563907a212?auto=format&fit=crop&w=1000&q=85',
+      'https://images.unsplash.com/photo-1618384887929-16ec33fab9ef?auto=format&fit=crop&w=1000&q=85'
     ],
     colors: [
-      { name: 'Titanium Graphite', hex: '#2b2d30', img: 'https://images.unsplash.com/photo-1593508512255-86ab42a8e620?auto=format&fit=crop&w=1000&q=85' },
-      { name: 'Lunar Silver', hex: '#d1d5db', img: 'https://images.unsplash.com/photo-1576793132646-60787e742880?auto=format&fit=crop&w=1000&q=85' },
-      { name: 'Champagne Gold', hex: '#d4af37', img: 'https://images.unsplash.com/photo-1508739773434-c26b3d09e071?auto=format&fit=crop&w=1000&q=85' }
+      { name: 'Obsidian Black', hex: '#18181b', img: 'https://images.unsplash.com/photo-1587829741301-dc798b83add3?auto=format&fit=crop&w=1000&q=85' },
+      { name: 'Frost White', hex: '#f4f4f5', img: 'https://images.unsplash.com/photo-1595225476474-87563907a212?auto=format&fit=crop&w=1000&q=85' },
+      { name: 'Space Gray Anodized', hex: '#3f3f46', img: 'https://images.unsplash.com/photo-1618384887929-16ec33fab9ef?auto=format&fit=crop&w=1000&q=85' }
     ],
-    storageOptions: ['256 GB', '512 GB', '1 TB'],
+    storageOptions: ['75% Compact Layout', 'TKL 80% Layout', 'Full 100% Layout (+ $30)'],
     specs: {
-      'Display': 'Dual 8K Micro-OLED (3840 x 3550 per eye)',
-      'Refresh Rate': '120Hz Low Latency HDR',
-      'Processor': 'Aura Quantum Neural SoC M4',
-      'Weight': '248 grams Ultra-light Titanium',
-      'Battery Life': 'Up to 5.5 hours active tetherless use',
-      'Audio': 'Binaural Ray-traced Spatial Acoustic Transducers',
-      'Connectivity': 'Wi-Fi 7, Ultra-Wideband, Bluetooth 5.4'
+      'Switch Type': 'Gateron Magnetic Jade Hall-Effect Switches',
+      'Actuation Point': 'Adjustable 0.1mm - 4.0mm (0.01mm Precision)',
+      'Polling Rate': '8000Hz (0.125ms Ultra-Low Latency)',
+      'Chassis': 'Solid CNC 6063 Anodized Aluminum',
+      'Keycaps': 'Double-shot PBT Cherry Profile',
+      'Connectivity': 'Detachable Braided USB-C / 2.4GHz Wireless / BT 5.3',
+      'Battery': '8000 mAh (Up to 320 hours battery life)'
     },
     features: [
-      'Zero-Latency True HDR Optical Passthrough',
-      'Sub-Millimeter Eye & Hand Gesture Tracking',
-      'Custom Prescription Magnetic Optical Inserts',
-      'Active Liquid-Vapor Thermal Dissipation'
+      'Rapid Trigger technology for instantaneous key resets',
+      'Dynamic Keystroke (DKS) assigns 4 actions to a single press',
+      'Hot-swappable magnetic switch sockets',
+      'Multi-layer Poron & IXPE acoustic sound dampeners'
     ],
     frequentlyBoughtTogether: ['prod-002', 'prod-006'],
     reviews: [
@@ -54,8 +55,8 @@ export const PRODUCTS = [
         rating: 5,
         date: '2 days ago',
         verified: true,
-        title: 'Unprecedented optical clarity',
-        comment: 'The 8K micro-OLED is astonishing. Replaced my triple-monitor studio desk setup in day one. The craftsmanship is pure luxury.'
+        title: 'Unbelievable Rapid Trigger speed',
+        comment: 'Counter-strafing and movement in competitive games feels instantaneous. The aluminum chassis weight keeps it glued to the desk.'
       },
       {
         id: 'rev-2',
@@ -63,52 +64,52 @@ export const PRODUCTS = [
         rating: 5,
         date: '1 week ago',
         verified: true,
-        title: 'Worth every dollar for design professionals',
-        comment: 'Tetherless freedom with spatial tracking that feels like science fiction made reality.'
+        title: 'The acoustic sound profile is pure bliss',
+        comment: 'Deep, muted thock without any ping. Easily the best mechanical keyboard I have ever owned in a decade of PC builds.'
       }
     ]
   },
   {
     id: 'prod-002',
-    name: 'Acoustics Apex Master Planar Headphones',
-    tagline: 'Open-Back Audiophile Planar Magnetic Studio Monitors',
-    category: 'Audio & Sound',
-    price: 980,
-    originalPrice: 1150,
+    name: 'ViperStrike Ultra 8K Wireless Gaming Mouse',
+    tagline: '49g Ultra-lightweight Magnesium Skeleton & 8000Hz Optical Sensor',
+    category: 'Mice & Precision',
+    price: 149,
+    originalPrice: 179,
     rating: 4.98,
-    reviewsCount: 219,
-    stock: 12,
-    isNew: false,
+    reviewsCount: 235,
+    stock: 15,
+    isNew: true,
     isTrending: true,
     isBestSeller: true,
     featured: true,
-    description: 'Forged from aircraft-grade aluminum, hand-finished walnut wood enclosures, and 100mm nano-scale planar drivers delivering harmonic clarity from 5Hz to 55kHz with zero distortion.',
-    heroImage: 'https://images.unsplash.com/photo-1546435770-a3e426bf472b?auto=format&fit=crop&w=1000&q=85',
+    description: 'Featherlight 49-gram magnesium alloy exoskeleton combined with the PAW3950 flagship optical sensor delivering 30,000 DPI, 750 IPS tracking, and true 8K wireless polling for pixel-perfect tracking accuracy.',
+    heroImage: 'https://images.unsplash.com/photo-1615663245857-ac93bb7c39e7?auto=format&fit=crop&w=1000&q=85',
     gallery: [
-      'https://images.unsplash.com/photo-1546435770-a3e426bf472b?auto=format&fit=crop&w=1000&q=85',
-      'https://images.unsplash.com/photo-1505740420928-5e560c06d30e?auto=format&fit=crop&w=1000&q=85',
-      'https://images.unsplash.com/photo-1484704849700-f032a568e944?auto=format&fit=crop&w=1000&q=85'
+      'https://images.unsplash.com/photo-1615663245857-ac93bb7c39e7?auto=format&fit=crop&w=1000&q=85',
+      'https://images.unsplash.com/photo-1527864550417-7fd91fc51a46?auto=format&fit=crop&w=1000&q=85'
     ],
     colors: [
-      { name: 'Walnut & Matte Black', hex: '#1c1917', img: 'https://images.unsplash.com/photo-1546435770-a3e426bf472b?auto=format&fit=crop&w=1000&q=85' },
-      { name: 'Silver Oak', hex: '#a8a29e', img: 'https://images.unsplash.com/photo-1505740420928-5e560c06d30e?auto=format&fit=crop&w=1000&q=85' }
+      { name: 'Matte Stealth Black', hex: '#111827', img: 'https://images.unsplash.com/photo-1615663245857-ac93bb7c39e7?auto=format&fit=crop&w=1000&q=85' },
+      { name: 'Lunar Arctic White', hex: '#f9fafb', img: 'https://images.unsplash.com/photo-1527864550417-7fd91fc51a46?auto=format&fit=crop&w=1000&q=85' }
     ],
-    storageOptions: ['Standard 3.5mm Cable', 'Balanced 4.4mm Pentaconn + XLR'],
+    storageOptions: ['Standard 8K Receiver Edition', 'With Magnetic Fast Charging Dock (+ $25)'],
     specs: {
-      'Transducer Type': '100mm Ultra-Thin Planar Magnetic',
-      'Frequency Response': '5 Hz - 55,000 Hz',
-      'Total Harmonic Distortion': '< 0.03% at 1kHz, 100dB SPL',
-      'Impedance': '32 Ohms (Easy to drive)',
-      'Ear Cushions': 'Italian Perforated Lambskin & Memory Foam',
-      'Cable': 'Silver-Plated Monocrystalline Copper Cable (2.5m)'
+      'Weight': '49 grams Ultra-light Magnesium Alloy',
+      'Sensor': 'PixArt PAW3950 Optical Gaming Sensor',
+      'Max DPI': '30,000 DPI (50 DPI increments)',
+      'Polling Rate': '8000Hz Wireless & Wired HyperSpeed',
+      'Switches': 'Omron Optical Micro Switches (100M click rating)',
+      'Battery Life': 'Up to 90 hours continuous competitive gaming',
+      'Feet': '100% Virgin Grade PTFE Rounded Skates'
     },
     features: [
-      'Ultra-low mass nano-scale planar diaphragm',
-      'Acoustic Waveguide for laser-accurate imaging',
-      'Zero-fatigue suspension headband with CNC alloy sliders',
-      'Handcrafted luxury presentation hard case'
+      'Zero-debounce optical actuation eliminates accidental double-clicks',
+      'Sub-0.125ms wireless latency with proprietary dongle',
+      'Onboard memory for up to 5 custom DPI and LOD profiles',
+      'Includes pre-cut textured grip tapes and extra glass skates'
     ],
-    frequentlyBoughtTogether: ['prod-007', 'prod-004'],
+    frequentlyBoughtTogether: ['prod-001', 'prod-006'],
     reviews: [
       {
         id: 'rev-3',
@@ -116,104 +117,100 @@ export const PRODUCTS = [
         rating: 5,
         date: '3 days ago',
         verified: true,
-        title: 'Reference standard soundstage',
-        comment: 'Bass is tight and deep, midrange vocals sound like the singer is in the room with you. Magnificent build.'
+        title: 'Insanely light and perfectly balanced',
+        comment: 'Moving from an 80g mouse to this feels like aiming with your bare hand. Tracking is buttery smooth on 240Hz.'
       }
     ]
   },
   {
     id: 'prod-003',
-    name: 'Chronos Cybernetic Titanium Smartwatch',
-    tagline: 'Sapphire Crystal & DLC Titanium Health Chronograph',
-    category: 'Wearables',
-    price: 749,
-    originalPrice: 899,
-    rating: 4.88,
-    reviewsCount: 98,
-    stock: 15,
-    isNew: true,
-    isTrending: false,
+    name: 'Acoustix Commander Pro Studio Gaming Headset',
+    tagline: 'Planar Magnetic Acoustic Drivers & Broadcast-Grade Detachable Mic',
+    category: 'Audio & Headsets',
+    price: 289,
+    originalPrice: 340,
+    rating: 4.92,
+    reviewsCount: 142,
+    stock: 11,
+    isNew: false,
+    isTrending: true,
     isBestSeller: true,
     featured: true,
-    description: 'Precision Swiss horological craftsmanship meets next-gen bio-sensing. Featuring Grade-5 DLC titanium, convex sapphire glass, ECG monitoring, arterial oxygen tracking, and a 14-day battery reserve.',
-    heroImage: 'https://images.unsplash.com/photo-1523275335684-37898b6baf30?auto=format&fit=crop&w=1000&q=85',
+    description: 'Audiophile planar magnetic transducers combined with dual wireless 2.4GHz / Bluetooth simultaneous streaming. Features passive memory foam acoustic isolation, reinforced aluminum sliders, and a studio broadcast condenser microphone.',
+    heroImage: 'https://images.unsplash.com/photo-1546435770-a3e426bf472b?auto=format&fit=crop&w=1000&q=85',
     gallery: [
-      'https://images.unsplash.com/photo-1523275335684-37898b6baf30?auto=format&fit=crop&w=1000&q=85',
-      'https://images.unsplash.com/photo-1508685096489-7aacd43bd3b1?auto=format&fit=crop&w=1000&q=85',
-      'https://images.unsplash.com/photo-1522335789203-aabd1fc54bc9?auto=format&fit=crop&w=1000&q=85'
+      'https://images.unsplash.com/photo-1546435770-a3e426bf472b?auto=format&fit=crop&w=1000&q=85',
+      'https://images.unsplash.com/photo-1505740420928-5e560c06d30e?auto=format&fit=crop&w=1000&q=85'
     ],
     colors: [
-      { name: 'DLC Midnight Obsidian', hex: '#18181b', img: 'https://images.unsplash.com/photo-1523275335684-37898b6baf30?auto=format&fit=crop&w=1000&q=85' },
-      { name: 'Brushed Raw Titanium', hex: '#71717a', img: 'https://images.unsplash.com/photo-1508685096489-7aacd43bd3b1?auto=format&fit=crop&w=1000&q=85' },
-      { name: 'Rose Gold Bezel', hex: '#b76e79', img: 'https://images.unsplash.com/photo-1522335789203-aabd1fc54bc9?auto=format&fit=crop&w=1000&q=85' }
+      { name: 'Carbon Black & Gunmetal', hex: '#1e293b', img: 'https://images.unsplash.com/photo-1546435770-a3e426bf472b?auto=format&fit=crop&w=1000&q=85' },
+      { name: 'Silver Oak Studio', hex: '#94a3b8', img: 'https://images.unsplash.com/photo-1505740420928-5e560c06d30e?auto=format&fit=crop&w=1000&q=85' }
     ],
-    storageOptions: ['42mm Case', '46mm Case'],
+    storageOptions: ['Standard Wireless Edition', 'With Desktop High-Res DAC Station (+ $60)'],
     specs: {
-      'Case Material': 'Aerospace Grade-5 DLC Titanium',
-      'Glass': 'Convex Anti-Reflective Sapphire Crystal',
-      'Display': '1.43" LTPO AMOLED 2000 nits Always-On',
-      'Water Resistance': '10 ATM (100 meters diving rated)',
-      'Sensors': 'Optical PPG, ECG, Skin Temp, Dual-Freq GPS',
-      'Battery': 'Up to 14 days normal use / 40h GPS tracking'
+      'Drivers': '90mm Ultra-Thin Planar Magnetic Transducers',
+      'Frequency Range': '10 Hz - 50,000 Hz Hi-Res Certified',
+      'Microphone': 'Detachable 9.7mm Cardioid Broadcast Capsule',
+      'Spatial Audio': 'Dolby Atmos & 3D Spatial Pinpoint Audio',
+      'Battery Life': 'Up to 80 hours playback on single charge',
+      'Connectivity': 'Ultra-low Latency 2.4GHz, Bluetooth 5.3, 3.5mm AUX'
     },
     features: [
-      'Continuous Medical-Grade ECG & HRV Readiness Score',
-      'Custom Horology Watch Faces by Independent Watchmakers',
-      'Emergency Satellite SOS Uplink Support',
-      'Wireless Magnetic Qi Fast Charging Stand included'
+      'Simultaneous dual-audio Bluetooth phone call & PC gaming audio',
+      'Breathable cooling-gel memory foam ear cushions',
+      'Hardware chat/game mix volume wheel on ear cup'
     ],
-    frequentlyBoughtTogether: ['prod-008', 'prod-005'],
+    frequentlyBoughtTogether: ['prod-007', 'prod-001'],
     reviews: [
       {
         id: 'rev-4',
-        author: 'Siddharth M.',
+        author: 'Liam Gallagher',
         rating: 5,
         date: '5 days ago',
         verified: true,
-        title: 'Feels like a $5,000 Swiss timepiece',
-        comment: 'The weight, the titanium finish, and the battery life blows competitors out of the water.'
+        title: 'Unmatched soundstage in FPS games',
+        comment: 'Footsteps and directional audio are pin-sharp. The planar magnetic clarity blows ordinary gaming headsets away.'
       }
     ]
   },
   {
     id: 'prod-004',
-    name: 'Luminary Monolith Hi-Fi Wireless Soundbar',
-    tagline: 'Dolby Atmos 9.1.4 Channel Architectural Sound System',
-    category: 'Audio & Sound',
-    price: 1450,
-    originalPrice: 1690,
-    rating: 4.92,
-    reviewsCount: 86,
-    stock: 5,
+    name: 'TitanFlex Dual Monitor Gas Spring Arm',
+    tagline: 'Heavy-Duty Aerospace Aluminum & Quick-Release VESA 75/100 Mount',
+    category: 'Monitors & Mounts',
+    price: 165,
+    originalPrice: 199,
+    rating: 4.91,
+    reviewsCount: 88,
+    stock: 14,
     isNew: false,
-    isTrending: true,
+    isTrending: false,
     isBestSeller: false,
     featured: false,
-    description: 'An architectural statement piece machined from a single block of anodized aluminum. Houses 15 discrete high-output drivers with up-firing Atmos height channels and room-calibrating acoustic radar.',
-    heroImage: 'https://images.unsplash.com/photo-1545454675-3531b543be5d?auto=format&fit=crop&w=1000&q=85',
+    description: 'Precision mechanical gas spring counter-balance monitor mount designed for displays up to 35 inches and 12kg each. Features integrated concealed cable channels, 360-degree rotation, 90-degree swivel, and dual clamp/grommet desk installation.',
+    heroImage: 'https://images.unsplash.com/photo-1527443224154-c4a3942d3acf?auto=format&fit=crop&w=1000&q=85',
     gallery: [
-      'https://images.unsplash.com/photo-1545454675-3531b543be5d?auto=format&fit=crop&w=1000&q=85',
-      'https://images.unsplash.com/photo-1608043152269-423dbba4e7e1?auto=format&fit=crop&w=1000&q=85'
+      'https://images.unsplash.com/photo-1527443224154-c4a3942d3acf?auto=format&fit=crop&w=1000&q=85',
+      'https://images.unsplash.com/photo-1593642632823-8f785ba67e45?auto=format&fit=crop&w=1000&q=85'
     ],
     colors: [
-      { name: 'Graphite Anodized', hex: '#27272a', img: 'https://images.unsplash.com/photo-1545454675-3531b543be5d?auto=format&fit=crop&w=1000&q=85' },
-      { name: 'Sandstone White', hex: '#e7e5e4', img: 'https://images.unsplash.com/photo-1608043152269-423dbba4e7e1?auto=format&fit=crop&w=1000&q=85' }
+      { name: 'Matte Stealth Black', hex: '#1e293b', img: 'https://images.unsplash.com/photo-1527443224154-c4a3942d3acf?auto=format&fit=crop&w=1000&q=85' },
+      { name: 'Brushed Silver Aluminum', hex: '#cbd5e1', img: 'https://images.unsplash.com/photo-1593642632823-8f785ba67e45?auto=format&fit=crop&w=1000&q=85' }
     ],
-    storageOptions: ['Solo Monolith', 'With Subwoofer Array (+ $490)'],
+    storageOptions: ['Dual Arm Setup', 'Single Heavy-Duty Ultrawide Arm (- $30)'],
     specs: {
-      'Channels': '9.1.4 Dolby Atmos & DTS:X Discrete Audio',
-      'Total Output Power': '850 Watts Peak Power Output',
-      'Inputs': 'HDMI eARC 2.1, Optical TOSLINK, AirPlay 2, Spotify Connect',
-      'Chassis': 'Solid Extruded Anodized Aluminum with Kvadrat Fabric Grille',
-      'Dimensions': '112cm x 9.5cm x 14cm',
-      'Weight': '11.8 kg'
+      'Screen Size Compatibility': '17" to 35" per arm (Flat & Curved)',
+      'Weight Capacity': 'Up to 12 kg (26.5 lbs) per monitor arm',
+      'VESA Standards': '75x75mm and 100x100mm Quick-Release Plates',
+      'Tilt Range': '+90° to -45° vertical angle adjustment',
+      'Swivel & Rotation': '180° swivel, 360° portrait/landscape rotation',
+      'Desk Thickness': 'Clamp: 10-85mm / Grommet: 10-80mm'
     },
     features: [
-      'RoomSense 3D Acoustic Environment Calibration',
-      'True Wireless Lossless 24-bit/192kHz Multi-room Streaming',
-      'Touch-sensitive illuminated top controls with proximity wake'
+      'Integrated high-capacity cable routing tracks hide all wires',
+      'Quick-release VESA bracket allows effortless one-person mounting'
     ],
-    frequentlyBoughtTogether: ['prod-007'],
+    frequentlyBoughtTogether: ['prod-010', 'prod-006'],
     reviews: [
       {
         id: 'rev-5',
@@ -221,49 +218,47 @@ export const PRODUCTS = [
         rating: 5,
         date: '2 weeks ago',
         verified: true,
-        title: 'Cinematic theater in the living room',
-        comment: 'The ceiling bounces sound with pinpoint accuracy. Looks like a sculptural artwork on the wall.'
+        title: 'Holds two 32-inch monitors rock solid',
+        comment: 'Zero wobbling when typing. Completely cleared up my desk space and looks ultra-clean.'
       }
     ]
   },
   {
     id: 'prod-005',
-    name: 'Aether Key Mechanical Studio Keyboard',
-    tagline: 'Gasket-Mounted Solid Brass & CNC Frosted Polycarbonate',
-    category: 'Smart Living',
-    price: 389,
-    originalPrice: 450,
-    rating: 4.97,
-    reviewsCount: 312,
-    stock: 18,
+    name: 'ThunderDock 16-in-1 Dual 4K Thunderbolt 4 Hub',
+    tagline: '40Gbps Transfer Speeds, 100W PD Host Charging & 2.5GbE LAN',
+    category: 'Hubs & Docks',
+    price: 249,
+    originalPrice: 299,
+    rating: 4.95,
+    reviewsCount: 116,
+    stock: 8,
     isNew: true,
     isTrending: true,
-    isBestSeller: true,
+    isBestSeller: false,
     featured: false,
-    description: 'Designed for elite writers and programmers. Double-gasket leaf spring mounting, custom hand-lubed linear switches, solid mirror-polished PVD brass weight, and seamless tri-mode wireless connectivity.',
-    heroImage: 'https://images.unsplash.com/photo-1587829741301-dc798b83add3?auto=format&fit=crop&w=1000&q=85',
+    description: 'Transform your laptop or desktop into a full workstation. Features dual 4K 144Hz or single 8K 60Hz display output, 100W power delivery, UHS-II SD 4.0 card reader, 2.5 Gigabit Ethernet, and quad 10Gbps USB-A/USB-C ports.',
+    heroImage: 'https://images.unsplash.com/photo-1544652478-6653e09f18a2?auto=format&fit=crop&w=1000&q=85',
     gallery: [
-      'https://images.unsplash.com/photo-1587829741301-dc798b83add3?auto=format&fit=crop&w=1000&q=85',
-      'https://images.unsplash.com/photo-1595225476474-87563907a212?auto=format&fit=crop&w=1000&q=85'
+      'https://images.unsplash.com/photo-1544652478-6653e09f18a2?auto=format&fit=crop&w=1000&q=85'
     ],
     colors: [
-      { name: 'Frosted Smoke & Brass', hex: '#3f3f46', img: 'https://images.unsplash.com/photo-1587829741301-dc798b83add3?auto=format&fit=crop&w=1000&q=85' },
-      { name: 'Ceramic White & Gold', hex: '#f4f4f5', img: 'https://images.unsplash.com/photo-1595225476474-87563907a212?auto=format&fit=crop&w=1000&q=85' }
+      { name: 'Space Gray Machined', hex: '#334155', img: 'https://images.unsplash.com/photo-1544652478-6653e09f18a2?auto=format&fit=crop&w=1000&q=85' }
     ],
-    storageOptions: ['Aura Cream Linear Switches (45g)', 'Aura Tactile Jade Switches (55g)'],
+    storageOptions: ['Standard Dock Package', 'With 2m 40Gbps Certified Cable Bundle (+ $20)'],
     specs: {
-      'Layout': '75% Compact with CNC Rotary Knob',
-      'Mounting': 'Leaf-Spring Gasket Mount with Poron Dampeners',
-      'Weight': '2.15 kg Solid Desk Stability',
-      'Keycaps': 'Double-shot PBT Cherry Profile',
-      'Battery': '8000 mAh (up to 300 hours non-backlit)'
+      'Chipset': 'Intel Goshen Ridge Thunderbolt 4 JHL8440 Controller',
+      'Speed': 'Up to 40Gbps Total Bidirectional Bandwidth',
+      'Display Outputs': '2x DisplayPort 1.4, 2x HDMI 2.1 (Dual 4K @ 144Hz)',
+      'Power Delivery': '100W Dynamic Smart Power Delivery to Host',
+      'Network': '2.5 Gbps Realtek High-Speed Ethernet',
+      'Audio': '3.5mm Hi-Fi Combo Headphone/Mic Jack'
     },
     features: [
-      'Deep acoustic "thock" sound profile without hollow resonance',
-      'Hot-swappable 5-pin PCB with South-Facing RGB LEDs',
-      'QMK / VIA open programmable keymaps'
+      'Fanless aluminum chassis dissipates heat quietly and efficiently',
+      'Compatible with Windows 10/11, macOS, and Linux'
     ],
-    frequentlyBoughtTogether: ['prod-006', 'prod-008'],
+    frequentlyBoughtTogether: ['prod-004', 'prod-011'],
     reviews: [
       {
         id: 'rev-6',
@@ -271,47 +266,47 @@ export const PRODUCTS = [
         rating: 5,
         date: '4 days ago',
         verified: true,
-        title: 'The typing feel is unmatched',
-        comment: 'Pure pleasure to write code on for 10 hours a day. The brass acoustics are sublime.'
+        title: 'Single-cable perfection for my workstation',
+        comment: 'Powers my dual displays, peripherals, and charges my machine with zero latency or dropped connections.'
       }
     ]
   },
   {
     id: 'prod-006',
-    name: 'Solace Desk Mat & MagSafe Fast Charging Pad',
-    tagline: 'Full-Grain Tuscan Vegetable-Tanned Leather & 15W Qi2 Pad',
-    category: 'Smart Living',
-    price: 185,
-    originalPrice: 220,
-    rating: 4.85,
-    reviewsCount: 77,
-    stock: 24,
+    name: 'HyperGlide Cordura XXL Gaming Desk Mat',
+    tagline: 'Water-Repellent Military Cordura Fabric & Anti-Fray Stitched Edges',
+    category: 'Desk Setup & Mats',
+    price: 49,
+    originalPrice: 65,
+    rating: 4.88,
+    reviewsCount: 310,
+    stock: 28,
     isNew: false,
-    isTrending: false,
-    isBestSeller: false,
+    isTrending: true,
+    isBestSeller: true,
     featured: false,
-    description: 'Artisanal Italian leather handcrafted with micro-felt wool backing. Integrated dual Qi2 fast magnetic charging zones for simultaneous iPhone/Android and wireless earbuds powering.',
+    description: 'Crafted from authentic Cordura 500D ballistic nylon fabric. Resists spills, sweat, and wear while providing the perfect balance of low dynamic friction and stopping power for high-precision competitive aiming.',
     heroImage: 'https://images.unsplash.com/photo-1616401784845-180882ba9ba8?auto=format&fit=crop&w=1000&q=85',
     gallery: [
       'https://images.unsplash.com/photo-1616401784845-180882ba9ba8?auto=format&fit=crop&w=1000&q=85',
       'https://images.unsplash.com/photo-1527864550417-7fd91fc51a46?auto=format&fit=crop&w=1000&q=85'
     ],
     colors: [
-      { name: 'Saddle Tan', hex: '#9a3412', img: 'https://images.unsplash.com/photo-1616401784845-180882ba9ba8?auto=format&fit=crop&w=1000&q=85' },
-      { name: 'Stealth Matte Black', hex: '#18181b', img: 'https://images.unsplash.com/photo-1527864550417-7fd91fc51a46?auto=format&fit=crop&w=1000&q=85' }
+      { name: 'Stealth Black', hex: '#0f172a', img: 'https://images.unsplash.com/photo-1616401784845-180882ba9ba8?auto=format&fit=crop&w=1000&q=85' },
+      { name: 'Topographic Minimalist', hex: '#475569', img: 'https://images.unsplash.com/photo-1527864550417-7fd91fc51a46?auto=format&fit=crop&w=1000&q=85' }
     ],
-    storageOptions: ['Medium (80 x 40 cm)', 'Large Executive (100 x 50 cm)'],
+    storageOptions: ['XL (900 x 400 x 4mm)', 'XXL Extended (1200 x 600 x 4mm + $15)'],
     specs: {
-      'Leather': 'Tuscan Full-Grain Vegetable Tanned Leather',
-      'Charging Output': 'Dual 15W Qi2 Certified Fast Charging',
-      'Underlay': 'Anti-slip Merino Wool Felt',
-      'Cable': 'Braided 2m USB-C to USB-C 100W Cable'
+      'Surface Material': 'Genuine Cordura 500D High-Tenacity Fabric',
+      'Base Material': 'Anti-Slip Natural Textured Cellular Rubber Base',
+      'Stitching': 'Sub-surface micro-knit anti-fray stitched perimeter',
+      'Thickness': '4.0mm High-Density Cushioning'
     },
     features: [
-      'Waterproof hydrophobic coating resists spills',
-      'Patina develops unique character over years of use'
+      'Hydrophobic coating causes liquids to bead up for instant wipe-off',
+      'Smooth glide consistency across all ambient humidity levels'
     ],
-    frequentlyBoughtTogether: ['prod-005'],
+    frequentlyBoughtTogether: ['prod-001', 'prod-002'],
     reviews: [
       {
         id: 'rev-7',
@@ -319,46 +314,46 @@ export const PRODUCTS = [
         rating: 5,
         date: '1 week ago',
         verified: true,
-        title: 'Elevates the entire workspace',
-        comment: 'The scent of genuine leather and the wireless charging works effortlessly.'
+        title: 'Spill-proof and stays perfectly flat',
+        comment: 'Coffee spilled right on it and wiped clean without a trace. Mouse sensor tracking is flawless.'
       }
     ]
   },
   {
     id: 'prod-007',
-    name: 'Vortex Quantum DAC & Headphone Amplifier',
-    tagline: 'Dual ESS Sabre Pro ES9038PRO 768kHz / DSD512 Reference Hub',
-    category: 'Audio & Sound',
-    price: 1120,
-    originalPrice: 1350,
-    rating: 4.96,
-    reviewsCount: 64,
-    stock: 4,
-    isNew: false,
+    name: 'StreamCast Studio USB-C Condenser Microphone',
+    tagline: '192kHz/24-Bit Studio Cardioid Mic with Integrated Shock Mount & Gain Dial',
+    category: 'Audio & Headsets',
+    price: 139,
+    originalPrice: 169,
+    rating: 4.93,
+    reviewsCount: 168,
+    stock: 12,
+    isNew: true,
     isTrending: false,
     isBestSeller: false,
     featured: false,
-    description: 'Reference-class desktop Digital-to-Analog converter with discrete Class-A amplification. Delivers 6000mW balanced power output per channel to effortlessly drive any headphone impedance with pitch-black noise floor.',
-    heroImage: 'https://images.unsplash.com/photo-1598488035139-bdbb2231ce04?auto=format&fit=crop&w=1000&q=85',
+    description: 'Broadcast studio quality sound without complex audio interfaces. Houses a 25mm gold-sputtered condenser capsule, touch-to-mute capacitive sensor with LED status, zero-latency 3.5mm monitor jack, and hardware noise gate.',
+    heroImage: 'https://images.unsplash.com/photo-1590602847861-f357a9332bbc?auto=format&fit=crop&w=1000&q=85',
     gallery: [
-      'https://images.unsplash.com/photo-1598488035139-bdbb2231ce04?auto=format&fit=crop&w=1000&q=85'
+      'https://images.unsplash.com/photo-1590602847861-f357a9332bbc?auto=format&fit=crop&w=1000&q=85'
     ],
     colors: [
-      { name: 'Space Gray Machined', hex: '#374151', img: 'https://images.unsplash.com/photo-1598488035139-bdbb2231ce04?auto=format&fit=crop&w=1000&q=85' }
+      { name: 'Matte Obsidian Black', hex: '#18181b', img: 'https://images.unsplash.com/photo-1590602847861-f357a9332bbc?auto=format&fit=crop&w=1000&q=85' }
     ],
-    storageOptions: ['Standard Edition', 'Master Clock BNC Edition (+ $250)'],
+    storageOptions: ['Desk Stand Edition', 'With Heavy-Duty Boom Arm & Pop Filter (+ $35)'],
     specs: {
-      'DAC Chip': 'Dual Flagship ESS Sabre ES9038PRO 32-bit',
-      'Output Power': '6000mW @ 32Ω Balanced XLR',
-      'Supported Formats': 'PCM up to 768kHz, DSD512 Native, MQA Full Decoder',
-      'SNR': '132 dB Dynamic Range',
-      'Inputs': 'USB-C XMOS XU316, Optical, Coaxial, Bluetooth LDAC 96kHz'
+      'Capsule': '25mm Gold-Sputtered Condenser Transducer',
+      'Polar Pattern': 'Cardioid Directional Pickup (Rejects desk typing noise)',
+      'Sample Rate / Resolution': '192kHz / 24-bit Studio Master Grade',
+      'Frequency Response': '20 Hz - 20,000 Hz',
+      'Controls': 'Touch Mute, Analog Gain Dial, Headphone Volume Dial'
     },
     features: [
-      'Discrete Relay Resistor Volume Control for perfect channel matching',
-      'Vibration-isolated solid alloy feet with ceramic bearings'
+      'Internal dual-layer pop filter and vibration-decoupling shock mount',
+      'Plug-and-play USB-C connectivity with zero driver install required'
     ],
-    frequentlyBoughtTogether: ['prod-002'],
+    frequentlyBoughtTogether: ['prod-003', 'prod-005'],
     reviews: [
       {
         id: 'rev-8',
@@ -366,47 +361,47 @@ export const PRODUCTS = [
         rating: 5,
         date: '3 weeks ago',
         verified: true,
-        title: 'Masterpiece of engineering',
-        comment: 'Drives my planar headphones effortlessly. Zero hiss, holographic instrument separation.'
+        title: 'Radio broadcast clarity right on USB',
+        comment: 'Deep, rich vocal tone for streaming and Discord calls. The tap-to-mute sensor is very responsive.'
       }
     ]
   },
   {
     id: 'prod-008',
-    name: 'Aura Halo Ambient Smart Luminaire',
-    tagline: 'Circadian Spectral Tuning & Sunset Atmosphere Lamp',
-    category: 'Smart Living',
-    price: 340,
-    originalPrice: 420,
-    rating: 4.89,
-    reviewsCount: 115,
-    stock: 14,
-    isNew: true,
+    name: 'Custom PBT Dye-Sub Keycap Set (Cyberpunk Edition)',
+    tagline: 'Cherry Profile 1.5mm Ultra-Thick PBT with Universal ANSI/ISO Support',
+    category: 'Keyboards & Keycaps',
+    price: 79,
+    originalPrice: 95,
+    rating: 4.90,
+    reviewsCount: 147,
+    stock: 20,
+    isNew: false,
     isTrending: true,
     isBestSeller: false,
     featured: false,
-    description: 'Precision optical glass dome with dual-axis magnetic fluid dispersion. Automatically synchronizes with your local circadian rhythm to enhance focus during the day and release natural melatonin at night.',
-    heroImage: 'https://images.unsplash.com/photo-1507473885765-e6ed057f782c?auto=format&fit=crop&w=1000&q=85',
+    description: '142-key universal keycap set molded from premium 1.5mm textured PBT plastic with permanent dye-sublimated legends. Resists shine, grease, and fading over years of heavy gaming sessions.',
+    heroImage: 'https://images.unsplash.com/photo-1618384887929-16ec33fab9ef?auto=format&fit=crop&w=1000&q=85',
     gallery: [
-      'https://images.unsplash.com/photo-1507473885765-e6ed057f782c?auto=format&fit=crop&w=1000&q=85',
-      'https://images.unsplash.com/photo-1513506003901-1e6a229e2d15?auto=format&fit=crop&w=1000&q=85'
+      'https://images.unsplash.com/photo-1618384887929-16ec33fab9ef?auto=format&fit=crop&w=1000&q=85',
+      'https://images.unsplash.com/photo-1595225476474-87563907a212?auto=format&fit=crop&w=1000&q=85'
     ],
     colors: [
-      { name: 'Brushed Brass', hex: '#ca8a04', img: 'https://images.unsplash.com/photo-1507473885765-e6ed057f782c?auto=format&fit=crop&w=1000&q=85' },
-      { name: 'Matte Obsidian', hex: '#18181b', img: 'https://images.unsplash.com/photo-1513506003901-1e6a229e2d15?auto=format&fit=crop&w=1000&q=85' }
+      { name: 'Cyberpunk Neon', hex: '#6366f1', img: 'https://images.unsplash.com/photo-1618384887929-16ec33fab9ef?auto=format&fit=crop&w=1000&q=85' },
+      { name: 'Classic Dolch Slate', hex: '#334155', img: 'https://images.unsplash.com/photo-1595225476474-87563907a212?auto=format&fit=crop&w=1000&q=85' }
     ],
-    storageOptions: ['Desk Luminaire (35cm)', 'Floor Standing Luminaire (140cm + $190)'],
+    storageOptions: ['142-Key Base Kit', 'Base Kit + Novelty Spacebar Accents (+ $15)'],
     specs: {
-      'Color Temperature': '1800K (Warm Candlelight) to 6500K (Crisp Daylight)',
-      'CRI': 'CRI 98+ Natural Sunlight Spectrum',
-      'Luminous Flux': '1400 Lumens Max Dimmable',
-      'Smart Home': 'Apple HomeKit, Matter, Google Home, Thread'
+      'Material': '1.5mm Extra-Thick Premium PBT (Polybutylene Terephthalate)',
+      'Profile': 'Ergonomic Sculpted Cherry Profile',
+      'Printing Method': 'Five-Sided Dye-Sublimation Legends',
+      'Layout Support': '60%, 65%, 75%, TKL, 96%, Full Size ANSI & ISO UK/EU'
     },
     features: [
-      'Contactless optical wave gesture dimming',
-      'Biophilic sunset simulation with dynamic gradient projection'
+      'Matte micro-textured finish prevents finger slippage and oil buildup',
+      'Includes wire keycap puller and extra novelty keycaps'
     ],
-    frequentlyBoughtTogether: ['prod-005', 'prod-006'],
+    frequentlyBoughtTogether: ['prod-001'],
     reviews: [
       {
         id: 'rev-9',
@@ -414,45 +409,94 @@ export const PRODUCTS = [
         rating: 5,
         date: '6 days ago',
         verified: true,
-        title: 'Deeply relaxing ambient light',
-        comment: 'The evening sunset fade has dramatically improved my sleep routine. Gorgeous design.'
+        title: 'Colors pop and the feel is velvety smooth',
+        comment: 'Thick keycaps completely deepened the sound profile of my mechanical keyboard.'
+      }
+    ]
+  },
+  {
+    id: 'prod-009',
+    name: 'ErgoVertical Wireless Precision Ergonomic Mouse',
+    tagline: '57-Degree Natural Handshake Angle & Dual-Mode Silent Click Switches',
+    category: 'Mice & Precision',
+    price: 89,
+    originalPrice: 110,
+    rating: 4.87,
+    reviewsCount: 92,
+    stock: 17,
+    isNew: false,
+    isTrending: false,
+    isBestSeller: false,
+    featured: false,
+    description: 'Scientifically validated ergonomic design aligns forearm posture at a 57-degree natural angle, reducing wrist pressure and muscular strain by up to 40%. Features ultra-quiet tactile clicks, smooth thumb rest, and 4000 DPI sensor.',
+    heroImage: 'https://images.unsplash.com/photo-1605792657660-596af9009e82?auto=format&fit=crop&w=1000&q=85',
+    gallery: [
+      'https://images.unsplash.com/photo-1605792657660-596af9009e82?auto=format&fit=crop&w=1000&q=85'
+    ],
+    colors: [
+      { name: 'Graphite Black', hex: '#1e293b', img: 'https://images.unsplash.com/photo-1605792657660-596af9009e82?auto=format&fit=crop&w=1000&q=85' }
+    ],
+    storageOptions: ['Standard Right-Handed', 'Left-Handed Edition'],
+    specs: {
+      'Posture Angle': '57° Natural Ergonomic Handshake Alignment',
+      'Sensor': 'Darkfield High-Precision Optical Sensor (400-4000 DPI)',
+      'Switches': '90% Noise-Reduced Silent Micro Switches',
+      'Connectivity': '2.4GHz USB Receiver + Bluetooth Multi-Device (3 devices)',
+      'Battery': 'Rechargeable 500mAh (Up to 4 months per charge)'
+    },
+    features: [
+      'Easy-Switch button allows toggling between laptop, desktop, and tablet',
+      'Textured rubber grip surface ensures effortless thumb comfort'
+    ],
+    frequentlyBoughtTogether: ['prod-006', 'prod-001'],
+    reviews: [
+      {
+        id: 'rev-10',
+        author: 'Siddharth M.',
+        rating: 5,
+        date: '1 week ago',
+        verified: true,
+        title: 'Cured my wrist pain completely',
+        comment: 'Working 9 hours a day coding without any forearm strain now. Silent clicks are wonderful in office environments.'
       }
     ]
   },
   {
     id: 'prod-010',
-    name: 'Kyoto Hand-Forged Damascus Pocket Knife',
-    tagline: '67-Layer VG-10 Core Damascus Steel & Desert Ironwood Handle',
-    category: 'Designer Essentials',
-    price: 310,
-    originalPrice: 380,
+    name: 'LuminaBar ScreenBar Plus Monitor Light',
+    tagline: 'Asymmetric Optical Glare-Free Workspace Lightbar with Desktop Puck',
+    category: 'Monitors & Mounts',
+    price: 119,
+    originalPrice: 145,
     rating: 4.94,
     reviewsCount: 160,
-    stock: 11,
+    stock: 13,
     isNew: false,
     isTrending: false,
     isBestSeller: false,
     featured: false,
-    description: 'Hand-crafted by master bladesmiths in Seki, Japan. Featuring a 67-layer acid-etched Damascus blade around a super-hard VG-10 steel core with ceramic ball-bearing pivot and titanium frame lock.',
-    heroImage: 'https://images.unsplash.com/photo-1589256469067-ea99122bbdc4?auto=format&fit=crop&w=1000&q=85',
+    description: 'Patented asymmetric optical illumination lights up your desktop workspace without causing any glare or reflection on your computer monitor screen. Features a rotary desktop wireless control dial and auto-ambient light sensor.',
+    heroImage: 'https://images.unsplash.com/photo-1593642632823-8f785ba67e45?auto=format&fit=crop&w=1000&q=85',
     gallery: [
-      'https://images.unsplash.com/photo-1589256469067-ea99122bbdc4?auto=format&fit=crop&w=1000&q=85'
+      'https://images.unsplash.com/photo-1593642632823-8f785ba67e45?auto=format&fit=crop&w=1000&q=85',
+      'https://images.unsplash.com/photo-1527443224154-c4a3942d3acf?auto=format&fit=crop&w=1000&q=85'
     ],
     colors: [
-      { name: 'Ironwood & Damascus', hex: '#78350f', img: 'https://images.unsplash.com/photo-1589256469067-ea99122bbdc4?auto=format&fit=crop&w=1000&q=85' }
+      { name: 'Space Black Machined', hex: '#1e293b', img: 'https://images.unsplash.com/photo-1593642632823-8f785ba67e45?auto=format&fit=crop&w=1000&q=85' }
     ],
-    storageOptions: ['Drop Point Blade', 'Tanto Precision Blade'],
+    storageOptions: ['Standard Flat Monitor Model', 'Curved Monitor Adapter Kit (+ $15)'],
     specs: {
-      'Blade Steel': '67-Layer VG-10 Core Damascus (61 HRC)',
-      'Blade Length': '3.25 inches / 8.2 cm',
-      'Handle': 'Grade 5 Titanium & Arizona Desert Ironwood',
-      'Pivot': 'Caged Ceramic Ball Bearings for instantaneous snap opening'
+      'Optics': 'Asymmetric 45° Glare-Free Optical Design',
+      'Color Temperature': 'Adjustable 2700K (Warm Glow) to 6500K (Cool White)',
+      'Color Rendering': 'Ra > 97 Ultra-High Natural Sunlight CRI',
+      'Controls': 'Wireless Desktop Rotary Controller (Brightness & CCT)',
+      'Power': 'USB-C 5V/2A powered directly from computer or monitor'
     },
     features: [
-      'Razor sharp 15-degree edge bevel polished to mirror finish',
-      'Deep carry reversible titanium pocket clip'
+      'Weighted counterweight clip mounts to any monitor bezel without tape',
+      'Saves 100% of valuable desktop surface real estate'
     ],
-    frequentlyBoughtTogether: ['prod-003'],
+    frequentlyBoughtTogether: ['prod-004', 'prod-006'],
     reviews: [
       {
         id: 'rev-11',
@@ -460,47 +504,45 @@ export const PRODUCTS = [
         rating: 5,
         date: '2 weeks ago',
         verified: true,
-        title: 'Impeccable Japanese craftsmanship',
-        comment: 'Action is smooth as silk. The damascus ripples are hypnotic.'
+        title: 'Relieves eye fatigue during late night sessions',
+        comment: 'Zero screen reflection. The wireless dial on the desk makes adjusting warmth super satisfying.'
       }
     ]
   },
   {
     id: 'prod-011',
-    name: 'Aura Nebula True Wireless Earbuds',
-    tagline: 'Hybrid Dual-Driver ANC with Lossless Spatial Audio',
-    category: 'Audio & Sound',
-    price: 360,
-    originalPrice: 420,
-    rating: 4.87,
-    reviewsCount: 204,
+    name: 'PCIe 4.0 NVMe M.2 USB4 40Gbps External Enclosure',
+    tagline: '40Gbps Transfer Speeds (3800MB/s) with Active Silent Micro-Fan Heatsink',
+    category: 'Hubs & Docks',
+    price: 75,
+    originalPrice: 95,
+    rating: 4.89,
+    reviewsCount: 104,
     stock: 22,
     isNew: true,
     isTrending: true,
-    isBestSeller: true,
+    isBestSeller: false,
     featured: false,
-    description: 'Custom 11mm beryllium dynamic driver paired with Knowles balanced armature. Adaptive real-time active noise cancellation at 48dB with transparency mode and Qi-compatible ceramic charging case.',
-    heroImage: 'https://images.unsplash.com/photo-1590658268037-6bf12165a8df?auto=format&fit=crop&w=1000&q=85',
+    description: 'Achieve blistering 3800 MB/s real-world read and write speeds with your M.2 NVMe SSD. Machined from solid aircraft-grade aluminum alloy with thermal silicone pad and an intelligent quiet PWM cooling fan that prevents thermal throttling.',
+    heroImage: 'https://images.unsplash.com/photo-1597872200969-2b65d56bd16b?auto=format&fit=crop&w=1000&q=85',
     gallery: [
-      'https://images.unsplash.com/photo-1590658268037-6bf12165a8df?auto=format&fit=crop&w=1000&q=85',
-      'https://images.unsplash.com/photo-1572536147248-ac59a8abfa4b?auto=format&fit=crop&w=1000&q=85'
+      'https://images.unsplash.com/photo-1597872200969-2b65d56bd16b?auto=format&fit=crop&w=1000&q=85'
     ],
     colors: [
-      { name: 'Ceramic White', hex: '#f8fafc', img: 'https://images.unsplash.com/photo-1590658268037-6bf12165a8df?auto=format&fit=crop&w=1000&q=85' },
-      { name: 'Onyx Black', hex: '#0f172a', img: 'https://images.unsplash.com/photo-1572536147248-ac59a8abfa4b?auto=format&fit=crop&w=1000&q=85' }
+      { name: 'Gunmetal Gray', hex: '#334155', img: 'https://images.unsplash.com/photo-1597872200969-2b65d56bd16b?auto=format&fit=crop&w=1000&q=85' }
     ],
-    storageOptions: ['Standard Edition', 'Lossless Wireless USB-C Dongle Bundle (+ $40)'],
+    storageOptions: ['Enclosure Only', 'Bundled with 1TB PCIe 4.0 NVMe (+ $80)', 'Bundled with 2TB PCIe 4.0 NVMe (+ $145)'],
     specs: {
-      'Drivers': '11mm Beryllium Dynamic + Knowles Balanced Armature',
-      'Noise Cancellation': 'Hybrid ANC up to -48dB with Wind-Noise Reduction',
-      'Battery Life': '9 Hours per charge (36 Hours with case)',
-      'Water Resistance': 'IPX5 Sweat and Rain Resistant'
+      'Interface': 'USB4 / Thunderbolt 4 & 3 (40Gbps Protocol)',
+      'Max Speed': 'Up to 3,800 MB/s Sequential Read / Write',
+      'Drive Support': 'M.2 NVMe PCIe M-Key / B&M Key (Sizes 2280, 2260, 2242, 2230)',
+      'Cooling': 'Dual-layer aluminum fins + Active PWM silent turbo fan'
     },
     features: [
-      'Lossless LDAC & aptX Adaptive 24-bit/96kHz support',
-      'Custom bone-conduction microphones for crystal clear calls'
+      'Tool-free toolless sliding lock design for quick drive swaps',
+      'Includes 40Gbps braided USB-C to USB-C cable with E-Marker chip'
     ],
-    frequentlyBoughtTogether: ['prod-006', 'prod-003'],
+    frequentlyBoughtTogether: ['prod-005'],
     reviews: [
       {
         id: 'rev-12',
@@ -508,55 +550,54 @@ export const PRODUCTS = [
         rating: 5,
         date: '4 days ago',
         verified: true,
-        title: 'Cancels city noise completely',
-        comment: 'The instrument separation on classical tracks is stunning for in-ear monitors.'
+        title: 'Transfers 100GB 4K video footage in 30 seconds',
+        comment: 'Never gets hot even during sustained file transfers. The fan is whisper quiet.'
       }
     ]
   },
   {
     id: 'prod-012',
-    name: 'Zenith MagLev Hovering Bluetooth Speaker',
-    tagline: 'True Magnetic Levitation 360-Degree Omnidirectional Sound',
-    category: 'Audio & Sound',
-    price: 495,
-    originalPrice: 580,
-    rating: 4.82,
-    reviewsCount: 52,
-    stock: 8,
+    name: 'StreamKey 15-Key Macro & Stream Controller',
+    tagline: 'Customizable LCD Keys with Dynamic Visual Shortcuts & OBS / Discord Integration',
+    category: 'Desk Setup & Mats',
+    price: 149,
+    originalPrice: 175,
+    rating: 4.93,
+    reviewsCount: 152,
+    stock: 10,
     isNew: true,
     isTrending: false,
     isBestSeller: false,
     featured: false,
-    description: 'Suspended in mid-air above an electromagnetic mirror base. Free from surface acoustic dampening, producing frictionless 360-degree high-fidelity acoustics with pulsing ambient glow.',
-    heroImage: 'https://images.unsplash.com/photo-1543512214-318c7553f230?auto=format&fit=crop&w=1000&q=85',
+    description: '15 customizable full-color LCD key icons to launch apps, mute audio channels, trigger macro scripts, adjust smart lighting, and control live streams with visual confirmation at the touch of a button.',
+    heroImage: 'https://images.unsplash.com/photo-1542751371-adc38448a05e?auto=format&fit=crop&w=1000&q=85',
     gallery: [
-      'https://images.unsplash.com/photo-1543512214-318c7553f230?auto=format&fit=crop&w=1000&q=85'
+      'https://images.unsplash.com/photo-1542751371-adc38448a05e?auto=format&fit=crop&w=1000&q=85'
     ],
     colors: [
-      { name: 'Orb Black & Cyan Glow', hex: '#0f172a', img: 'https://images.unsplash.com/photo-1543512214-318c7553f230?auto=format&fit=crop&w=1000&q=85' },
-      { name: 'Orb Pearl Silver', hex: '#cbd5e1', img: 'https://images.unsplash.com/photo-1543512214-318c7553f230?auto=format&fit=crop&w=1000&q=85' }
+      { name: 'Midnight Black', hex: '#0f172a', img: 'https://images.unsplash.com/photo-1542751371-adc38448a05e?auto=format&fit=crop&w=1000&q=85' }
     ],
-    storageOptions: ['Single Orb + Base', 'Stereo Pair Duo (+ $450)'],
+    storageOptions: ['15-Key Deck', '32-Key XL Deck (+ $95)'],
     specs: {
-      'Levitation': 'Electromagnetic 20mm Air Suspension Base',
-      'Acoustic Driver': '50mm Neodymium Full-Range + Downward Bass Radiator',
-      'Power': '25W RMS Omnidirectional Output',
-      'Battery': '10 Hours Continuous Orb Playback (Auto-recharging base)'
+      'Keys': '15 Programmable Full-Color Transparent LCD Display Keys',
+      'Interface': 'Detachable Braided USB-C Cable (1.5m)',
+      'Stand': 'Magnetic 45° Angled Non-Slip Aluminum Desktop Stand',
+      'Integration': 'OBS Studio, Twitch, Discord, Spotify, Premiere Pro, Photoshop, Blender'
     },
     features: [
-      'Zero surface contact eliminates mechanical audio rattling',
-      'Base features dual Qi charging and USB-C power out'
+      'Folders feature unlocks infinite custom actions and sub-menus',
+      'Drag-and-drop icon store with thousands of animated icons and plugins'
     ],
-    frequentlyBoughtTogether: ['prod-008'],
+    frequentlyBoughtTogether: ['prod-007', 'prod-001'],
     reviews: [
       {
         id: 'rev-13',
-        author: 'Liam Gallagher',
+        author: 'Kenji Sato',
         rating: 5,
         date: '1 week ago',
         verified: true,
-        title: 'Conversation starter of the year',
-        comment: 'Everyone who visits my studio asks about it. Sound quality is surprisingly rich and room-filling.'
+        title: 'Massive productivity booster for coding & editing',
+        comment: 'I mapped all my VS Code terminal tasks, git commits, and music controls. Cannot work without it now.'
       }
     ]
   }
@@ -564,23 +605,24 @@ export const PRODUCTS = [
 
 export const CATEGORIES = [
   'All Products',
-  'Spatial Optics',
-  'Audio & Sound',
-  'Wearables',
-  'Smart Living',
-  'Designer Essentials'
+  'Keyboards & Keycaps',
+  'Mice & Precision',
+  'Audio & Headsets',
+  'Monitors & Mounts',
+  'Desk Setup & Mats',
+  'Hubs & Docks'
 ];
 
 export const PROMO_CODES = {
   'SAVE20': { discountPercent: 20, description: '20% Off Storewide' },
-  'LUXE15': { discountPercent: 15, description: '15% Luxury VIP Discount' },
-  'FREESHIP': { freeShipping: true, description: 'Free Global Express Courier' }
+  'LUXE15': { discountPercent: 15, description: '15% VIP Peripheral Discount' },
+  'FREESHIP': { freeShipping: true, description: 'Free Express Computer Accessories Shipping' }
 };
 
 export const RECENT_SALES_NOTIFICATIONS = [
-  { user: 'Søren from Copenhagen', item: 'Aura Horizon Spatial Vision Glass', time: '2 mins ago' },
-  { user: 'Chloe from Paris', item: 'Acoustics Apex Master Planar Headphones', time: '5 mins ago' },
-  { user: 'Kenji from Tokyo', item: 'Chronos Cybernetic Titanium Smartwatch', time: '11 mins ago' },
-  { user: 'Maya from New York', item: 'Aether Key Mechanical Studio Keyboard', time: '14 mins ago' },
-  { user: 'Alexander from Zurich', item: 'Luminary Monolith Hi-Fi Wireless Soundbar', time: '18 mins ago' }
+  { user: 'Marcus from London', item: 'ApexPro V3 Magnetic Hall-Effect Keyboard', time: '2 mins ago' },
+  { user: 'Kenji from Tokyo', item: 'ViperStrike Ultra 8K Wireless Gaming Mouse', time: '5 mins ago' },
+  { user: 'Elena from Berlin', item: 'Acoustix Commander Pro Studio Gaming Headset', time: '11 mins ago' },
+  { user: 'Alexander from Zurich', item: 'ThunderDock 16-in-1 Dual 4K Thunderbolt 4 Hub', time: '14 mins ago' },
+  { user: 'Maya from New York', item: 'TitanFlex Dual Monitor Gas Spring Arm', time: '18 mins ago' }
 ];

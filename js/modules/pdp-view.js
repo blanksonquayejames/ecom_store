@@ -21,6 +21,12 @@ export function renderProductDetailPage(container, productId) {
   const originalPriceObj = product.originalPrice ? convertPrice(product.originalPrice, currency) : null;
   const discountPercent = product.originalPrice ? Math.round(((product.originalPrice - product.price) / product.originalPrice) * 100) : 0;
 
+  // Compute Suggested Accessories (Synergy pairings + complementary products)
+  const pairedIds = product.frequentlyBoughtTogether || [];
+  const explicitPaired = pairedIds.map(id => store.state.products.find(p => p.id === id)).filter(Boolean);
+  const sameCategory = store.state.products.filter(p => p.id !== product.id && p.category === product.category && !pairedIds.includes(p.id));
+  const otherBestSellers = store.state.products.filter(p => p.id !== product.id && !pairedIds.includes(p.id) && (p.isBestSeller || p.featured));
+  const suggestedProducts = Array.from(new Set([...explicitPaired, ...sameCategory, ...otherBestSellers])).slice(0, 4);
 
   container.innerHTML = `
     <div class="pdp-wrapper animate-fade-in">
@@ -46,7 +52,7 @@ export function renderProductDetailPage(container, productId) {
               
               <div class="pdp-image-badges">
                 ${product.isNew ? '<span class="badge badge-new">NEW EDITION</span>' : ''}
-                ${discountPercent > 0 ? `<span class="badge badge-sale">-${discountPercent}% OFF</span>` : ''}
+                ${discountPercent > 0 ? `<span class="badge badge-sale">-${discountPercent}% OFF</span>' : ''}
               </div>
             </div>
 
@@ -64,15 +70,15 @@ export function renderProductDetailPage(container, productId) {
               <div class="guarantee-item">
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--color-accent)" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
                 <div>
-                  <strong>3-Year Aura Care Warranty</strong>
-                  <span>Global hardware replacement & dedicated concierge support.</span>
+                  <strong>3-Year 7th June Care Warranty</strong>
+                  <span>Global hardware replacement & dedicated VIP technician support.</span>
                 </div>
               </div>
               <div class="guarantee-item">
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--color-accent)" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
                 <div>
-                  <strong>30-Day Bespoke Trial</strong>
-                  <span>Full return guarantee with complimentary return courier pickup.</span>
+                  <strong>30-Day Risk-Free Performance Trial</strong>
+                  <span>Full return guarantee with complimentary courier return pickup.</span>
                 </div>
               </div>
             </div>
@@ -103,35 +109,34 @@ export function renderProductDetailPage(container, productId) {
 
             <div class="pdp-divider"></div>
 
-            <!-- Color Variants Selection -->
+            <!-- Color Variants -->
             ${product.colors && product.colors.length > 0 ? `
               <div class="pdp-variant-section">
                 <div class="variant-label-row">
-                  <span class="variant-label">Finishing / Color:</span>
-                  <span class="variant-selected-name" id="selected-color-name">${selectedColor}</span>
+                  <span class="variant-label">Color Finish:</span>
+                  <span class="variant-value" id="selected-color-name">${selectedColor}</span>
                 </div>
-                <div class="pdp-color-picker">
+                <div class="pdp-color-swatches">
                   ${product.colors.map((c, idx) => `
-                    <button 
-                      class="pdp-color-dot ${idx === 0 ? 'is-active' : ''}" 
-                      style="background-color: ${c.hex};" 
-                      data-color="${c.name}" 
-                      data-img="${c.img}"
-                      title="${c.name}">
-                      <span class="color-inner-ring"></span>
+                    <button class="pdp-color-dot ${idx === 0 ? 'is-active' : ''}" 
+                            data-color="${c.name}" 
+                            data-img="${c.img}" 
+                            style="background-color: ${c.hex};" 
+                            title="${c.name}">
                     </button>
                   `).join('')}
                 </div>
               </div>
             ` : ''}
 
-            <!-- Specification / Storage Selection -->
+            <!-- Option / Layout / Cable Variants -->
             ${product.storageOptions && product.storageOptions.length > 0 ? `
               <div class="pdp-variant-section">
                 <div class="variant-label-row">
-                  <span class="variant-label">Configuration / Edition:</span>
+                  <span class="variant-label">Configuration Option:</span>
+                  <span class="variant-value" id="selected-option-name">${selectedOption}</span>
                 </div>
-                <div class="pdp-options-grid">
+                <div class="pdp-option-pills">
                   ${product.storageOptions.map((opt, idx) => `
                     <button class="pdp-option-btn ${idx === 0 ? 'is-active' : ''}" data-option="${opt}">
                       ${opt}
@@ -141,15 +146,9 @@ export function renderProductDetailPage(container, productId) {
               </div>
             ` : ''}
 
-            <!-- Stock Urgency -->
-            <div class="pdp-stock-status">
-              <span class="stock-pulse"></span>
-              <span><strong>In Stock</strong> — ${product.stock} units available in Zurich Vault</span>
-            </div>
-
-            <!-- Quantity & Actions -->
-            <div class="pdp-cta-container">
-              <div class="pdp-qty-picker">
+            <!-- Quantity & Call-to-Action Buttons -->
+            <div class="pdp-actions-row">
+              <div class="pdp-qty-wrap">
                 <button class="qty-btn" id="pdp-qty-minus">-</button>
                 <span class="qty-val" id="pdp-qty-val">1</span>
                 <button class="qty-btn" id="pdp-qty-plus">+</button>
@@ -160,25 +159,40 @@ export function renderProductDetailPage(container, productId) {
                 <span>Add to Cart</span>
               </button>
 
-              <button class="btn btn-gold btn-lg" id="pdp-buy-now-btn">
-                Buy Now
+              <button class="btn btn-secondary btn-lg" id="pdp-buy-now-btn">
+                <span>Buy Now</span>
               </button>
             </div>
 
+            <!-- Trust Highlights Grid -->
+            <div class="pdp-trust-highlights">
+              <div class="trust-highlight-item">
+                <span class="trust-icon">⚡</span>
+                <span>In Stock • Dispatched in 24 Hours</span>
+              </div>
+              <div class="trust-highlight-item">
+                <span class="trust-icon">🛡️</span>
+                <span>3-Year Official Manufacturer Warranty</span>
+              </div>
+              <div class="trust-highlight-item">
+                <span class="trust-icon">🔄</span>
+                <span>Free 30-Day Hassle-Free Returns</span>
+              </div>
+            </div>
 
           </div>
-
         </div>
 
-        <!-- Tabbed Information Section: Specs, Reviews, Shipping -->
+        <!-- Detailed Specifications, Reviews & Delivery Tabs -->
         <div class="pdp-tabs-section" id="pdp-tabs-section">
+          
           <div class="pdp-tabs-nav">
             <button class="pdp-tab-btn is-active" data-tab="tab-specs">Technical Specifications</button>
-            <button class="pdp-tab-btn" data-tab="tab-reviews" id="reviews-tab-nav">Verified Reviews (${product.reviews.length})</button>
-            <button class="pdp-tab-btn" data-tab="tab-shipping">White Glove Delivery & Returns</button>
+            <button class="pdp-tab-btn" data-tab="tab-reviews" id="reviews-tab-nav">Client Reviews (${product.reviewsCount})</button>
+            <button class="pdp-tab-btn" data-tab="tab-shipping">Shipping & Returns</button>
           </div>
 
-          <div class="pdp-tab-content">
+          <div class="pdp-tabs-content">
             
             <!-- Tab 1: Specs -->
             <div class="pdp-tab-pane is-active" id="tab-specs">
@@ -193,8 +207,8 @@ export function renderProductDetailPage(container, productId) {
                 </tbody>
               </table>
 
-              <div class="features-list-wrap">
-                <h4>Signature Innovations</h4>
+              <div class="features-highlight-box">
+                <h4>Engineered Highlights & Features</h4>
                 <ul class="features-bullet-list">
                   ${(product.features || []).map(f => `
                     <li>
@@ -244,7 +258,7 @@ export function renderProductDetailPage(container, productId) {
                 </div>
                 <div class="form-group">
                   <label>Your Review</label>
-                  <textarea class="custom-textarea" id="rev-comment" rows="3" placeholder="Describe the materials, craftsmanship, sound, or performance..."></textarea>
+                  <textarea class="custom-textarea" id="rev-comment" rows="3" placeholder="Describe the materials, performance, click feel, or sound..."></textarea>
                 </div>
                 <div class="form-actions">
                   <button class="btn btn-primary" id="submit-review-btn">Submit Review</button>
@@ -259,7 +273,7 @@ export function renderProductDetailPage(container, productId) {
                     <div class="review-header">
                       <div class="review-author-info">
                         <strong class="author-name">${rev.author}</strong>
-                        ${rev.verified ? '<span class="verified-badge">✓ Verified Collector</span>' : ''}
+                        ${rev.verified ? '<span class="verified-badge">✓ Verified Buyer</span>' : ''}
                       </div>
                       <span class="review-date">${rev.date}</span>
                     </div>
@@ -276,24 +290,76 @@ export function renderProductDetailPage(container, productId) {
               <div class="shipping-info-grid">
                 <div class="shipping-card">
                   <div class="shipping-icon">✈️</div>
-                  <h4>Bespoke Insured Transit</h4>
-                  <p>All items are sealed in tamper-evident aerospace canisters and dispatched via temperature-regulated courier with real-time biometric GPS monitoring.</p>
+                  <h4>Express Insured Dispatch</h4>
+                  <p>All items are securely packaged in shock-proof anti-static containers and dispatched via tracked express courier within 24 hours.</p>
                 </div>
                 <div class="shipping-card">
                   <div class="shipping-icon">🛡️</div>
-                  <h4>Global Concierge Warranty</h4>
-                  <p>Comprehensive 36-month worldwide warranty covering component craftsmanship, optical recalibration, and software firmware enhancements.</p>
+                  <h4>3-Year 7th June Warranty</h4>
+                  <p>Comprehensive 36-month worldwide warranty covering component craftsmanship, switch replacements, and firmware optimizations.</p>
                 </div>
                 <div class="shipping-card">
                   <div class="shipping-icon">🔄</div>
-                  <h4>30-Day Complimentary Exchange</h4>
-                  <p>If you are not captivated by your selection, our courier will pick up the package from your residence or office at zero cost.</p>
+                  <h4>30-Day Hassle-Free Returns</h4>
+                  <p>If you are not 100% satisfied with your accessory, return it within 30 days for a full refund or free replacement.</p>
                 </div>
               </div>
             </div>
 
           </div>
         </div>
+
+        <!-- Suggested Items & Frequently Paired Accessories Section -->
+        ${suggestedProducts.length > 0 ? `
+          <section class="pdp-suggested-section animate-fade-in" id="pdp-suggested-section">
+            <div class="suggested-section-header">
+              <div class="suggested-title-group">
+                <span class="suggested-badge">⚡ SETUP SYNERGY</span>
+                <h2 class="suggested-title">Suggested Accessories & Pairings</h2>
+                <p class="suggested-subtitle">Complete your setup with frequently bought and complementary high-performance peripherals.</p>
+              </div>
+              <div class="suggested-header-nav">
+                <button class="btn btn-secondary-sm" id="suggested-browse-all-btn">Browse All Peripherals &rarr;</button>
+              </div>
+            </div>
+
+            <!-- Suggested Products Cards Grid -->
+            <div class="suggested-products-grid" id="suggested-products-grid">
+              ${suggestedProducts.map(item => {
+                const itemPrice = convertPrice(item.price, currency);
+                const itemOrigPrice = item.originalPrice ? convertPrice(item.originalPrice, currency) : null;
+                const itemDiscount = item.originalPrice ? Math.round(((item.originalPrice - item.price) / item.originalPrice) * 100) : 0;
+
+                return `
+                  <div class="suggested-product-card" data-id="${item.id}">
+                    <div class="suggested-img-wrap" data-nav-id="${item.id}">
+                      <img src="${item.heroImage}" alt="${item.name}" class="suggested-img" />
+                      ${itemDiscount > 0 ? `<span class="suggested-discount-pill">-${itemDiscount}%</span>` : ''}
+                      <button class="suggested-quick-view-btn" data-quickview="${item.id}" title="Quick View">
+                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+                      </button>
+                    </div>
+                    <div class="suggested-info">
+                      <span class="suggested-category">${item.category}</span>
+                      <h4 class="suggested-name" data-nav-id="${item.id}">${item.name}</h4>
+                      <div class="suggested-stars">★★★★★ <span>(${item.rating.toFixed(2)})</span></div>
+                      <div class="suggested-price-row">
+                        <div class="suggested-price">
+                          <span class="curr-price">${itemPrice.formatted}</span>
+                          ${itemOrigPrice ? `<span class="old-price">${itemOrigPrice.formatted}</span>` : ''}
+                        </div>
+                        <button class="btn btn-primary-sm suggested-add-btn" data-id="${item.id}">
+                          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
+                          <span>Add</span>
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                `;
+              }).join('')}
+            </div>
+          </section>
+        ` : ''}
 
       </div>
     </div>
@@ -480,6 +546,56 @@ function attachPdpEvents(container, product, state) {
       container.querySelector('#reviews-tab-nav')?.click();
     });
   }
+
+  // Suggested Items Quick Add
+  container.querySelectorAll('.suggested-add-btn').forEach(btn => {
+    btn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      const targetId = btn.dataset.id;
+      const targetProd = store.state.products.find(p => p.id === targetId);
+      if (targetProd) {
+        store.addToCart(targetProd);
+        ui.showToast({
+          title: 'Added to Cart',
+          message: `${targetProd.name} added.`,
+          type: 'success',
+          actionText: 'View Cart',
+          onAction: () => ui.toggleDrawer('cart-drawer', true)
+        });
+      }
+    });
+  });
+
+  // Suggested Items Navigate to Product PDP
+  container.querySelectorAll('[data-nav-id]').forEach(el => {
+    el.addEventListener('click', (e) => {
+      if (e.target.closest('.suggested-quick-view-btn') || e.target.closest('.suggested-add-btn')) return;
+      sounds.playClick();
+      const targetId = el.dataset.navId;
+      if (targetId) {
+        store.setView('pdp', targetId);
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      }
+    });
+  });
+
+  // Suggested Items Quick View
+  container.querySelectorAll('.suggested-quick-view-btn').forEach(btn => {
+    btn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      const targetId = btn.dataset.quickview;
+      if (targetId) {
+        store.setQuickView(targetId);
+      }
+    });
+  });
+
+  // Browse All Accessories CTA button
+  container.querySelector('#suggested-browse-all-btn')?.addEventListener('click', () => {
+    sounds.playClick();
+    store.setView('catalog');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  });
 }
 
 /**
