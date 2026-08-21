@@ -274,14 +274,28 @@ img {
   border-bottom: 1px solid var(--border-subtle);
   box-shadow: var(--shadow-sm);
   transition: var(--transition-fast);
+  padding: 0.65rem 0;
 }
 
 .header-inner {
   display: flex;
+  flex-direction: column;
+  gap: 0.65rem;
+  width: 100%;
+}
+
+.header-top-row {
+  display: flex;
   align-items: center;
   justify-content: space-between;
-  height: 74px;
-  gap: var(--space-md);
+  width: 100%;
+}
+
+.header-bottom-row {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
 }
 
 /* Brand Logo */
@@ -354,8 +368,8 @@ img {
 
 /* Header Live Search (Amazon-style with Category Dropdown & Submit Button) */
 .header-search-wrap {
-  flex: 1;
-  max-width: 520px;
+  width: 100%;
+  max-width: 680px;
   position: relative;
 }
 
@@ -5941,6 +5955,7 @@ img {
    ========================================================================== */
 body[data-view="account"] #top-announcement-bar,
 body[data-view="account"] .announcement-bar,
+body[data-view="account"] .header-bottom-row,
 body[data-view="account"] .header-search-wrap,
 body[data-view="account"] .currency-selector-wrap,
 body[data-view="account"] #header-account-btn {

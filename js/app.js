@@ -84,10 +84,12 @@ function updateHeaderLayoutForView(page) {
 
   const announcementBar = document.getElementById('top-announcement-bar') || document.querySelector('.announcement-bar');
   const searchWrap = document.querySelector('.header-search-wrap');
+  const bottomRow = document.querySelector('.header-bottom-row');
   const currencyWrap = document.querySelector('.currency-selector-wrap');
   const accountBtn = document.getElementById('header-account-btn');
 
   if (announcementBar) announcementBar.style.display = isAccount ? 'none' : '';
+  if (bottomRow) bottomRow.style.display = isAccount ? 'none' : '';
   if (searchWrap) searchWrap.style.display = isAccount ? 'none' : '';
   if (currencyWrap) currencyWrap.style.display = isAccount ? 'none' : '';
   if (accountBtn) accountBtn.style.display = isAccount ? 'none' : '';
