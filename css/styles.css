@@ -1751,11 +1751,11 @@ img {
   line-height: 1.4;
 }
 
-/* Products Grid */
+/* Products Grid (2 Products per Row) */
 .products-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-  gap: var(--space-lg);
+  grid-template-columns: repeat(2, 1fr);
+  gap: var(--space-xl);
 }
 
 /* Product Card (Cards/Sections: #F1F5F9) */
@@ -5345,27 +5345,40 @@ img {
     font-size: 0.8125rem;
   }
 
-  /* Products Grid Single Column */
+  /* Products Grid 2-Column on Mobile */
   .products-grid {
-    grid-template-columns: 1fr;
-    gap: var(--space-md);
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: 0.65rem;
   }
 
   .card-img-container {
-    height: 230px;
+    height: 175px;
   }
 
-  .product-card-body {
-    padding: var(--space-md);
+  .card-content {
+    padding: 0.65rem;
   }
 
-  .product-card-title {
-    font-size: 1.05rem;
+  .card-title {
+    font-size: 0.875rem;
+    line-height: 1.25;
+    margin-bottom: 0.2rem;
+  }
+
+  .card-tagline {
+    font-size: 0.72rem;
+    line-height: 1.35;
+    margin-bottom: 0.35rem;
+  }
+
+  .card-price {
+    font-size: 0.95rem;
   }
 
   .btn-add-cart {
-    height: 42px;
-    font-size: 0.85rem;
+    height: 36px;
+    font-size: 0.75rem;
+    padding: 0 0.4rem;
   }
 
   /* Product Detail Page (PDP) Mobile */
@@ -5708,7 +5721,38 @@ img {
 /* --- Extra Small Mobile (<= 380px) --- */
 @media (max-width: 380px) {
   .container {
-    padding: 0 10px;
+    padding: 0 8px;
+  }
+
+  .products-grid {
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: 0.45rem;
+  }
+
+  .card-img-container {
+    height: 145px;
+  }
+
+  .card-content {
+    padding: 0.45rem;
+  }
+
+  .card-title {
+    font-size: 0.8125rem;
+  }
+
+  .card-tagline {
+    display: none;
+  }
+
+  .card-price {
+    font-size: 0.875rem;
+  }
+
+  .btn-add-cart {
+    height: 32px;
+    font-size: 0.7rem;
+    padding: 0 0.25rem;
   }
 
   .brand-name {
@@ -5722,11 +5766,6 @@ img {
   .brand-logo-img {
     width: 32px;
     height: 32px;
-  }
-
-  .search-category-label {
-    max-width: 46px;
-    font-size: 0.7rem;
   }
 
   .hero-title {
