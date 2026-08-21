@@ -5044,6 +5044,8 @@ img {
 
   /* Header Multi-Row Mobile Layout: Row 1 = Logo + Cart, Row 2 = Search Bar */
   .site-header {
+    position: static !important;
+    top: auto !important;
     padding: 0;
   }
 
