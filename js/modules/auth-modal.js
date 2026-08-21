@@ -67,13 +67,15 @@ function setupAuthEvents() {
   document.getElementById('auth-form-login')?.addEventListener('submit', (e) => {
     e.preventDefault();
     sounds.playClick();
-    const email = document.getElementById('login-email')?.value.trim() || 'julian.vance@auraconcept.com';
+    const email = document.getElementById('login-email')?.value.trim() || 'julian.vance@7thjune.com';
     const name = email.split('@')[0].replace('.', ' ').replace(/\b\w/g, l => l.toUpperCase()) || 'Valued Client';
+    const firstName = name.trim().split(' ')[0] || 'Valued Client';
 
     const user = {
+      isLoggedIn: true,
       name: name,
       email: email,
-      tier: '7th June Gold Member',
+      tier: '7th June Gold VIP',
       points: 1250,
       avatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=400&q=80'
     };
@@ -81,8 +83,8 @@ function setupAuthEvents() {
     store.setUser(user);
     closeAuthModal();
     ui.showToast({
-      title: 'Signed In Successfully',
-      message: `Welcome back, ${user.name}! Your preferences are active.`,
+      title: `Welcome back, ${firstName}!`,
+      message: `Great to see you again. Your order history and saved delivery addresses are ready.`,
       type: 'success'
     });
   });
@@ -93,8 +95,10 @@ function setupAuthEvents() {
     sounds.playClick();
     const name = document.getElementById('reg-name')?.value.trim() || 'New Member';
     const email = document.getElementById('reg-email')?.value.trim() || 'client@7thjune.com';
+    const firstName = name.trim().split(' ')[0] || 'Member';
 
     const user = {
+      isLoggedIn: true,
       name: name,
       email: email,
       tier: '7th June VIP Member',
@@ -105,8 +109,8 @@ function setupAuthEvents() {
     store.setUser(user);
     closeAuthModal();
     ui.showToast({
-      title: 'Account Created & 500 Points Awarded',
-      message: `Welcome to 7th June Computers, ${user.name}!`,
+      title: `Welcome to 7th June, ${firstName}!`,
+      message: `Your VIP account has been created with 500 bonus reward points.`,
       type: 'success'
     });
   });
@@ -115,6 +119,7 @@ function setupAuthEvents() {
   document.getElementById('demo-login-julian')?.addEventListener('click', () => {
     sounds.playClick();
     const user = {
+      isLoggedIn: true,
       name: 'Julian Vance',
       email: 'julian.vance@7thjune.com',
       tier: 'Platinum Titan VIP',
@@ -124,26 +129,19 @@ function setupAuthEvents() {
     store.setUser(user);
     closeAuthModal();
     ui.showToast({
-      title: 'Demo Profile Loaded',
-      message: 'Signed in as Julian Vance (VIP Tier)',
-      type: 'info'
+      title: `Welcome back, Julian!`,
+      message: `Signed in as Julian Vance. Order history & saved addresses loaded.`,
+      type: 'success'
     });
   });
 
   document.getElementById('demo-login-guest')?.addEventListener('click', () => {
     sounds.playClick();
-    const user = {
-      name: 'Guest Shopper',
-      email: 'guest@7thjune.com',
-      tier: 'Guest Express Account',
-      points: 0,
-      avatar: 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&w=400&q=80'
-    };
-    store.setUser(user);
+    store.logout();
     closeAuthModal();
     ui.showToast({
       title: 'Browsing as Guest',
-      message: 'You can complete your order quickly as a guest.',
+      message: 'Sign in anytime from Account to view past orders and saved addresses.',
       type: 'info'
     });
   });

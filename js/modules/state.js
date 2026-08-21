@@ -82,6 +82,7 @@ class Store {
         }
       ],
       user: savedUser ? JSON.parse(savedUser) : {
+        isLoggedIn: true,
         name: 'Julian Vance',
         email: 'julian.vance@7thjune.com',
         tier: '7th June Platinum VIP',
@@ -346,13 +347,14 @@ class Store {
 
   // --- User Authentication ---
   setUser(userData) {
-    this.state.user = { ...this.state.user, ...userData };
+    this.state.user = { ...this.state.user, isLoggedIn: true, ...userData };
     localStorage.setItem('aura_user', JSON.stringify(this.state.user));
     this.notify('user_updated', this.state.user);
   }
 
   logout() {
     this.state.user = {
+      isLoggedIn: false,
       name: 'Guest Shopper',
       email: 'guest@7thjune.com',
       tier: 'Guest Account',

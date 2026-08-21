@@ -11,7 +11,60 @@ import { openAuthModal } from './auth-modal.js';
 
 export function renderAccountView(container) {
   const { user, orders, currency } = store.state;
+  const isLoggedIn = user && user.isLoggedIn;
+  const firstName = user && user.name ? user.name.trim().split(' ')[0] : 'Member';
 
+  if (!isLoggedIn) {
+    // --- Logged Out / Guest State ---
+    container.innerHTML = `
+      <div class="account-page-wrapper animate-fade-in">
+        <div class="container">
+          
+          <!-- Top Back Navigation -->
+          <div class="account-top-nav mb-3">
+            <button class="btn btn-ghost btn-sm" id="account-back-shop-btn">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>
+              <span>Back to Store</span>
+            </button>
+          </div>
+
+          <!-- Guest / Sign In Prompt Card -->
+          <div class="account-guest-gate-card">
+            <div class="guest-gate-icon">🔐</div>
+            <h2 class="guest-gate-title">Sign In to View Your Account</h2>
+            <p class="guest-gate-desc">
+              Sign in to access your complete <strong>Order History</strong>, track live courier shipments, manage your <strong>Saved Delivery Addresses</strong>, and earn <strong>7th June VIP Rewards</strong>.
+            </p>
+            
+            <div class="guest-gate-actions">
+              <button class="btn btn-primary btn-lg" id="guest-open-login-btn">
+                Sign In to 7th June Account
+              </button>
+              <button class="btn btn-secondary btn-lg" id="guest-open-reg-btn">
+                Create New VIP Account (+ 500 Pts)
+              </button>
+            </div>
+
+            <div class="auth-demo-divider mt-4">
+              <span>OR TEST WITH 1-CLICK DEMO PROFILE</span>
+            </div>
+            
+            <div class="guest-demo-pill-wrap mt-2">
+              <button class="btn btn-ghost btn-sm" id="guest-demo-julian-btn">
+                👑 1-Click Sign In as Julian Vance (VIP Member)
+              </button>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    `;
+
+    attachGuestAccountEvents(container);
+    return;
+  }
+
+  // --- Authenticated User State ---
   container.innerHTML = `
     <div class="account-page-wrapper animate-fade-in">
       <div class="container">
@@ -24,18 +77,18 @@ export function renderAccountView(container) {
           </button>
         </div>
 
-        <!-- Account Header Card -->
+        <!-- Account Header Card with Personalized First Name Greeting -->
         <div class="account-header-card">
           <div class="account-profile-info">
             <img src="${user.avatar}" alt="${user.name}" class="account-avatar" />
             <div class="account-texts">
               <div class="tier-pill">${user.tier}</div>
-              <h1 class="account-name">${user.name}</h1>
-              <p class="account-email">${user.email}</p>
+              <h1 class="account-name">Welcome back, ${firstName}!</h1>
+              <p class="account-email">${user.name} • ${user.email}</p>
               
               <div class="account-user-actions mt-2">
                 <button class="btn btn-secondary btn-sm" id="account-switch-btn">
-                  Switch / Sign In
+                  Switch Account
                 </button>
                 <button class="btn btn-ghost btn-sm" id="account-logout-btn">
                   Sign Out
@@ -56,7 +109,7 @@ export function renderAccountView(container) {
           </div>
         </div>
 
-        <!-- Account Navigation Tabs -->
+        <!-- Account Navigation Tabs (Orders & Saved Addresses) -->
         <div class="account-tabs-nav">
           <button class="account-tab-btn is-active" data-tab="tab-orders">
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="7" width="20" height="14" rx="2" ry="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg>
@@ -135,7 +188,7 @@ export function renderAccountView(container) {
               
               <div class="address-card is-default">
                 <div class="address-tag-row">
-                  <span class="address-type">Primary Office</span>
+                  <span class="address-type">Primary Office (Ghana)</span>
                   <span class="default-badge">DEFAULT</span>
                 </div>
                 <h4>${user.name}</h4>
@@ -146,7 +199,7 @@ export function renderAccountView(container) {
 
               <div class="address-card">
                 <div class="address-tag-row">
-                  <span class="address-type">Secondary Dispatch</span>
+                  <span class="address-type">Secondary Dispatch (USA)</span>
                 </div>
                 <h4>${user.name}</h4>
                 <p>742 Evergreen Terrace, Suite 800</p>
@@ -164,6 +217,46 @@ export function renderAccountView(container) {
   `;
 
   attachAccountEvents(container);
+}
+
+function attachGuestAccountEvents(container) {
+  // Back to Store
+  container.querySelector('#account-back-shop-btn')?.addEventListener('click', () => {
+    sounds.playClick();
+    store.setView('catalog');
+  });
+
+  // Open Sign In Modal
+  container.querySelector('#guest-open-login-btn')?.addEventListener('click', () => {
+    sounds.playClick();
+    openAuthModal('login');
+  });
+
+  // Open Register Modal
+  container.querySelector('#guest-open-reg-btn')?.addEventListener('click', () => {
+    sounds.playClick();
+    openAuthModal('register');
+  });
+
+  // 1-Click Demo Login as Julian
+  container.querySelector('#guest-demo-julian-btn')?.addEventListener('click', () => {
+    sounds.playClick();
+    const user = {
+      isLoggedIn: true,
+      name: 'Julian Vance',
+      email: 'julian.vance@7thjune.com',
+      tier: 'Platinum Titan VIP',
+      points: 3450,
+      avatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=400&q=80'
+    };
+    store.setUser(user);
+    ui.showToast({
+      title: 'Welcome back, Julian!',
+      message: 'Signed in as Julian Vance. Order history & saved addresses active.',
+      type: 'success'
+    });
+    renderAccountView(container);
+  });
 }
 
 function attachAccountEvents(container) {
@@ -198,7 +291,7 @@ function attachAccountEvents(container) {
     store.logout();
     ui.showToast({
       title: 'Signed Out',
-      message: 'You are now browsing as a guest.',
+      message: 'You have been signed out. Please sign in to access orders and addresses.',
       type: 'info'
     });
     renderAccountView(container);
@@ -235,7 +328,7 @@ function attachAccountEvents(container) {
       if (order) {
         ui.showToast({
           title: `Receipt #${order.orderId}`,
-          message: `Digital invoice for ${order.shippingAddress.fullName} generated.`,
+          message: `Digital invoice generated for ${order.shippingAddress.fullName}.`,
           type: 'info'
         });
       }
