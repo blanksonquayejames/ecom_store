@@ -57,6 +57,9 @@ function handleRoute(page, productId) {
   const mainViewContainer = document.getElementById('app-main-view');
   if (!mainViewContainer) return;
 
+  // Toggle header elements based on active view
+  updateHeaderLayoutForView(page);
+
   switch (page) {
     case 'catalog':
       renderCatalogView(mainViewContainer);
@@ -73,6 +76,20 @@ function handleRoute(page, productId) {
     default:
       renderCatalogView(mainViewContainer);
   }
+}
+
+function updateHeaderLayoutForView(page) {
+  const isAccount = page === 'account';
+
+  const announcementBar = document.getElementById('top-announcement-bar') || document.querySelector('.announcement-bar');
+  const searchWrap = document.querySelector('.header-search-wrap');
+  const currencyWrap = document.querySelector('.currency-selector-wrap');
+  const accountBtn = document.getElementById('header-account-btn');
+
+  if (announcementBar) announcementBar.style.display = isAccount ? 'none' : '';
+  if (searchWrap) searchWrap.style.display = isAccount ? 'none' : '';
+  if (currencyWrap) currencyWrap.style.display = isAccount ? 'none' : '';
+  if (accountBtn) accountBtn.style.display = isAccount ? 'none' : '';
 }
 
 function setupHeaderEvents() {

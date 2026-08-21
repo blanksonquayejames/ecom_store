@@ -16,6 +16,14 @@ export function renderAccountView(container) {
     <div class="account-page-wrapper animate-fade-in">
       <div class="container">
         
+        <!-- Top Back Navigation -->
+        <div class="account-top-nav mb-3">
+          <button class="btn btn-ghost btn-sm" id="account-back-shop-btn">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>
+            <span>Back to Store</span>
+          </button>
+        </div>
+
         <!-- Account Header Card -->
         <div class="account-header-card">
           <div class="account-profile-info">
@@ -159,6 +167,12 @@ export function renderAccountView(container) {
 }
 
 function attachAccountEvents(container) {
+  // Back to Store
+  container.querySelector('#account-back-shop-btn')?.addEventListener('click', () => {
+    sounds.playClick();
+    store.setView('catalog');
+  });
+
   // Tabs
   container.querySelectorAll('.account-tab-btn').forEach(btn => {
     btn.addEventListener('click', () => {
