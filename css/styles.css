@@ -5068,6 +5068,12 @@ img {
 
 /* --- Tablets & Mobile Landscape (<= 860px) --- */
 @media (max-width: 860px) {
+  /* Hide Announcement Bar on Mobile */
+  .announcement-bar,
+  #top-announcement-bar {
+    display: none !important;
+  }
+
   /* Header Multi-Row Mobile Layout */
   .site-header {
     padding: 0;
@@ -5106,9 +5112,9 @@ img {
     gap: 0.45rem;
   }
 
-  .currency-select {
-    padding: 0.35rem 0.5rem;
-    font-size: 0.75rem;
+  /* Hide Currency Selector on Mobile */
+  .currency-selector-wrap {
+    display: none !important;
   }
 
   /* Full-width Search Bar on Row 2 */
@@ -5116,7 +5122,7 @@ img {
     order: 3;
     width: 100%;
     max-width: 100%;
-    display: block !important;
+    display: block;
     margin: 0;
   }
 
@@ -5125,30 +5131,24 @@ img {
     width: 100%;
   }
 
-  .search-category-btn {
-    padding: 0 0.6rem;
-  }
-
-  .search-category-label {
-    max-width: 75px;
-    font-size: 0.75rem;
+  /* Hide Search Category Dropdown on Mobile */
+  .search-category-dropdown-wrap,
+  .search-category-menu {
+    display: none !important;
   }
 
   .search-input-field-wrap {
-    padding: 0 0.6rem;
+    padding: 0 0.85rem;
+    flex: 1;
   }
 
   .search-input-field-wrap input {
     font-size: 0.8125rem;
+    padding-left: 0.25rem;
   }
 
   .search-submit-btn {
     padding: 0 0.95rem;
-  }
-
-  .search-category-menu {
-    max-width: calc(100vw - 32px);
-    min-width: 210px;
   }
 
   .search-dropdown-menu {
@@ -5168,27 +5168,6 @@ img {
     padding: 0 var(--space-md);
   }
 
-  /* Top Announcement Bar */
-  .announcement-bar {
-    padding: 0.45rem 0;
-    font-size: 0.75rem;
-  }
-
-  .announcement-inner {
-    flex-direction: column;
-    text-align: center;
-    gap: 0.25rem;
-  }
-
-  .announcement-perks {
-    display: none;
-  }
-
-  .promo-highlight {
-    padding: 0.05rem 0.35rem;
-    font-size: 0.72rem;
-  }
-
   /* Header Controls on Small Mobile */
   .cart-label {
     display: none;
@@ -5202,22 +5181,6 @@ img {
   .header-icon-btn {
     width: 36px;
     height: 36px;
-  }
-
-  .currency-selector-wrap select {
-    padding: 0.3rem 0.4rem;
-    font-size: 0.72rem;
-  }
-
-  /* Search Bar Compact Styling */
-  .search-category-label {
-    max-width: 58px;
-    font-size: 0.72rem;
-  }
-
-  .search-category-btn {
-    padding: 0 0.45rem;
-    gap: 0.25rem;
   }
 
   .search-submit-btn {
