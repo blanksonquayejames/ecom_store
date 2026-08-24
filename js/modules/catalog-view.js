@@ -13,8 +13,22 @@ export function renderCatalogView(container) {
   const { filters, currency } = store.state;
 
   container.innerHTML = `
-    <!-- Modern High-Tech Hero Showcase Section -->
+    <!-- Modern High-Tech Hero Showcase Section with Multi-Scene Animated Video Background -->
     <section class="hero-showcase" id="hero-showcase">
+      <!-- Background Video Animation Layer with Crossfade -->
+      <div class="hero-video-bg-wrap" id="hero-video-bg-wrap">
+        <video class="hero-bg-video is-active" data-index="0" autoplay muted playsinline preload="auto">
+          <source src="image/animation 1.mp4" type="video/mp4">
+        </video>
+        <video class="hero-bg-video" data-index="1" muted playsinline preload="auto">
+          <source src="image/animation 2.mp4" type="video/mp4">
+        </video>
+        <video class="hero-bg-video" data-index="2" muted playsinline preload="auto">
+          <source src="image/animation 3.mp4" type="video/mp4">
+        </video>
+        <div class="hero-video-overlay"></div>
+      </div>
+
       <div class="hero-mesh-glow hero-mesh-1"></div>
       <div class="hero-mesh-glow hero-mesh-2"></div>
       <div class="hero-tech-grid-overlay"></div>
@@ -373,6 +387,38 @@ export function updateProductsList() {
 }
 
 function attachCatalogEvents(container) {
+  // Multi-Video Hero Background Controller
+  const heroVideos = container.querySelectorAll('.hero-bg-video');
+  let currentVideoIdx = 0;
+
+  function playVideoScene(index) {
+    if (!heroVideos.length) return;
+    const nextIdx = (index + heroVideos.length) % heroVideos.length;
+    currentVideoIdx = nextIdx;
+
+    heroVideos.forEach((vid, i) => {
+      if (i === nextIdx) {
+        vid.classList.add('is-active');
+        vid.currentTime = 0;
+        vid.play().catch(() => {});
+      } else {
+        vid.classList.remove('is-active');
+      }
+    });
+  }
+
+  // Auto-advance to next video when current video ends
+  heroVideos.forEach((vid, i) => {
+    vid.addEventListener('ended', () => {
+      playVideoScene((i + 1) % heroVideos.length);
+    });
+  });
+
+  // Start with first video
+  if (heroVideos.length) {
+    heroVideos[0].play().catch(() => {});
+  }
+
   // Hero Explore Collection Scroll
   const heroExploreBtn = container.querySelector('#hero-explore-btn');
   if (heroExploreBtn) {

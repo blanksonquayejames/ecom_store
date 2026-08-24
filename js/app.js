@@ -292,20 +292,20 @@ function setupGlobalSearch() {
 function renderSearchSuggestions(query, dropdown) {
   const q = query.toLowerCase();
   const activeCategory = store.state.filters.category;
-  
+
   // Filter products matching query & current department scope if any
   let matched = store.state.products.filter(p => {
     const matchesCategory = activeCategory === 'All Products' || p.category === activeCategory;
-    const matchesText = p.name.toLowerCase().includes(q) || 
-                        p.category.toLowerCase().includes(q) ||
-                        p.tagline.toLowerCase().includes(q);
+    const matchesText = p.name.toLowerCase().includes(q) ||
+      p.category.toLowerCase().includes(q) ||
+      p.tagline.toLowerCase().includes(q);
     return matchesCategory && matchesText;
   });
 
   // If no matches in active category, search across all categories as fallback
   if (matched.length === 0 && activeCategory !== 'All Products') {
-    matched = store.state.products.filter(p => 
-      p.name.toLowerCase().includes(q) || 
+    matched = store.state.products.filter(p =>
+      p.name.toLowerCase().includes(q) ||
       p.category.toLowerCase().includes(q) ||
       p.tagline.toLowerCase().includes(q)
     );
