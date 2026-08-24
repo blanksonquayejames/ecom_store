@@ -39,7 +39,7 @@ class Store {
       ],
       wishlist: savedWishlist ? JSON.parse(savedWishlist) : ['prod-002', 'prod-003'],
       compareList: savedCompare ? JSON.parse(savedCompare) : [],
-      currency: savedCurrency || 'USD',
+      currency: (savedCurrency === 'GHS' || savedCurrency === 'USD') ? savedCurrency : 'GHS',
       theme: savedTheme || 'light',
       appliedPromo: savedPromo ? JSON.parse(savedPromo) : null,
       recentSearches: savedSearches ? JSON.parse(savedSearches) : ['hall effect keyboard', '8k mouse', 'monitor arm', 'desk mat'],
