@@ -400,7 +400,7 @@ function attachCatalogEvents(container) {
       if (i === nextIdx) {
         vid.classList.add('is-active');
         vid.currentTime = 0;
-        vid.play().catch(() => {});
+        vid.play().catch(() => { });
       } else {
         vid.classList.remove('is-active');
       }
@@ -416,7 +416,7 @@ function attachCatalogEvents(container) {
 
   // Start with first video
   if (heroVideos.length) {
-    heroVideos[0].play().catch(() => {});
+    heroVideos[0].play().catch(() => { });
   }
 
   // Hero Explore Collection Scroll
@@ -613,7 +613,7 @@ function attachCardEvents(grid) {
         const card = btn.closest('.product-card');
         const selectedDot = card.querySelector('.color-swatch-dot.is-selected');
         const selectedColor = selectedDot ? selectedDot.dataset.colorName : null;
-        
+
         store.addToCart(prod, selectedColor, null, 1);
 
         // Visual feedback on button

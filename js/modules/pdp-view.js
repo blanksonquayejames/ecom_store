@@ -1,6 +1,6 @@
 /**
  * AURA LUXE - Product Detail Page (PDP) & Quick View Controller
- * Full product exploration, multi-angle gallery, zoom lens, variants, reviews, and bundles.
+ * Full product exploration, multi-angle touch gallery, zoom lens, mobile sticky action bar, variants, reviews, and bundles.
  */
 
 import { store } from './state.js';
@@ -28,6 +28,8 @@ export function renderProductDetailPage(container, productId) {
   const otherBestSellers = store.state.products.filter(p => p.id !== product.id && !pairedIds.includes(p.id) && (p.isBestSeller || p.featured));
   const suggestedProducts = Array.from(new Set([...explicitPaired, ...sameCategory, ...otherBestSellers])).slice(0, 4);
 
+  const galleryList = product.gallery && product.gallery.length > 0 ? product.gallery : [product.heroImage];
+
   container.innerHTML = `
     <div class="pdp-wrapper animate-fade-in">
       <div class="container">
@@ -44,7 +46,7 @@ export function renderProductDetailPage(container, productId) {
         <!-- Main Product Grid: Gallery Left + Configuration Right -->
         <div class="pdp-main-grid">
           
-          <!-- Left: Gallery & Zoom -->
+          <!-- Left: Gallery & Touch Zoom -->
           <div class="pdp-gallery-col">
             <div class="pdp-main-image-wrap" id="pdp-zoom-container">
               <img src="${currentImage}" alt="${product.name}" id="pdp-active-img" class="pdp-main-img" />
@@ -54,13 +56,18 @@ export function renderProductDetailPage(container, productId) {
                 ${product.isNew ? '<span class="badge badge-new">NEW EDITION</span>' : ''}
                 ${discountPercent > 0 ? `<span class="badge badge-sale">-${discountPercent}% OFF</span>` : ''}
               </div>
+
+              <!-- Mobile Photo Counter Pill -->
+              <div class="pdp-mobile-img-counter" id="pdp-mobile-img-counter">
+                1 / ${galleryList.length}
+              </div>
             </div>
 
             <!-- Thumbnail Strip -->
             <div class="pdp-thumbnails-strip" id="pdp-thumbs-strip">
-              ${(product.gallery || [product.heroImage]).map((img, idx) => `
-                <button class="pdp-thumb-btn ${idx === 0 ? 'is-active' : ''}" data-img="${img}">
-                  <img src="${img}" alt="Thumbnail ${idx + 1}" />
+              ${galleryList.map((img, idx) => `
+                <button class="pdp-thumb-btn ${idx === 0 ? 'is-active' : ''}" data-img="${img}" data-idx="${idx}" aria-label="Product image ${idx + 1}">
+                  <img src="${img}" alt="Thumbnail ${idx + 1}" loading="lazy" />
                 </button>
               `).join('')}
             </div>
@@ -122,7 +129,8 @@ export function renderProductDetailPage(container, productId) {
                             data-color="${c.name}" 
                             data-img="${c.img}" 
                             style="background-color: ${c.hex};" 
-                            title="${c.name}">
+                            title="${c.name}"
+                            aria-label="Color ${c.name}">
                     </button>
                   `).join('')}
                 </div>
@@ -149,9 +157,9 @@ export function renderProductDetailPage(container, productId) {
             <!-- Quantity & Call-to-Action Buttons -->
             <div class="pdp-actions-row">
               <div class="pdp-qty-wrap">
-                <button class="qty-btn" id="pdp-qty-minus">-</button>
+                <button class="qty-btn" id="pdp-qty-minus" aria-label="Decrease quantity">-</button>
                 <span class="qty-val" id="pdp-qty-val">1</span>
-                <button class="qty-btn" id="pdp-qty-plus">+</button>
+                <button class="qty-btn" id="pdp-qty-plus" aria-label="Increase quantity">+</button>
               </div>
 
               <button class="btn btn-primary btn-lg flex-1" id="pdp-add-cart-btn">
@@ -163,23 +171,6 @@ export function renderProductDetailPage(container, productId) {
                 <span>Buy Now</span>
               </button>
             </div>
-
-            <!-- Trust Highlights Grid -->
-            <div class="pdp-trust-highlights">
-              <div class="trust-highlight-item">
-                <span class="trust-icon">⚡</span>
-                <span>In Stock • Dispatched in 24 Hours</span>
-              </div>
-              <div class="trust-highlight-item">
-                <span class="trust-icon">🛡️</span>
-                <span>3-Year Official Manufacturer Warranty</span>
-              </div>
-              <div class="trust-highlight-item">
-                <span class="trust-icon">🔄</span>
-                <span>Free 30-Day Hassle-Free Returns</span>
-              </div>
-            </div>
-
           </div>
         </div>
 
@@ -333,7 +324,7 @@ export function renderProductDetailPage(container, productId) {
                 return `
                   <div class="suggested-product-card" data-id="${item.id}">
                     <div class="suggested-img-wrap" data-nav-id="${item.id}">
-                      <img src="${item.heroImage}" alt="${item.name}" class="suggested-img" />
+                      <img src="${item.heroImage}" alt="${item.name}" class="suggested-img" loading="lazy" />
                       ${itemDiscount > 0 ? `<span class="suggested-discount-pill">-${itemDiscount}%</span>` : ''}
                       <button class="suggested-quick-view-btn" data-quickview="${item.id}" title="Quick View">
                         <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
@@ -362,6 +353,22 @@ export function renderProductDetailPage(container, productId) {
         ` : ''}
 
       </div>
+
+      <!-- Mobile Sticky Bottom Floating Action Bar -->
+      <div class="pdp-mobile-sticky-bar" id="pdp-mobile-sticky-bar">
+        <div class="sticky-bar-left">
+          <img src="${currentImage}" alt="${product.name}" class="sticky-bar-thumb" id="sticky-bar-img" />
+          <div class="sticky-bar-info">
+            <span class="sticky-bar-title">${product.name}</span>
+            <span class="sticky-bar-price" id="sticky-bar-price">${currentPriceObj.formatted}</span>
+          </div>
+        </div>
+        <button class="btn btn-primary sticky-bar-add-btn" id="sticky-bar-add-btn">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
+          <span>Add to Cart</span>
+        </button>
+      </div>
+
     </div>
   `;
 
@@ -382,19 +389,67 @@ function attachPdpEvents(container, product, state) {
     store.setView('catalog');
   });
 
-  // Thumbnails click
   const activeImg = container.querySelector('#pdp-active-img');
-  container.querySelectorAll('.pdp-thumb-btn').forEach(btn => {
+  const stickyImg = container.querySelector('#sticky-bar-img');
+  const counterEl = container.querySelector('#pdp-mobile-img-counter');
+  const galleryImgs = product.gallery && product.gallery.length > 0 ? product.gallery : [product.heroImage];
+  let currentGalleryIdx = 0;
+
+  function updateGalleryIndex(idx) {
+    currentGalleryIdx = (idx + galleryImgs.length) % galleryImgs.length;
+    const newImg = galleryImgs[currentGalleryIdx];
+    if (activeImg) activeImg.src = newImg;
+    if (stickyImg) stickyImg.src = newImg;
+    if (counterEl) counterEl.textContent = `${currentGalleryIdx + 1} / ${galleryImgs.length}`;
+
+    container.querySelectorAll('.pdp-thumb-btn').forEach((b, i) => {
+      if (i === currentGalleryIdx) {
+        b.classList.add('is-active');
+        b.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+      } else {
+        b.classList.remove('is-active');
+      }
+    });
+  }
+
+  // Thumbnails click sync
+  container.querySelectorAll('.pdp-thumb-btn').forEach((btn, idx) => {
     btn.addEventListener('click', () => {
       sounds.playClick();
-      const imgUrl = btn.dataset.img;
-      if (activeImg && imgUrl) {
-        activeImg.src = imgUrl;
-      }
-      container.querySelectorAll('.pdp-thumb-btn').forEach(b => b.classList.remove('is-active'));
-      btn.classList.add('is-active');
+      updateGalleryIndex(idx);
     });
   });
+
+  // Mobile Touch Swipe Gesture for Image Gallery
+  const galleryWrap = container.querySelector('#pdp-zoom-container');
+  if (galleryWrap) {
+    let touchStartX = 0;
+    let touchStartY = 0;
+    let touchEndX = 0;
+    let touchEndY = 0;
+
+    galleryWrap.addEventListener('touchstart', (e) => {
+      touchStartX = e.changedTouches[0].screenX;
+      touchStartY = e.changedTouches[0].screenY;
+    }, { passive: true });
+
+    galleryWrap.addEventListener('touchend', (e) => {
+      touchEndX = e.changedTouches[0].screenX;
+      touchEndY = e.changedTouches[0].screenY;
+      const diffX = touchEndX - touchStartX;
+      const diffY = touchEndY - touchStartY;
+      
+      // Horizontal swipe detected and larger than vertical drift
+      if (Math.abs(diffX) > 35 && Math.abs(diffX) > Math.abs(diffY) && galleryImgs.length > 1) {
+        sounds.playClick();
+        if (diffX < 0) {
+          updateGalleryIndex(currentGalleryIdx + 1); // Swipe left -> Next
+        } else {
+          updateGalleryIndex(currentGalleryIdx - 1); // Swipe right -> Prev
+        }
+      }
+    }, { passive: true });
+  }
 
   // Color selection
   const selectedColorText = container.querySelector('#selected-color-name');
@@ -406,6 +461,7 @@ function attachPdpEvents(container, product, state) {
       state.setSelectedColor(color);
       if (selectedColorText) selectedColorText.textContent = color;
       if (activeImg && imgUrl) activeImg.src = imgUrl;
+      if (stickyImg && imgUrl) stickyImg.src = imgUrl;
 
       container.querySelectorAll('.pdp-color-dot').forEach(d => d.classList.remove('is-active'));
       dot.classList.add('is-active');
@@ -417,6 +473,8 @@ function attachPdpEvents(container, product, state) {
     optBtn.addEventListener('click', () => {
       sounds.playClick();
       state.setSelectedOption(optBtn.dataset.option);
+      const optNameEl = container.querySelector('#selected-option-name');
+      if (optNameEl) optNameEl.textContent = optBtn.dataset.option;
       container.querySelectorAll('.pdp-option-btn').forEach(b => b.classList.remove('is-active'));
       optBtn.classList.add('is-active');
     });
@@ -444,11 +502,66 @@ function attachPdpEvents(container, product, state) {
     }
   });
 
-  // Add to Cart
+  // Add to Cart Main Button
   const addCartBtn = container.querySelector('#pdp-add-cart-btn');
   if (addCartBtn) {
     addCartBtn.addEventListener('click', () => {
+      sounds.playClick();
       store.addToCart(product, state.getSelectedColor(), state.getSelectedOption(), state.getQuantity());
+      
+      const origText = addCartBtn.innerHTML;
+      addCartBtn.innerHTML = `✓ Added to Cart`;
+      addCartBtn.classList.add('btn-added-state');
+      setTimeout(() => {
+        addCartBtn.innerHTML = origText;
+        addCartBtn.classList.remove('btn-added-state');
+      }, 1200);
+
+      ui.showToast({
+        title: 'Added to Cart',
+        message: `${state.getQuantity()}x ${product.name} (${state.getSelectedColor()})`,
+        type: 'success',
+        actionText: 'View Cart',
+        onAction: () => ui.toggleDrawer('cart-drawer', true)
+      });
+    });
+  }
+
+  // Mobile Sticky Bar Visibility on Scroll
+  const stickyBar = container.querySelector('#pdp-mobile-sticky-bar');
+  const mainBuyBtn = container.querySelector('#pdp-add-cart-btn');
+  if (stickyBar && mainBuyBtn) {
+    const handleScroll = () => {
+      if (window.innerWidth <= 768) {
+        const btnRect = mainBuyBtn.getBoundingClientRect();
+        // If user scrolled past the main buy button, show sticky bar
+        if (btnRect.bottom < 60) {
+          stickyBar.classList.add('is-visible');
+        } else {
+          stickyBar.classList.remove('is-visible');
+        }
+      }
+    };
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    handleScroll();
+  }
+
+  // Mobile Sticky Bar Add to Cart
+  const stickyAddBtn = container.querySelector('#sticky-bar-add-btn');
+  if (stickyAddBtn) {
+    stickyAddBtn.addEventListener('click', () => {
+      sounds.playClick();
+      store.addToCart(product, state.getSelectedColor(), state.getSelectedOption(), state.getQuantity());
+      stickyAddBtn.innerHTML = `✓ Added`;
+      stickyAddBtn.classList.add('btn-added-state');
+      setTimeout(() => {
+        stickyAddBtn.innerHTML = `
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
+          <span>Add to Cart</span>
+        `;
+        stickyAddBtn.classList.remove('btn-added-state');
+      }, 1200);
+
       ui.showToast({
         title: 'Added to Cart',
         message: `${state.getQuantity()}x ${product.name} (${state.getSelectedColor()})`,
@@ -463,11 +576,11 @@ function attachPdpEvents(container, product, state) {
   const buyNowBtn = container.querySelector('#pdp-buy-now-btn');
   if (buyNowBtn) {
     buyNowBtn.addEventListener('click', () => {
+      sounds.playClick();
       store.addToCart(product, state.getSelectedColor(), state.getSelectedOption(), state.getQuantity());
       store.setView('checkout');
     });
   }
-
 
   // Tabs Switching
   container.querySelectorAll('.pdp-tab-btn').forEach(tabBtn => {
@@ -485,6 +598,7 @@ function attachPdpEvents(container, product, state) {
   // Scroll to reviews link
   container.querySelector('#scroll-to-reviews')?.addEventListener('click', (e) => {
     e.preventDefault();
+    sounds.playClick();
     container.querySelector('#reviews-tab-nav')?.click();
     container.querySelector('#pdp-tabs-section')?.scrollIntoView({ behavior: 'smooth' });
   });
@@ -504,6 +618,7 @@ function attachPdpEvents(container, product, state) {
 
   if (cancelReviewBtn && reviewForm) {
     cancelReviewBtn.addEventListener('click', () => {
+      sounds.playClick();
       reviewForm.style.display = 'none';
     });
   }
@@ -523,6 +638,7 @@ function attachPdpEvents(container, product, state) {
         return;
       }
 
+      sounds.playSuccess();
       product.reviews.unshift({
         id: `rev-${Date.now()}`,
         author: name,
@@ -551,6 +667,7 @@ function attachPdpEvents(container, product, state) {
   container.querySelectorAll('.suggested-add-btn').forEach(btn => {
     btn.addEventListener('click', (e) => {
       e.stopPropagation();
+      sounds.playClick();
       const targetId = btn.dataset.id;
       const targetProd = store.state.products.find(p => p.id === targetId);
       if (targetProd) {
@@ -583,6 +700,7 @@ function attachPdpEvents(container, product, state) {
   container.querySelectorAll('.suggested-quick-view-btn').forEach(btn => {
     btn.addEventListener('click', (e) => {
       e.stopPropagation();
+      sounds.playClick();
       const targetId = btn.dataset.quickview;
       if (targetId) {
         store.setQuickView(targetId);
@@ -633,6 +751,7 @@ export function renderQuickViewModal(productId) {
   `;
 
   modalContent.querySelector('#quick-view-add-btn')?.addEventListener('click', () => {
+    sounds.playClick();
     store.addToCart(product);
     ui.closeModal('quick-view-modal');
     ui.showToast({
@@ -645,6 +764,7 @@ export function renderQuickViewModal(productId) {
   });
 
   modalContent.querySelector('#quick-view-full-btn')?.addEventListener('click', () => {
+    sounds.playClick();
     ui.closeModal('quick-view-modal');
     store.setView('pdp', product.id);
   });
