@@ -120,7 +120,7 @@ export function renderCartDrawerContent() {
             <div class="cart-item-info">
               <h4 class="cart-item-title">${item.name}</h4>
               <div class="cart-item-variants">
-                ${item.selectedColor ? `<span class="cart-variant-pill">${item.selectedColor}</span>` : ''}
+                ${item.selectedColor && item.selectedColor !== 'Default' ? `<span class="cart-variant-pill">${item.selectedColor}</span>` : ''}
                 ${item.selectedOption ? `<span class="cart-variant-pill">${item.selectedOption}</span>` : ''}
               </div>
               <div class="cart-item-price-row">

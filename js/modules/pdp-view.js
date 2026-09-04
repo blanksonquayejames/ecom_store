@@ -116,26 +116,7 @@ export function renderProductDetailPage(container, productId) {
 
             <div class="pdp-divider"></div>
 
-            <!-- Color Variants -->
-            ${product.colors && product.colors.length > 0 ? `
-              <div class="pdp-variant-section">
-                <div class="variant-label-row">
-                  <span class="variant-label">Color Finish:</span>
-                  <span class="variant-value" id="selected-color-name">${selectedColor}</span>
-                </div>
-                <div class="pdp-color-swatches">
-                  ${product.colors.map((c, idx) => `
-                    <button class="pdp-color-dot ${idx === 0 ? 'is-active' : ''}" 
-                            data-color="${c.name}" 
-                            data-img="${c.img}" 
-                            style="background-color: ${c.hex};" 
-                            title="${c.name}"
-                            aria-label="Color ${c.name}">
-                    </button>
-                  `).join('')}
-                </div>
-              </div>
-            ` : ''}
+
 
             <!-- Option / Layout / Cable Variants -->
             ${product.storageOptions && product.storageOptions.length > 0 ? `
@@ -363,10 +344,14 @@ export function renderProductDetailPage(container, productId) {
             <span class="sticky-bar-price" id="sticky-bar-price">${currentPriceObj.formatted}</span>
           </div>
         </div>
-        <button class="btn btn-primary sticky-bar-add-btn" id="sticky-bar-add-btn">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
-          <span>Add to Cart</span>
-        </button>
+        <div class="sticky-bar-actions">
+          <button class="btn btn-secondary sticky-bar-cart-btn" id="sticky-bar-add-btn" aria-label="Add to cart" title="Add to cart">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
+          </button>
+          <button class="btn btn-primary sticky-bar-buy-btn" id="sticky-bar-buy-btn">
+            <span>Buy Now</span>
+          </button>
+        </div>
       </div>
 
     </div>
@@ -451,22 +436,7 @@ function attachPdpEvents(container, product, state) {
     }, { passive: true });
   }
 
-  // Color selection
-  const selectedColorText = container.querySelector('#selected-color-name');
-  container.querySelectorAll('.pdp-color-dot').forEach(dot => {
-    dot.addEventListener('click', () => {
-      sounds.playClick();
-      const color = dot.dataset.color;
-      const imgUrl = dot.dataset.img;
-      state.setSelectedColor(color);
-      if (selectedColorText) selectedColorText.textContent = color;
-      if (activeImg && imgUrl) activeImg.src = imgUrl;
-      if (stickyImg && imgUrl) stickyImg.src = imgUrl;
 
-      container.querySelectorAll('.pdp-color-dot').forEach(d => d.classList.remove('is-active'));
-      dot.classList.add('is-active');
-    });
-  });
 
   // Option selection
   container.querySelectorAll('.pdp-option-btn').forEach(optBtn => {
@@ -569,6 +539,16 @@ function attachPdpEvents(container, product, state) {
         actionText: 'View Cart',
         onAction: () => ui.toggleDrawer('cart-drawer', true)
       });
+    });
+  }
+
+  // Mobile Sticky Bar Buy Now (Direct to Checkout)
+  const stickyBuyBtn = container.querySelector('#sticky-bar-buy-btn');
+  if (stickyBuyBtn) {
+    stickyBuyBtn.addEventListener('click', () => {
+      sounds.playClick();
+      store.addToCart(product, state.getSelectedColor(), state.getSelectedOption(), state.getQuantity());
+      store.setView('checkout');
     });
   }
 

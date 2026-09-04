@@ -68,6 +68,67 @@ export function renderCheckoutView(container) {
           </div>
         </div>
 
+        <!-- Mobile Expandable Order Summary Accordion Bar (Visible on mobile <= 992px) -->
+        <div class="checkout-mobile-summary-bar" id="chk-mobile-summary-toggle">
+          <div class="mobile-summary-left">
+            <span class="mobile-summary-icon">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
+            </span>
+            <span class="mobile-summary-text">
+              <span id="mobile-summary-label">Show order summary</span>
+              <svg class="summary-caret" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>
+            </span>
+          </div>
+          <span class="mobile-summary-total">${convertPrice(summary.total, currency).formatted}</span>
+        </div>
+
+        <div class="checkout-mobile-summary-drawer" id="chk-mobile-summary-drawer" style="display: none;">
+          <div class="chk-items-preview">
+            ${cart.map(item => `
+              <div class="chk-item-row">
+                <div class="chk-item-thumb">
+                  <img src="${item.heroImage}" alt="${item.name}" />
+                  <span class="chk-item-qty-badge">${item.quantity}</span>
+                </div>
+                <div class="chk-item-details">
+                  <strong class="chk-name">${item.name}</strong>
+                  <span class="chk-variant">${item.selectedColor && item.selectedColor !== 'Default' ? item.selectedColor : ''} ${item.selectedOption ? `• ${item.selectedOption}` : ''}</span>
+                </div>
+                <div class="chk-item-price">
+                  ${convertPrice(item.price * item.quantity, currency).formatted}
+                </div>
+              </div>
+            `).join('')}
+          </div>
+
+          <div class="summary-divider"></div>
+
+          <div class="chk-cost-breakdown">
+            <div class="chk-cost-row">
+              <span>Subtotal</span>
+              <span>${convertPrice(summary.subtotal, currency).formatted}</span>
+            </div>
+            ${summary.discount > 0 ? `
+              <div class="chk-cost-row line-discount">
+                <span>Promo Discount</span>
+                <span>-${convertPrice(summary.discount, currency).formatted}</span>
+              </div>
+            ` : ''}
+            <div class="chk-cost-row">
+              <span>White Glove Logistics</span>
+              <span>${summary.shipping === 0 ? '<strong class="text-green">COMPLIMENTARY</strong>' : convertPrice(summary.shipping, currency).formatted}</span>
+            </div>
+            <div class="chk-cost-row">
+              <span>Estimated Tax & Duty</span>
+              <span>${convertPrice(summary.tax, currency).formatted}</span>
+            </div>
+            <div class="chk-cost-row total-row">
+              <span>Total Amount</span>
+              <span class="total-price">${convertPrice(summary.total, currency).formatted}</span>
+            </div>
+          </div>
+        </div>
+
         <!-- 2-Column Grid: Steps Left + Sticky Order Summary Right -->
         <div class="checkout-grid">
           
@@ -366,7 +427,7 @@ export function renderCheckoutView(container) {
                     </div>
                     <div class="chk-item-details">
                       <strong class="chk-name">${item.name}</strong>
-                      <span class="chk-variant">${item.selectedColor || ''} ${item.selectedOption ? `• ${item.selectedOption}` : ''}</span>
+                      <span class="chk-variant">${item.selectedColor && item.selectedColor !== 'Default' ? item.selectedColor : ''} ${item.selectedOption ? `• ${item.selectedOption}` : ''}</span>
                     </div>
                     <div class="chk-item-price">
                       ${convertPrice(item.price * item.quantity, currency).formatted}
@@ -505,6 +566,22 @@ function attachCheckoutEvents(container, formData) {
   container.querySelector('#chk-back-to-bag')?.addEventListener('click', () => {
     ui.toggleDrawer('cart-drawer', true);
   });
+
+  // Mobile Order Summary Accordion Toggle
+  const mobileSummaryToggle = container.querySelector('#chk-mobile-summary-toggle');
+  const mobileSummaryDrawer = container.querySelector('#chk-mobile-summary-drawer');
+  const mobileSummaryLabel = container.querySelector('#mobile-summary-label');
+  if (mobileSummaryToggle && mobileSummaryDrawer) {
+    mobileSummaryToggle.addEventListener('click', () => {
+      sounds.playClick();
+      const isCurrentlyOpen = mobileSummaryDrawer.style.display !== 'none';
+      mobileSummaryDrawer.style.display = isCurrentlyOpen ? 'none' : 'block';
+      mobileSummaryToggle.classList.toggle('is-open', !isCurrentlyOpen);
+      if (mobileSummaryLabel) {
+        mobileSummaryLabel.textContent = isCurrentlyOpen ? 'Show order summary' : 'Hide order summary';
+      }
+    });
+  }
 
   // Shipping Tiers
   container.querySelectorAll('.shipping-tier-card').forEach(card => {
@@ -693,7 +770,7 @@ export function renderOrderConfirmation(container, order) {
                     <img src="${item.heroImage}" alt="${item.name}" class="confirm-item-img" />
                     <div class="confirm-item-details">
                       <strong>${item.name}</strong>
-                      <div class="confirm-variant-tag">${item.selectedColor || ''} • Qty: ${item.quantity}</div>
+                      <div class="confirm-variant-tag">${item.selectedColor && item.selectedColor !== 'Default' ? `${item.selectedColor} • ` : ''}Qty: ${item.quantity}</div>
                     </div>
                     <div class="confirm-item-price">
                       ${convertPrice(item.price * item.quantity, currency).formatted}
