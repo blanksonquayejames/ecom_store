@@ -4,18 +4,15 @@
  */
 
 import { sounds } from './audio.js';
-import { RECENT_SALES_NOTIFICATIONS } from '../data/products.js';
 
 class UIManager {
   constructor() {
     this.toastContainer = null;
-    this.tickerTimeout = null;
   }
 
   init() {
     this.toastContainer = document.getElementById('toast-container');
     this.setupEscapeListener();
-    this.startSalesTicker();
   }
 
   showToast({ title, message, type = 'info', actionText = null, onAction = null, duration = 4000 }) {
@@ -151,39 +148,6 @@ class UIManager {
         document.body.classList.remove('no-scroll');
       });
     }
-  }
-
-  // Live sales ticker animation
-  startSalesTicker() {
-    const tickerContainer = document.getElementById('live-sales-ticker');
-    if (!tickerContainer) return;
-
-    let index = 0;
-    const showNext = () => {
-      const sale = RECENT_SALES_NOTIFICATIONS[index % RECENT_SALES_NOTIFICATIONS.length];
-      index++;
-
-      tickerContainer.innerHTML = `
-        <div class="sales-ticker-card animate-fade-in">
-          <div class="sales-pulse-dot"></div>
-          <div class="sales-text">
-            <span class="sales-user">${sale.user}</span> purchased <strong>${sale.item}</strong>
-            <span class="sales-time">• ${sale.time}</span>
-          </div>
-          <button class="sales-ticker-close" onclick="this.closest('#live-sales-ticker').style.display='none'">&times;</button>
-        </div>
-      `;
-
-      tickerContainer.classList.add('is-visible');
-
-      setTimeout(() => {
-        tickerContainer.classList.remove('is-visible');
-      }, 5500);
-
-      this.tickerTimeout = setTimeout(showNext, 14000);
-    };
-
-    setTimeout(showNext, 3500);
   }
 }
 
