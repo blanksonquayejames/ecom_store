@@ -7,6 +7,7 @@ import { store } from './state.js';
 import { convertPrice } from './currency.js';
 import { ui } from './ui.js';
 import { sounds } from './audio.js';
+import { showOrderReceiptModal } from './account-view.js';
 
 export function renderCheckoutView(container) {
   const { cart, currency, appliedPromo, user } = store.state;
@@ -39,11 +40,10 @@ export function renderCheckoutView(container) {
     zip: '94107',
     country: 'United States',
     shippingMethod: 'FedEx White Glove Priority Courier',
-    paymentMethod: 'Credit / Debit Card',
-    cardNumber: '•••• •••• •••• 4242',
-    cardName: 'JULIAN VANCE',
-    cardExpiry: '08/29',
-    cardCvv: '•••'
+    paymentMethod: 'Mobile Money',
+    momoNetwork: 'MTN MoMo',
+    momoPhone: '024 555 7788',
+    momoAccountName: user.name || 'Kwame Blankson'
   };
 
   container.innerHTML = `
@@ -259,35 +259,19 @@ export function renderCheckoutView(container) {
               </div>
             </div>
 
-            <!-- STEP 3: Payment & 3D Interactive Card -->
+            <!-- STEP 3: Payment (Mobile Money Gateway Only) -->
             <div class="checkout-step-content" id="chk-step-3" style="display: none;">
               <div class="step-header">
-                <h3>Encrypted Payment Gateway</h3>
-                <p>256-bit quantum-resistant TLS encryption. Your payment is tokenized and secure.</p>
+                <div class="momo-exclusive-pill">
+                  <span class="momo-live-dot"></span>
+                  <span>GHANA MOBILE MONEY (MOMO) GATEWAY</span>
+                </div>
+                <h3>Secure Mobile Money Authorization</h3>
+                <p>Fast, encrypted mobile payment directly from your smartphone wallet. Select your network below.</p>
               </div>
 
-              <!-- Payment Method Selector Tabs -->
-              <div class="payment-tabs-nav">
-                <button class="pay-tab-btn is-active" data-method="Mobile Money">
-                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="5" y="2" width="14" height="20" rx="2" ry="2"/><line x1="12" y1="18" x2="12.01" y2="18"/></svg>
-                  Mobile Money (MoMo)
-                </button>
-                <button class="pay-tab-btn" data-method="Credit Card">
-                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="1" y="4" width="22" height="16" rx="2" ry="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>
-                  Credit / Debit Card
-                </button>
-                <button class="pay-tab-btn" data-method="Apple Pay">
-                  <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.81-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M15.97 6.85c.66-.8 1.1-1.92.98-3.05-1 .04-2.17.67-2.83 1.44-.58.67-1.1 1.77-.96 2.87 1.12.09 2.15-.46 2.81-1.26z"/></svg>
-                  Apple Pay
-                </button>
-                <button class="pay-tab-btn" data-method="Crypto / Solana">
-                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 2 7 12 12 22 7 12 2"/><polyline points="2 17 12 22 22 17"/><polyline points="2 12 12 17 22 12"/></svg>
-                  Crypto / USDC
-                </button>
-              </div>
-
-              <!-- Container: Mobile Money (MoMo) -->
-              <div class="payment-method-panel" id="panel-momo">
+              <!-- Dedicated Mobile Money (MoMo) Panel -->
+              <div class="payment-method-panel is-active" id="panel-momo">
                 <div class="momo-form-card">
                   <div class="momo-network-select-group">
                     <label>Select Mobile Money Network</label>
@@ -314,90 +298,22 @@ export function renderCheckoutView(container) {
                     <label>Mobile Money Phone Number (Ghana)</label>
                     <div class="phone-input-wrap">
                       <span class="phone-prefix">🇬🇭 +233</span>
-                      <input type="tel" class="custom-input" id="input-momo-phone" placeholder="024 123 4567" value="024 555 7788" />
+                      <input type="tel" class="custom-input" id="input-momo-phone" placeholder="024 123 4567" value="${formData.momoPhone || '024 555 7788'}" />
                     </div>
                   </div>
 
                   <div class="form-group">
                     <label>Registered Account Name</label>
-                    <input type="text" class="custom-input" id="input-momo-name" placeholder="Kwame Blankson" value="${formData.fullName || 'Kwame Blankson'}" />
+                    <input type="text" class="custom-input" id="input-momo-name" placeholder="Kwame Blankson" value="${formData.momoAccountName || formData.fullName || 'Kwame Blankson'}" />
                   </div>
 
                   <div class="momo-instructions-box">
                     <div class="momo-instruct-icon">📲</div>
                     <div class="momo-instruct-text">
                       <strong>Instant Push USSD Authorization</strong>
-                      <p>When you click Authorize, a prompt will be sent instantly to your phone. Enter your 4-digit MoMo PIN to complete the transaction.</p>
+                      <p>When you click Authorize, a secure prompt is sent instantly to your phone. Enter your 4-digit MoMo PIN to verify and complete the payment.</p>
                     </div>
                   </div>
-                </div>
-              </div>
-
-              <!-- Container: Credit Card & 3D Interactive Card -->
-              <div class="payment-method-panel" id="panel-card" style="display: none;">
-                <div class="interactive-card-showcase" id="card-3d-wrap">
-                  <div class="virtual-card">
-                    <div class="virtual-card-chip">
-                      <svg width="34" height="26" viewBox="0 0 34 26" fill="none"><rect width="34" height="26" rx="4" fill="#d4af37"/><path d="M0 9h34M0 17h34M12 0v26M22 0v26" stroke="#996515" stroke-width="1.5"/></svg>
-                      <span class="card-contactless">)))</span>
-                    </div>
-                    <div class="virtual-card-number" id="preview-card-number">•••• •••• •••• 4242</div>
-                    <div class="virtual-card-bottom">
-                      <div class="virtual-card-holder">
-                        <span class="v-label">CARDHOLDER</span>
-                        <span class="v-val" id="preview-card-name">JULIAN VANCE</span>
-                      </div>
-                      <div class="virtual-card-expires">
-                        <span class="v-label">EXPIRES</span>
-                        <span class="v-val" id="preview-card-expiry">08/29</span>
-                      </div>
-                      <div class="virtual-card-logo">7TH JUNE</div>
-                    </div>
-                  </div>
-                </div>
-
-                <div class="card-inputs-form">
-                  <div class="form-group">
-                    <label>Card Number</label>
-                    <input type="text" class="custom-input" id="input-card-number" placeholder="4242 •••• •••• 4242" maxlength="19" value="4242 8890 1204 4242" />
-                  </div>
-
-                  <div class="form-group">
-                    <label>Cardholder Name</label>
-                    <input type="text" class="custom-input" id="input-card-name" placeholder="JULIAN VANCE" value="JULIAN VANCE" />
-                  </div>
-
-                  <div class="form-row">
-                    <div class="form-group flex-1">
-                      <label>Expiration (MM/YY)</label>
-                      <input type="text" class="custom-input" id="input-card-expiry" placeholder="08/29" maxlength="5" value="08/29" />
-                    </div>
-                    <div class="form-group flex-1">
-                      <label>Security CVV</label>
-                      <input type="password" class="custom-input" id="input-card-cvv" placeholder="•••" maxlength="4" value="888" />
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              <!-- Container: Apple Pay -->
-              <div class="payment-method-panel" id="panel-applepay" style="display: none;">
-                <div class="express-checkout-box">
-                  <p>Express 1-Click biometric checkout with Apple Pay / Touch ID.</p>
-                  <button class="btn btn-primary w-100 mt-2" id="express-apple-btn">
-                     Pay with Apple Pay
-                  </button>
-                </div>
-              </div>
-
-              <!-- Container: Crypto -->
-              <div class="payment-method-panel" id="panel-crypto" style="display: none;">
-                <div class="crypto-pay-box">
-                  <p>Send USDC (SPL or ERC-20) or SOL to 7th June Verified Treasury:</p>
-                  <div class="crypto-addr-chip">
-                    <code>7thJuneX942kLP991kMNa7812904812894</code>
-                  </div>
-                  <span class="crypto-notice">Instant on-chain confirmation in 400ms.</span>
                 </div>
               </div>
 
@@ -405,7 +321,7 @@ export function renderCheckoutView(container) {
                 <button class="btn btn-ghost" id="chk-back-step-2">Back to Delivery</button>
                 <button class="btn btn-primary btn-lg flex-1" id="chk-place-order-btn">
                   <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
-                  <span>Authorize & Complete Purchase (${convertPrice(summary.total, currency).formatted})</span>
+                  <span>Authorize MoMo Payment (${convertPrice(summary.total, currency).formatted})</span>
                 </button>
               </div>
             </div>
@@ -447,7 +363,7 @@ export function renderCheckoutView(container) {
                   </div>
                 ` : `
                   <div class="promo-input-group">
-                    <input type="text" class="custom-input custom-input-sm" id="chk-promo-input" placeholder="VIP Promo code" />
+                    <input type="text" class="custom-input custom-input-sm" id="chk-promo-input" placeholder="Promo code (optional)" />
                     <button class="btn btn-secondary btn-sm" id="chk-apply-promo-btn">Apply</button>
                   </div>
                 `}
@@ -594,56 +510,6 @@ function attachCheckoutEvents(container, formData) {
     });
   });
 
-  // Interactive Card Realtime preview input bindings
-  const cardNumberInput = container.querySelector('#input-card-number');
-  const cardNameInput = container.querySelector('#input-card-name');
-  const cardExpiryInput = container.querySelector('#input-card-expiry');
-
-  const cardNumDisplay = container.querySelector('#preview-card-number');
-  const cardNameDisplay = container.querySelector('#preview-card-name');
-  const cardExpiryDisplay = container.querySelector('#preview-card-expiry');
-
-  cardNumberInput?.addEventListener('input', (e) => {
-    let val = e.target.value.replace(/\D/g, '').substring(0, 16);
-    val = val.replace(/(.{4})/g, '$1 ').trim();
-    e.target.value = val;
-    if (cardNumDisplay) cardNumDisplay.textContent = val || '•••• •••• •••• 4242';
-  });
-
-  cardNameInput?.addEventListener('input', (e) => {
-    if (cardNameDisplay) cardNameDisplay.textContent = e.target.value.toUpperCase() || 'JULIAN VANCE';
-  });
-
-  cardExpiryInput?.addEventListener('input', (e) => {
-    let val = e.target.value.replace(/\D/g, '').substring(0, 4);
-    if (val.length >= 3) {
-      val = val.substring(0, 2) + '/' + val.substring(2);
-    }
-    e.target.value = val;
-    if (cardExpiryDisplay) cardExpiryDisplay.textContent = val || '08/29';
-  });
-
-  // Payment Tabs Switcher
-  container.querySelectorAll('.pay-tab-btn').forEach(btn => {
-    btn.addEventListener('click', () => {
-      sounds.playClick();
-      container.querySelectorAll('.pay-tab-btn').forEach(b => b.classList.remove('is-active'));
-      btn.classList.add('is-active');
-      const method = btn.dataset.method;
-      formData.paymentMethod = method;
-
-      // Toggle Panels
-      const panelMomo = container.querySelector('#panel-momo');
-      const panelCard = container.querySelector('#panel-card');
-      const panelApple = container.querySelector('#panel-applepay');
-      const panelCrypto = container.querySelector('#panel-crypto');
-
-      if (panelMomo) panelMomo.style.display = method === 'Mobile Money' ? 'block' : 'none';
-      if (panelCard) panelCard.style.display = method === 'Credit Card' ? 'block' : 'none';
-      if (panelApple) panelApple.style.display = method === 'Apple Pay' ? 'block' : 'none';
-      if (panelCrypto) panelCrypto.style.display = method === 'Crypto / Solana' ? 'block' : 'none';
-    });
-  });
 
   // Mobile Money Network Pills
   container.querySelectorAll('.momo-network-pill').forEach(pill => {
@@ -651,6 +517,11 @@ function attachCheckoutEvents(container, formData) {
       sounds.playClick();
       container.querySelectorAll('.momo-network-pill').forEach(p => p.classList.remove('is-selected'));
       pill.classList.add('is-selected');
+      const radio = pill.querySelector('input[name="momo-network"]');
+      if (radio) {
+        radio.checked = true;
+        formData.momoNetwork = radio.value;
+      }
     });
   });
 
@@ -676,17 +547,23 @@ function attachCheckoutEvents(container, formData) {
     renderCheckoutView(container);
   });
 
-  // PLACE ORDER BUTTON
+  // PLACE ORDER BUTTON (MoMo Gateway)
   const placeOrderBtn = container.querySelector('#chk-place-order-btn');
   if (placeOrderBtn) {
     placeOrderBtn.addEventListener('click', () => {
       sounds.playClick();
-      placeOrderBtn.disabled = true;
 
-      const isMomo = formData.paymentMethod === 'Mobile Money';
+      const selectedNetworkRadio = container.querySelector('input[name="momo-network"]:checked');
+      const selectedNetwork = selectedNetworkRadio ? selectedNetworkRadio.value : (formData.momoNetwork || 'MTN MoMo');
+      const phoneInput = container.querySelector('#input-momo-phone');
+      const momoPhone = phoneInput ? phoneInput.value.trim() : (formData.momoPhone || '024 555 7788');
+      const nameInput = container.querySelector('#input-momo-name');
+      const momoName = nameInput ? nameInput.value.trim() : (formData.momoAccountName || formData.fullName || 'Kwame Blankson');
+
+      placeOrderBtn.disabled = true;
       placeOrderBtn.innerHTML = `
         <span class="spinner-border"></span>
-        <span>${isMomo ? 'Sending MoMo USSD Prompt to Phone...' : 'Authorizing Secure Payment & Placing Order...'}</span>
+        <span>Sending ${selectedNetwork} USSD prompt to +233 ${momoPhone}...</span>
       `;
 
       setTimeout(() => {
@@ -697,10 +574,14 @@ function attachCheckoutEvents(container, formData) {
             city: formData.city,
             state: formData.state,
             zip: formData.zip,
-            country: formData.country
+            country: formData.country,
+            phone: `+233 ${momoPhone}`
           },
           shippingMethod: formData.shippingMethod,
-          paymentMethod: formData.paymentMethod
+          paymentMethod: `Mobile Money (${selectedNetwork})`,
+          momoNetwork: selectedNetwork,
+          momoPhone: momoPhone,
+          momoAccountName: momoName
         });
 
         sounds.playSuccess();
@@ -786,7 +667,7 @@ export function renderOrderConfirmation(container, order) {
                 </div>
                 ${order.discount > 0 ? `
                   <div class="summary-line line-discount">
-                    <span>VIP Promo Discount</span>
+                    <span>Promo Discount</span>
                     <span>-${convertPrice(order.discount, currency).formatted}</span>
                   </div>
                 ` : ''}
@@ -816,6 +697,19 @@ export function renderOrderConfirmation(container, order) {
                 <p>${order.shippingAddress.address}</p>
                 <p>${order.shippingAddress.city}, ${order.shippingAddress.state} ${order.shippingAddress.zip}</p>
                 <p>${order.shippingAddress.country}</p>
+                ${order.shippingAddress.phone ? `<p class="dest-phone">Phone: ${order.shippingAddress.phone}</p>` : ''}
+              </div>
+
+              <div class="meta-divider"></div>
+
+              <h3>Payment Method</h3>
+              <div class="momo-confirmation-tag">
+                <span class="momo-tag-icon">📲</span>
+                <div class="momo-tag-details">
+                  <strong>${order.paymentMethod || 'Mobile Money (MTN MoMo)'}</strong>
+                  <span class="momo-status-tag">Status: <strong>PAID & VERIFIED</strong></span>
+                  ${order.momoTransactionId ? `<small class="momo-ref-tag">MoMo Ref: ${order.momoTransactionId}</small>` : ''}
+                </div>
               </div>
 
               <div class="meta-divider"></div>
@@ -852,9 +746,10 @@ export function renderOrderConfirmation(container, order) {
     </div>
   `;
 
-  // Print Invoice simulation
+  // View & Print Digital Receipt
   container.querySelector('#print-invoice-btn')?.addEventListener('click', () => {
-    window.print();
+    sounds.playClick();
+    showOrderReceiptModal(order);
   });
 
   // Account Hub

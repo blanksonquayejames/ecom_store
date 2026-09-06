@@ -823,7 +823,6 @@ export const CATEGORIES = [
 
 export const PROMO_CODES = {
   'SAVE20': { discountPercent: 20, description: '20% Off Storewide' },
-  'LUXE15': { discountPercent: 15, description: '15% VIP Peripheral Discount' },
   'FREESHIP': { freeShipping: true, description: 'Free Express Computer Accessories Shipping' }
 };
 

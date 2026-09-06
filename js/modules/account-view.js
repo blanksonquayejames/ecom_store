@@ -90,6 +90,9 @@ export function renderAccountView(container) {
                 <button class="btn btn-secondary btn-sm" id="account-switch-btn">
                   Switch Account
                 </button>
+                <button class="btn btn-secondary btn-sm" id="account-goto-admin-btn">
+                  🛠️ Store Admin
+                </button>
                 <button class="btn btn-ghost btn-sm" id="account-logout-btn">
                   Sign Out
                 </button>
@@ -285,6 +288,12 @@ function attachAccountEvents(container) {
     openAuthModal('login');
   });
 
+  // Admin Portal Navigation
+  container.querySelector('#account-goto-admin-btn')?.addEventListener('click', () => {
+    sounds.playClick();
+    store.setView('admin');
+  });
+
   // Sign Out
   container.querySelector('#account-logout-btn')?.addEventListener('click', () => {
     sounds.playClick();
@@ -326,12 +335,194 @@ function attachAccountEvents(container) {
       const orderId = btn.dataset.orderId;
       const order = store.state.orders.find(o => o.orderId === orderId);
       if (order) {
-        ui.showToast({
-          title: `Receipt #${order.orderId}`,
-          message: `Digital invoice generated for ${order.shippingAddress.fullName}.`,
-          type: 'info'
-        });
+        showOrderReceiptModal(order);
       }
     });
+  });
+}
+
+/**
+ * High-fidelity Digital Receipt Modal Inspector
+ * Displays full itemized invoice, MoMo transaction verification, and PDF printing.
+ */
+export function showOrderReceiptModal(order) {
+  const modal = document.getElementById('receipt-modal');
+  const content = document.getElementById('receipt-modal-content');
+  if (!modal || !content) return;
+
+  const { currency } = store.state;
+  sounds.playPop();
+
+  const receiptNumber = `REC-${order.orderId.replace('7TH-', 'GH')}`;
+  const momoRef = order.momoTransactionId || `MM-${order.orderId.replace('7TH-', '8890')}`;
+  const phone = order.shippingAddress?.phone || order.momoPhone || '+233 24 555 7788';
+  const paymentMethod = order.paymentMethod || 'Mobile Money (MTN MoMo)';
+
+  content.innerHTML = `
+    <div class="receipt-card">
+      <!-- Receipt Header -->
+      <div class="receipt-header">
+        <div class="receipt-brand">
+          <div class="receipt-logo-wrap">
+            <img src="image/7th June logo.png" alt="7th June Computers" class="receipt-logo-img" />
+            <div>
+              <div class="receipt-brand-title">7TH JUNE COMPUTERS</div>
+              <div class="receipt-brand-sub">Premium Hardware & Custom Tech Systems Ltd.</div>
+            </div>
+          </div>
+          <div class="receipt-store-address">
+            <p>Tech Tower, 4th Floor, Airport Residential Area</p>
+            <p>Accra, Greater Accra Region, Ghana</p>
+            <p>VAT Reg: GH-94810294-A • contact@7thjune.com</p>
+          </div>
+        </div>
+
+        <div class="receipt-title-box">
+          <div class="receipt-badge-paid">
+            <span class="paid-dot"></span>
+            <span>PAID &amp; VERIFIED</span>
+          </div>
+          <h2 class="receipt-doc-title">OFFICIAL SALES RECEIPT</h2>
+          <div class="receipt-ref-num">Receipt #: <strong>${receiptNumber}</strong></div>
+          <div class="receipt-date-placed">Date: <strong>${order.date}</strong></div>
+        </div>
+      </div>
+
+      <div class="receipt-divider"></div>
+
+      <!-- Customer & Payment Metadata Grid -->
+      <div class="receipt-meta-grid">
+        <div class="receipt-meta-box">
+          <span class="receipt-meta-label">CUSTOMER / BILLED TO</span>
+          <strong class="receipt-meta-val">${order.shippingAddress?.fullName || 'Valued Customer'}</strong>
+          <p class="receipt-meta-sub">${order.shippingAddress?.address || ''}</p>
+          <p class="receipt-meta-sub">${order.shippingAddress?.city || ''}, ${order.shippingAddress?.country || 'Ghana'}</p>
+          <p class="receipt-meta-sub">Tel: <strong>${phone}</strong></p>
+        </div>
+
+        <div class="receipt-meta-box">
+          <span class="receipt-meta-label">PAYMENT CHANNEL</span>
+          <div class="receipt-momo-badge">
+            <span class="momo-icon-sm">📲</span>
+            <strong>${paymentMethod}</strong>
+          </div>
+          <p class="receipt-meta-sub">Gateway: <strong>Ghana Mobile Money (MoMo)</strong></p>
+          <p class="receipt-meta-sub">MoMo Ref: <code>${momoRef}</code></p>
+          <p class="receipt-meta-sub">Status: <strong class="text-green">Instant USSD PIN Verified</strong></p>
+        </div>
+
+        <div class="receipt-meta-box">
+          <span class="receipt-meta-label">DISPATCH &amp; LOGISTICS</span>
+          <p class="receipt-meta-sub">Order Ref: <strong>${order.orderId}</strong></p>
+          <p class="receipt-meta-sub">Logistics: <strong>${order.carrier || 'FedEx Express Courier'}</strong></p>
+          <p class="receipt-meta-sub">Tracking: <code>${order.trackingNumber || 'FX-84920412A'}</code></p>
+          <p class="receipt-meta-sub">Delivery Status: <strong class="text-blue">${order.status || 'Processing'}</strong></p>
+        </div>
+      </div>
+
+      <!-- Itemized Table -->
+      <div class="receipt-table-wrap">
+        <table class="receipt-items-table">
+          <thead>
+            <tr>
+              <th style="width: 50%;">Item Description</th>
+              <th style="width: 15%; text-align: center;">Qty</th>
+              <th style="width: 15%; text-align: right;">Unit Price</th>
+              <th style="width: 20%; text-align: right;">Amount</th>
+            </tr>
+          </thead>
+          <tbody>
+            ${order.items.map(item => `
+              <tr>
+                <td>
+                  <div class="receipt-item-cell">
+                    <img src="${item.heroImage}" alt="${item.name}" class="receipt-item-thumb" />
+                    <div>
+                      <strong class="receipt-item-name">${item.name}</strong>
+                      <span class="receipt-item-variant">${item.selectedColor ? `${item.selectedColor}` : ''} ${item.selectedOption ? `• ${item.selectedOption}` : ''}</span>
+                    </div>
+                  </div>
+                </td>
+                <td style="text-align: center;">${item.quantity}</td>
+                <td style="text-align: right;">${convertPrice(item.price, currency).formatted}</td>
+                <td style="text-align: right;"><strong>${convertPrice(item.price * item.quantity, currency).formatted}</strong></td>
+              </tr>
+            `).join('')}
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Financial Calculation Summary -->
+      <div class="receipt-finance-wrap">
+        <div class="receipt-notes-col">
+          <div class="receipt-security-note">
+            <span class="shield-icon">🛡️</span>
+            <div>
+              <strong>7th June 3-Year Hardware Protection</strong>
+              <p>This electronic receipt is your official proof of purchase for genuine warranty coverage and concierge technical support in Ghana.</p>
+            </div>
+          </div>
+          <div class="receipt-barcode-row">
+            <div class="receipt-barcode-lines"></div>
+            <span class="receipt-barcode-text">*${order.orderId}*</span>
+          </div>
+        </div>
+
+        <div class="receipt-totals-col">
+          <div class="receipt-total-row">
+            <span>Subtotal</span>
+            <span>${convertPrice(order.subtotal, currency).formatted}</span>
+          </div>
+          ${order.discount > 0 ? `
+            <div class="receipt-total-row receipt-row-discount">
+              <span>Promo Discount</span>
+              <span>-${convertPrice(order.discount, currency).formatted}</span>
+            </div>
+          ` : ''}
+          <div class="receipt-total-row">
+            <span>Insured Courier Shipping</span>
+            <span>${order.shipping === 0 ? '<strong class="text-green">COMPLIMENTARY</strong>' : convertPrice(order.shipping, currency).formatted}</span>
+          </div>
+          <div class="receipt-total-row">
+            <span>Tax &amp; VAT</span>
+            <span>${convertPrice(order.tax, currency).formatted}</span>
+          </div>
+          <div class="receipt-total-divider"></div>
+          <div class="receipt-total-row receipt-grand-row">
+            <span>Total Paid (MoMo)</span>
+            <span class="receipt-grand-amount">${convertPrice(order.total, currency).formatted}</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Receipt Action Bar -->
+      <div class="receipt-modal-actions no-print">
+        <button class="btn btn-primary" id="receipt-print-action-btn">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
+          Print / Save PDF Receipt
+        </button>
+        <button class="btn btn-secondary" id="receipt-close-action-btn">
+          Close Receipt
+        </button>
+      </div>
+    </div>
+  `;
+
+  ui.openModal('receipt-modal');
+
+  // Wire up close and print buttons
+  content.querySelector('#receipt-print-action-btn')?.addEventListener('click', () => {
+    sounds.playClick();
+    window.print();
+  });
+
+  content.querySelector('#receipt-close-action-btn')?.addEventListener('click', () => {
+    sounds.playClick();
+    ui.closeModal('receipt-modal');
+  });
+
+  document.getElementById('receipt-modal-close-btn')?.addEventListener('click', () => {
+    sounds.playClick();
+    ui.closeModal('receipt-modal');
   });
 }

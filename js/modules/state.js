@@ -21,9 +21,24 @@ class Store {
     const savedPromo = localStorage.getItem('aura_promo');
     const savedSearches = localStorage.getItem('aura_searches');
     const savedUser = localStorage.getItem('aura_user');
+    const savedProducts = localStorage.getItem('aura_products');
+    const savedPromoCodes = localStorage.getItem('aura_promo_codes');
+    const savedAdminSession = localStorage.getItem('aura_admin_session');
 
     return {
-      products: PRODUCTS,
+      products: savedProducts ? JSON.parse(savedProducts) : PRODUCTS.map(p => ({
+        ...p,
+        stockCount: p.stockCount !== undefined ? p.stockCount : (p.stock !== undefined ? p.stock : 15),
+        stock: p.stock !== undefined ? p.stock : (p.stockCount !== undefined ? p.stockCount : 15),
+        inStock: p.inStock !== undefined ? p.inStock : ((p.stockCount ?? p.stock ?? 15) > 0)
+      })),
+      promoCodes: savedPromoCodes ? JSON.parse(savedPromoCodes) : PROMO_CODES,
+      adminSession: savedAdminSession ? JSON.parse(savedAdminSession) : {
+        isLoggedIn: false,
+        name: 'Kwame Blankson',
+        role: 'Chief Technology Officer & Administrator',
+        email: 'admin@7thjune.com'
+      },
       cart: savedCart ? JSON.parse(savedCart) : [
         {
           id: 'cart-init-1',
@@ -71,8 +86,13 @@ class Store {
             city: 'San Francisco',
             state: 'CA',
             zip: '94107',
-            country: 'United States'
+            country: 'United States',
+            phone: '+233 24 555 7788'
           },
+          paymentMethod: 'Mobile Money (MTN MoMo)',
+          momoNetwork: 'MTN MoMo',
+          momoPhone: '024 555 7788',
+          momoTransactionId: 'MM-TX-984210',
           timeline: [
             { step: 'Order Placed', time: 'Aug 14, 10:30 AM', completed: true },
             { step: 'Handcrafted Assembly & QA', time: 'Aug 14, 04:15 PM', completed: true },
@@ -228,13 +248,14 @@ class Store {
   // --- Promo Code Actions ---
   applyPromo(code) {
     const cleanCode = code.trim().toUpperCase();
-    if (PROMO_CODES[cleanCode]) {
-      this.state.appliedPromo = { code: cleanCode, ...PROMO_CODES[cleanCode] };
+    const codes = this.state.promoCodes || PROMO_CODES;
+    if (codes[cleanCode]) {
+      this.state.appliedPromo = { code: cleanCode, ...codes[cleanCode] };
       localStorage.setItem('aura_promo', JSON.stringify(this.state.appliedPromo));
       this.notify('promo_applied', this.state.appliedPromo);
       return { success: true, promo: this.state.appliedPromo };
     }
-    return { success: false, message: 'Invalid promotional or VIP code.' };
+    return { success: false, message: 'Invalid promo code.' };
   }
 
   removePromo() {
@@ -325,7 +346,10 @@ class Store {
       tax: summary.tax,
       total: summary.total,
       shippingAddress: orderData.address,
-      paymentMethod: orderData.paymentMethod,
+      paymentMethod: orderData.paymentMethod || 'Mobile Money (MTN MoMo)',
+      momoNetwork: orderData.momoNetwork || 'MTN MoMo',
+      momoPhone: orderData.momoPhone || '',
+      momoTransactionId: `MM-${Math.floor(10000000 + Math.random() * 90000000)}`,
       timeline: [
         { step: 'Order Placed & Verified', time: 'Just now', completed: true },
         { step: 'Aura Artisan Vault Allocation', time: 'In Progress', completed: false },
@@ -403,6 +427,146 @@ class Store {
     this.state.recentSearches = [clean, ...this.state.recentSearches.filter(s => s.toLowerCase() !== clean.toLowerCase())].slice(0, 6);
     localStorage.setItem('aura_searches', JSON.stringify(this.state.recentSearches));
     this.notify('searches_updated', this.state.recentSearches);
+  }
+
+  // --- Admin Portal & Catalog Management ---
+  setAdminSession(isLoggedIn, adminData = {}) {
+    this.state.adminSession = {
+      ...this.state.adminSession,
+      isLoggedIn,
+      ...adminData
+    };
+    localStorage.setItem('aura_admin_session', JSON.stringify(this.state.adminSession));
+    this.notify('admin_session_changed', this.state.adminSession);
+  }
+
+  addProduct(productData) {
+    const id = `prod-${String(Date.now()).slice(-5)}`;
+    const initialStock = Number(productData.stockCount || productData.stock) || 15;
+    const newProduct = {
+      id,
+      rating: 5.0,
+      reviewCount: 1,
+      stockCount: initialStock,
+      stock: initialStock,
+      inStock: initialStock > 0,
+      colors: [{ name: 'Obsidian Black', hex: '#18181b', img: productData.heroImage || '' }],
+      storageOptions: ['Standard Edition'],
+      specs: {},
+      featured: false,
+      badge: 'NEW',
+      gallery: productData.heroImage ? [productData.heroImage] : [],
+      ...productData
+    };
+    this.state.products.unshift(newProduct);
+    localStorage.setItem('aura_products', JSON.stringify(this.state.products));
+    this.notify('products_updated', this.state.products);
+    return newProduct;
+  }
+
+  updateProduct(productId, updatedFields) {
+    const idx = this.state.products.findIndex(p => p.id === productId);
+    if (idx > -1) {
+      this.state.products[idx] = { ...this.state.products[idx], ...updatedFields };
+      if (typeof updatedFields.stockCount !== 'undefined' || typeof updatedFields.stock !== 'undefined') {
+        const sc = Number(updatedFields.stockCount !== undefined ? updatedFields.stockCount : updatedFields.stock);
+        this.state.products[idx].stockCount = sc;
+        this.state.products[idx].stock = sc;
+        this.state.products[idx].inStock = sc > 0;
+      }
+      localStorage.setItem('aura_products', JSON.stringify(this.state.products));
+      this.notify('products_updated', this.state.products);
+      return this.state.products[idx];
+    }
+    return null;
+  }
+
+  deleteProduct(productId) {
+    this.state.products = this.state.products.filter(p => p.id !== productId);
+    localStorage.setItem('aura_products', JSON.stringify(this.state.products));
+    this.notify('products_updated', this.state.products);
+  }
+
+  adjustProductStock(productId, delta) {
+    const prod = this.state.products.find(p => p.id === productId);
+    if (prod) {
+      const current = Number(prod.stockCount !== undefined ? prod.stockCount : (prod.stock !== undefined ? prod.stock : 0));
+      const next = Math.max(0, current + delta);
+      prod.stockCount = next;
+      prod.stock = next;
+      prod.inStock = next > 0;
+      localStorage.setItem('aura_products', JSON.stringify(this.state.products));
+      this.notify('products_updated', this.state.products);
+      return prod;
+    }
+    return null;
+  }
+
+  updateOrderStatus(orderId, newStatus) {
+    const order = this.state.orders.find(o => o.orderId === orderId);
+    if (order) {
+      order.status = newStatus;
+      if (order.timeline) {
+        if (newStatus === 'Delivered') {
+          order.timeline.forEach(t => t.completed = true);
+        } else if (newStatus === 'In Transit') {
+          if (order.timeline[0]) order.timeline[0].completed = true;
+          if (order.timeline[1]) order.timeline[1].completed = true;
+          if (order.timeline[2]) order.timeline[2].completed = true;
+          if (order.timeline[3]) order.timeline[3].completed = false;
+        } else if (newStatus === 'Processing') {
+          if (order.timeline[0]) order.timeline[0].completed = true;
+          if (order.timeline[1]) order.timeline[1].completed = false;
+          if (order.timeline[2]) order.timeline[2].completed = false;
+          if (order.timeline[3]) order.timeline[3].completed = false;
+        }
+      }
+      localStorage.setItem('aura_orders', JSON.stringify(this.state.orders));
+      this.notify('orders_updated', this.state.orders);
+      return order;
+    }
+    return null;
+  }
+
+  addPromoCode(code, promoData) {
+    const cleanCode = code.trim().toUpperCase();
+    this.state.promoCodes[cleanCode] = { ...promoData };
+    localStorage.setItem('aura_promo_codes', JSON.stringify(this.state.promoCodes));
+    this.notify('promos_updated', this.state.promoCodes);
+    return this.state.promoCodes[cleanCode];
+  }
+
+  deletePromoCode(code) {
+    const cleanCode = code.trim().toUpperCase();
+    if (this.state.promoCodes[cleanCode]) {
+      delete this.state.promoCodes[cleanCode];
+      localStorage.setItem('aura_promo_codes', JSON.stringify(this.state.promoCodes));
+      this.notify('promos_updated', this.state.promoCodes);
+      return true;
+    }
+    return false;
+  }
+
+  updateCustomerPoints(delta) {
+    if (this.state.user) {
+      this.state.user.points = Math.max(0, (this.state.user.points || 0) + delta);
+      localStorage.setItem('aura_user', JSON.stringify(this.state.user));
+      this.notify('user_updated', this.state.user);
+    }
+  }
+
+  resetStoreData() {
+    this.state.products = PRODUCTS.map(p => ({
+      ...p,
+      stockCount: p.stockCount !== undefined ? p.stockCount : (p.stock !== undefined ? p.stock : 15),
+      stock: p.stock !== undefined ? p.stock : (p.stockCount !== undefined ? p.stockCount : 15),
+      inStock: p.inStock !== undefined ? p.inStock : ((p.stockCount ?? p.stock ?? 15) > 0)
+    }));
+    this.state.promoCodes = { ...PROMO_CODES };
+    localStorage.removeItem('aura_products');
+    localStorage.removeItem('aura_promo_codes');
+    this.notify('products_updated', this.state.products);
+    this.notify('promos_updated', this.state.promoCodes);
   }
 }
 

@@ -29,7 +29,7 @@
     <div class="container announcement-inner">
       <div class="announcement-text">
         <span class="announcement-sparkle">✦</span>
-        <span>VIP INVITATION: Use code <strong class="promo-highlight" id="announcement-promo-click">SAVE20</strong> for
+        <span>SPECIAL OFFER: Use code <strong class="promo-highlight" id="announcement-promo-click">SAVE20</strong> for
           20% off all mechanical keyboards & gaming accessories.</span>
       </div>
       <div class="announcement-perks">
@@ -144,6 +144,16 @@
             <option value="USD">USD ($)</option>
           </select>
         </div>
+
+        <!-- Store Admin Portal -->
+        <button class="header-icon-btn admin-portal-btn" id="header-admin-btn" title="Store Admin Portal" aria-label="Admin Portal">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <rect x="3" y="3" width="7" height="7" rx="1"></rect>
+            <rect x="14" y="3" width="7" height="7" rx="1"></rect>
+            <rect x="14" y="14" width="7" height="7" rx="1"></rect>
+            <rect x="3" y="14" width="7" height="7" rx="1"></rect>
+          </svg>
+        </button>
 
         <!-- Account Hub -->
         <button class="header-icon-btn" id="header-account-btn" title="Customer Account Hub" aria-label="Account">
@@ -281,6 +291,90 @@
 
 
 
+  <!-- Digital Receipt & Tax Invoice Modal -->
+  <div class="modal" id="receipt-modal" role="dialog" aria-modal="true" aria-labelledby="receipt-modal-title">
+    <div class="modal-dialog modal-lg">
+      <button class="modal-close-btn" id="receipt-modal-close-btn" aria-label="Close Receipt">&times;</button>
+      <div class="receipt-modal-wrap" id="receipt-modal-content">
+        <!-- Dynamically injected receipt content -->
+      </div>
+    </div>
+  </div>
+
+  <!-- Admin Add / Edit Product Modal -->
+  <div class="modal" id="admin-product-modal" role="dialog" aria-modal="true" aria-labelledby="admin-prod-modal-title">
+    <div class="modal-dialog modal-lg">
+      <button class="modal-close-btn" id="admin-prod-modal-close" aria-label="Close Modal" onclick="document.getElementById('admin-product-modal').classList.remove('is-open'); document.getElementById('global-backdrop').classList.remove('is-active'); document.body.classList.remove('no-scroll');">&times;</button>
+      <div class="admin-modal-wrap">
+        <div class="admin-modal-header">
+          <h2 id="admin-prod-modal-title">Add New Hardware Product</h2>
+          <p>Configure hardware specifications, inventory counts, and pricing.</p>
+        </div>
+
+        <form id="admin-product-form" class="admin-product-form">
+          <input type="hidden" id="modal-prod-id" />
+
+          <div class="form-group">
+            <label>Product Name / Model Title</label>
+            <input type="text" class="custom-input" id="modal-prod-name" placeholder="e.g. ApexPro V4 Magnetic Rapid-Trigger Keyboard" required />
+          </div>
+
+          <div class="form-row">
+            <div class="form-group flex-1">
+              <label>Department / Category</label>
+              <select class="custom-select" id="modal-prod-category">
+                <option value="Laptops & Workstations">Laptops & Workstations</option>
+                <option value="Gaming PCs & Towers">Gaming PCs & Towers</option>
+                <option value="Keyboards & Keycaps">Keyboards & Keycaps</option>
+                <option value="Mice & Precision">Mice & Precision</option>
+                <option value="Audio & Headsets">Audio & Headsets</option>
+                <option value="Monitors & Mounts">Monitors & Mounts</option>
+                <option value="Desk Setup & Mats">Desk Setup & Mats</option>
+                <option value="Hubs & Docks">Hubs & Docks</option>
+              </select>
+            </div>
+            <div class="form-group flex-1">
+              <label>Merchandising Badge</label>
+              <input type="text" class="custom-input" id="modal-prod-badge" placeholder="NEW, FLAGSHIP, SALE, etc." value="NEW" />
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group flex-1">
+              <label>Selling Price (USD base)</label>
+              <input type="number" class="custom-input" id="modal-prod-price" min="1" step="0.01" placeholder="199" required />
+            </div>
+            <div class="form-group flex-1">
+              <label>Original / Strikethrough Price (USD)</label>
+              <input type="number" class="custom-input" id="modal-prod-orig-price" min="1" step="0.01" placeholder="249" />
+            </div>
+            <div class="form-group flex-1">
+              <label>Initial Stock Count</label>
+              <input type="number" class="custom-input" id="modal-prod-stock" min="0" placeholder="25" required />
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label>Hero Image URL</label>
+            <input type="url" class="custom-input" id="modal-prod-img" placeholder="https://images.unsplash.com/..." required />
+          </div>
+
+          <div class="form-group">
+            <label>Product Overview & Specifications Summary</label>
+            <textarea class="custom-input custom-textarea" id="modal-prod-desc" rows="3" placeholder="Enter detailed specs, hardware design, key switch mechanism..." required></textarea>
+          </div>
+
+          <div class="admin-modal-actions mt-3">
+            <button type="button" class="btn btn-ghost" onclick="ui.closeModal('admin-product-modal')">Cancel</button>
+            <button type="submit" class="btn btn-primary btn-lg" id="modal-prod-save-btn">
+              Save Product to Catalog
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
   <!-- Global Backdrop for Modals & Drawers -->
   <div class="global-backdrop" id="global-backdrop"></div>
 
@@ -340,6 +434,7 @@
             <li><a href="#" onclick="document.getElementById('header-cart-btn').click()">7th June Cart</a></li>
             <li><a href="#">Zurich Vault Custody & Transit</a></li>
             <li><a href="#">3-Year Global Hardware Warranty</a></li>
+            <li><a href="#" id="footer-admin-link">Store Administration (Admin Portal)</a></li>
           </ul>
         </div>
 
@@ -365,7 +460,7 @@
         <div class="footer-badges">
           <span>256-Bit Quantum TLS</span>
           <span class="dot-sep">•</span>
-          <span>Apple Pay & Crypto Accepted</span>
+          <span>Ghana Mobile Money (MoMo) Gateway</span>
           <span class="dot-sep">•</span>
           <span>White Glove Logistics</span>
         </div>

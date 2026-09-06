@@ -13,6 +13,7 @@ import { initCartDrawer, updateCartBadges } from './modules/cart-drawer.js';
 import { renderCheckoutView } from './modules/checkout-view.js';
 import { renderAccountView } from './modules/account-view.js';
 import { initAuthModal, openAuthModal } from './modules/auth-modal.js';
+import { renderAdminView } from './modules/admin-view.js';
 
 document.addEventListener('DOMContentLoaded', () => {
   initApp();
@@ -49,6 +50,13 @@ function initApp() {
     }
   });
 
+  store.subscribe('products_updated', () => {
+    if (store.state.currentView.page === 'catalog') {
+      const mainViewContainer = document.getElementById('app-main-view');
+      if (mainViewContainer) renderCatalogView(mainViewContainer);
+    }
+  });
+
   // Initial Route Render
   handleRoute(store.state.currentView.page, store.state.currentView.productId);
 }
@@ -73,6 +81,9 @@ function handleRoute(page, productId) {
     case 'account':
       renderAccountView(mainViewContainer);
       break;
+    case 'admin':
+      renderAdminView(mainViewContainer);
+      break;
     default:
       renderCatalogView(mainViewContainer);
   }
@@ -80,17 +91,20 @@ function handleRoute(page, productId) {
 
 function updateHeaderLayoutForView(page) {
   const isAccount = page === 'account';
+  const isAdmin = page === 'admin';
   document.body.setAttribute('data-view', page);
 
   const announcementBar = document.getElementById('top-announcement-bar') || document.querySelector('.announcement-bar');
   const searchWrap = document.querySelector('.header-search-wrap');
   const currencyWrap = document.querySelector('.currency-selector-wrap');
   const accountBtn = document.getElementById('header-account-btn');
+  const cartBtn = document.getElementById('header-cart-btn');
 
-  if (announcementBar) announcementBar.style.display = isAccount ? 'none' : '';
-  if (searchWrap) searchWrap.style.display = isAccount ? 'none' : '';
-  if (currencyWrap) currencyWrap.style.display = isAccount ? 'none' : '';
-  if (accountBtn) accountBtn.style.display = isAccount ? 'none' : '';
+  if (announcementBar) announcementBar.style.display = (isAccount || isAdmin) ? 'none' : '';
+  if (searchWrap) searchWrap.style.display = (isAccount || isAdmin) ? 'none' : '';
+  if (currencyWrap) currencyWrap.style.display = (isAccount || isAdmin) ? 'none' : '';
+  if (accountBtn) accountBtn.style.display = (isAccount || isAdmin) ? 'none' : '';
+  if (cartBtn) cartBtn.style.display = isAdmin ? 'none' : '';
 }
 
 function setupHeaderEvents() {
@@ -126,6 +140,18 @@ function setupHeaderEvents() {
   document.getElementById('header-account-btn')?.addEventListener('click', () => {
     sounds.playClick();
     store.setView('account');
+  });
+
+  // Admin Portal Button (Header & Footer)
+  document.getElementById('header-admin-btn')?.addEventListener('click', () => {
+    sounds.playClick();
+    store.setView('admin');
+  });
+
+  document.getElementById('footer-admin-link')?.addEventListener('click', (e) => {
+    e.preventDefault();
+    sounds.playClick();
+    store.setView('admin');
   });
 
   // Announcement Bar Promo Click
