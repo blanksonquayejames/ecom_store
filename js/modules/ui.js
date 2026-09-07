@@ -127,6 +127,117 @@ class UIManager {
     document.body.classList.remove('no-scroll');
   }
 
+  /**
+   * Modern Confirmation Prompt Dialog
+   * Returns a Promise resolving to true (confirmed) or false (cancelled)
+   */
+  confirm({
+    title = 'Confirm Action',
+    message = 'Are you sure you want to proceed?',
+    subMessage = '',
+    confirmText = 'Confirm',
+    cancelText = 'Cancel',
+    type = 'danger', // 'danger' | 'warning' | 'primary'
+    icon = null
+  } = {}) {
+    return new Promise((resolve) => {
+      const modal = document.getElementById('confirm-modal');
+      const backdrop = document.getElementById('global-backdrop');
+      const titleEl = document.getElementById('confirm-modal-title');
+      const msgEl = document.getElementById('confirm-modal-message');
+      const subMsgBox = document.getElementById('confirm-modal-submessage-box');
+      const subMsgEl = document.getElementById('confirm-modal-submessage');
+      const iconWrap = document.getElementById('confirm-modal-icon-wrap');
+      const iconEl = document.getElementById('confirm-modal-icon');
+      const cancelBtn = document.getElementById('confirm-modal-cancel-btn');
+      const actionBtn = document.getElementById('confirm-modal-action-btn');
+      const closeBtn = document.getElementById('confirm-modal-close-btn');
+
+      if (!modal) {
+        resolve(window.confirm(`${title}\n\n${message}`));
+        return;
+      }
+
+      if (type === 'danger') sounds.playPop();
+      else sounds.playClick();
+
+      if (titleEl) titleEl.textContent = title;
+      if (msgEl) msgEl.innerHTML = message;
+
+      if (subMsgBox && subMsgEl) {
+        if (subMessage) {
+          subMsgEl.innerHTML = subMessage;
+          subMsgBox.style.display = 'block';
+        } else {
+          subMsgBox.style.display = 'none';
+        }
+      }
+
+      const defaultIcons = {
+        danger: '🗑️',
+        warning: '🚪',
+        primary: '✓',
+        info: 'ℹ️'
+      };
+      if (iconEl) iconEl.textContent = icon || defaultIcons[type] || '⚠️';
+
+      if (iconWrap) {
+        iconWrap.className = `confirm-icon-wrap confirm-theme-${type}`;
+      }
+
+      if (actionBtn) {
+        actionBtn.textContent = confirmText;
+        actionBtn.className = `btn flex-1 ${type === 'danger' ? 'btn-danger' : 'btn-primary'}`;
+      }
+
+      if (cancelBtn) {
+        cancelBtn.textContent = cancelText;
+      }
+
+      let settled = false;
+      const finish = (confirmed) => {
+        if (settled) return;
+        settled = true;
+        sounds.playClick();
+        window.removeEventListener('keydown', onKeyDown);
+        cancelBtn?.removeEventListener('click', onCancel);
+        actionBtn?.removeEventListener('click', onAction);
+        closeBtn?.removeEventListener('click', onCancel);
+        backdrop?.removeEventListener('click', onBackdrop);
+        this.closeModal('confirm-modal');
+        resolve(confirmed);
+      };
+
+      const onAction = () => finish(true);
+      const onCancel = () => finish(false);
+      const onBackdrop = () => {
+        if (modal.classList.contains('is-open')) finish(false);
+      };
+
+      const onKeyDown = (e) => {
+        if (!modal.classList.contains('is-open')) return;
+        if (e.key === 'Escape') {
+          e.preventDefault();
+          e.stopPropagation();
+          finish(false);
+        } else if (e.key === 'Enter') {
+          e.preventDefault();
+          e.stopPropagation();
+          finish(true);
+        }
+      };
+
+      cancelBtn?.addEventListener('click', onCancel);
+      actionBtn?.addEventListener('click', onAction);
+      closeBtn?.addEventListener('click', onCancel);
+      backdrop?.addEventListener('click', onBackdrop);
+      window.addEventListener('keydown', onKeyDown);
+
+      this.openModal('confirm-modal');
+      setTimeout(() => actionBtn?.focus(), 60);
+    });
+  }
+
   setupEscapeListener() {
     window.addEventListener('keydown', (e) => {
       if (e.key === 'Escape') {

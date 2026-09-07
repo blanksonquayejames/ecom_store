@@ -8,6 +8,7 @@ import { convertPrice } from './currency.js';
 import { ui } from './ui.js';
 import { sounds } from './audio.js';
 import { showOrderReceiptModal } from './account-view.js';
+import { openAuthModal } from './auth-modal.js';
 
 export function renderCheckoutView(container) {
   const { cart, currency, appliedPromo, user } = store.state;
@@ -28,21 +29,30 @@ export function renderCheckoutView(container) {
     return;
   }
 
+  const isLoggedIn = Boolean(user && user.isLoggedIn);
+  if (!isLoggedIn) {
+    renderCheckoutAuthGate(container, cart, currency);
+    return;
+  }
+
   let currentStep = 1;
   const summary = store.getCartSummary();
 
+  const defaultAddr = (user.addresses && user.addresses.find(a => a.isDefault)) || (user.addresses && user.addresses[0]) || null;
+
   const formData = {
-    email: user.email || 'julian.vance@auraconcept.com',
+    email: user.email || 'julian.vance@7thjune.com',
     fullName: user.name || 'Julian Vance',
-    address: '742 Evergreen Terrace, Suite 400',
-    city: 'San Francisco',
-    state: 'CA',
-    zip: '94107',
-    country: 'United States',
+    phone: defaultAddr?.phone || user.phone || '+233 24 555 7788',
+    address: defaultAddr ? defaultAddr.address : '7th June Tech Tower, Suite 400',
+    city: defaultAddr ? defaultAddr.city : 'Accra',
+    state: defaultAddr ? (defaultAddr.region || defaultAddr.state || 'Greater Accra') : 'Greater Accra',
+    zip: defaultAddr ? (defaultAddr.zip || '00233') : '00233',
+    country: defaultAddr ? defaultAddr.country : 'Ghana',
     shippingMethod: 'FedEx White Glove Priority Courier',
     paymentMethod: 'Mobile Money',
     momoNetwork: 'MTN MoMo',
-    momoPhone: '024 555 7788',
+    momoPhone: defaultAddr?.phone || user.phone || '024 555 7788',
     momoAccountName: user.name || 'Kwame Blankson'
   };
 
@@ -142,6 +152,23 @@ export function renderCheckoutView(container) {
                 <p>Provide your delivery location for our insured white-glove logistics network.</p>
               </div>
 
+              ${user.addresses && user.addresses.length > 0 ? `
+                <div class="chk-saved-addresses-box mb-4">
+                  <div class="chk-saved-addr-label">
+                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+                    <span>Saved Delivery Addresses (${user.name}):</span>
+                  </div>
+                  <div class="chk-saved-addr-chips">
+                    ${user.addresses.map((a, i) => `
+                      <button type="button" class="chk-addr-chip ${a.isDefault ? 'is-active' : ''}" data-addr-id="${a.id}">
+                        <span class="chk-chip-title">${a.type || 'Destination ' + (i+1)}</span>
+                        <span class="chk-chip-detail">${a.address}, ${a.city}</span>
+                      </button>
+                    `).join('')}
+                  </div>
+                </div>
+              ` : ''}
+
               <div class="checkout-form">
                 <div class="form-group">
                   <label>Email Address for Order Confirmation</label>
@@ -155,7 +182,7 @@ export function renderCheckoutView(container) {
                   </div>
                   <div class="form-group flex-1">
                     <label>Phone Number (Courier Dispatch)</label>
-                    <input type="tel" class="custom-input" id="chk-phone" value="+1 (415) 890-4321" placeholder="+1 (555) 000-0000" />
+                    <input type="tel" class="custom-input" id="chk-phone" value="${formData.phone}" placeholder="+233 24 555 7788" />
                   </div>
                 </div>
 
@@ -167,29 +194,29 @@ export function renderCheckoutView(container) {
                 <div class="form-row">
                   <div class="form-group flex-2">
                     <label>City</label>
-                    <input type="text" class="custom-input" id="chk-city" value="${formData.city}" placeholder="San Francisco" required />
+                    <input type="text" class="custom-input" id="chk-city" value="${formData.city}" placeholder="Accra" required />
                   </div>
                   <div class="form-group flex-1">
                     <label>State / Region</label>
-                    <input type="text" class="custom-input" id="chk-state" value="${formData.state}" placeholder="CA" required />
+                    <input type="text" class="custom-input" id="chk-state" value="${formData.state}" placeholder="Greater Accra" required />
                   </div>
                   <div class="form-group flex-1">
                     <label>Postal Code</label>
-                    <input type="text" class="custom-input" id="chk-zip" value="${formData.zip}" placeholder="94107" required />
+                    <input type="text" class="custom-input" id="chk-zip" value="${formData.zip}" placeholder="00233" required />
                   </div>
                 </div>
 
                 <div class="form-group">
                   <label>Country / Territory</label>
                   <select class="custom-select" id="chk-country">
-                    <option value="United States" selected>United States</option>
-                    <option value="United Kingdom">United Kingdom</option>
-                    <option value="Germany">Germany</option>
-                    <option value="Switzerland">Switzerland</option>
-                    <option value="Japan">Japan</option>
-                    <option value="Canada">Canada</option>
-                    <option value="Australia">Australia</option>
-                    <option value="Ghana">Ghana</option>
+                    <option value="Ghana" ${formData.country === 'Ghana' ? 'selected' : ''}>Ghana</option>
+                    <option value="United States" ${formData.country === 'United States' ? 'selected' : ''}>United States</option>
+                    <option value="United Kingdom" ${formData.country === 'United Kingdom' ? 'selected' : ''}>United Kingdom</option>
+                    <option value="Germany" ${formData.country === 'Germany' ? 'selected' : ''}>Germany</option>
+                    <option value="Switzerland" ${formData.country === 'Switzerland' ? 'selected' : ''}>Switzerland</option>
+                    <option value="Japan" ${formData.country === 'Japan' ? 'selected' : ''}>Japan</option>
+                    <option value="Canada" ${formData.country === 'Canada' ? 'selected' : ''}>Canada</option>
+                    <option value="Australia" ${formData.country === 'Australia' ? 'selected' : ''}>Australia</option>
                   </select>
                 </div>
 
@@ -444,6 +471,35 @@ function attachCheckoutEvents(container, formData) {
     window.scrollTo({ top: 120, behavior: 'smooth' });
   };
 
+  // Address Chips Selection
+  container.querySelectorAll('.chk-addr-chip').forEach(chip => {
+    chip.addEventListener('click', () => {
+      sounds.playClick();
+      const addrId = chip.dataset.addrId;
+      const addr = (store.state.user?.addresses || []).find(a => a.id === addrId);
+      if (!addr) return;
+
+      container.querySelectorAll('.chk-addr-chip').forEach(c => c.classList.remove('is-active'));
+      chip.classList.add('is-active');
+
+      const nameInput = container.querySelector('#chk-name');
+      const phoneInput = container.querySelector('#chk-phone');
+      const addrInput = container.querySelector('#chk-address');
+      const cityInput = container.querySelector('#chk-city');
+      const stateInput = container.querySelector('#chk-state');
+      const zipInput = container.querySelector('#chk-zip');
+      const countrySelect = container.querySelector('#chk-country');
+
+      if (nameInput) nameInput.value = addr.fullName || store.state.user?.name || '';
+      if (phoneInput) phoneInput.value = addr.phone || store.state.user?.phone || '';
+      if (addrInput) addrInput.value = addr.address || '';
+      if (cityInput) cityInput.value = addr.city || '';
+      if (stateInput) stateInput.value = addr.region || addr.state || '';
+      if (zipInput) zipInput.value = addr.zip || '00233';
+      if (countrySelect && addr.country) countrySelect.value = addr.country;
+    });
+  });
+
   // Step 1 to 2
   container.querySelector('#chk-goto-step-2')?.addEventListener('click', () => {
     const email = container.querySelector('#chk-email')?.value.trim();
@@ -462,11 +518,12 @@ function attachCheckoutEvents(container, formData) {
 
     formData.email = email;
     formData.fullName = name;
+    formData.phone = container.querySelector('#chk-phone')?.value.trim() || formData.phone;
     formData.address = address;
     formData.city = city;
-    formData.state = container.querySelector('#chk-state')?.value || 'CA';
-    formData.zip = container.querySelector('#chk-zip')?.value || '94107';
-    formData.country = container.querySelector('#chk-country')?.value || 'United States';
+    formData.state = container.querySelector('#chk-state')?.value || 'Greater Accra';
+    formData.zip = container.querySelector('#chk-zip')?.value || '00233';
+    formData.country = container.querySelector('#chk-country')?.value || 'Ghana';
 
     goToStep(2);
   });
@@ -755,12 +812,146 @@ export function renderOrderConfirmation(container, order) {
   // Account Hub
   container.querySelector('#view-account-hub-btn')?.addEventListener('click', () => {
     sounds.playClick();
-    store.setView('account');
+    store.setView('account', null, { tab: 'orders' });
   });
 
   // Return to Catalog
   container.querySelector('#return-catalog-btn')?.addEventListener('click', () => {
     sounds.playClick();
     store.setView('catalog');
+  });
+}
+
+/**
+  * Checkout Authentication Gate for Unauthenticated Shoppers
+  */
+function renderCheckoutAuthGate(container, cart, currency) {
+  const summary = store.getCartSummary();
+  const totalItems = cart.reduce((acc, item) => acc + item.quantity, 0);
+
+  container.innerHTML = `
+    <div class="checkout-auth-gate-wrapper animate-fade-in">
+      <div class="container" style="max-width: 660px; margin: 2.5rem auto; padding: 0 1.25rem;">
+        
+        <div class="mb-3">
+          <button class="btn btn-ghost btn-sm" id="chk-gate-back-btn">
+            &larr; Return to Storefront Collection
+          </button>
+        </div>
+
+        <div class="checkout-auth-card">
+          <div class="auth-gate-icon-badge">
+            <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+          </div>
+          
+          <span class="auth-gate-kicker">7TH JUNE COMPUTERS • CLIENT IDENTITY & DISPATCH</span>
+          <h2 class="auth-gate-title">Sign In or Register to Checkout</h2>
+          <p class="auth-gate-sub">
+            To protect high-value hardware purchases, provide end-to-end white glove delivery tracking, and apply exclusive VIP rewards, please sign in or create an account to proceed.
+          </p>
+
+          <!-- Order Summary Card -->
+          <div class="chk-auth-cart-snippet">
+            <div class="snippet-info">
+              <span class="snippet-count"><strong>${totalItems}</strong> item${totalItems > 1 ? 's' : ''} reserved in your bag</span>
+              <span class="snippet-note">Tamper-proof insured packaging included</span>
+            </div>
+            <div class="snippet-total">
+              ${convertPrice(summary.total, currency).formatted}
+            </div>
+          </div>
+
+          <!-- Primary Actions -->
+          <div class="auth-gate-actions">
+            <button class="btn btn-primary btn-lg w-100" id="chk-gate-signin-btn">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><polyline points="10 17 15 12 10 7"/><line x1="15" y1="12" x2="3" y2="12"/></svg>
+              Sign In to Your Account
+            </button>
+            <button class="btn btn-secondary btn-lg w-100" id="chk-gate-register-btn">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="8.5" cy="7" r="4"/><line x1="20" y1="8" x2="20" y2="14"/><line x1="23" y1="11" x2="17" y2="11"/></svg>
+              Create VIP Account (+500 Pts)
+            </button>
+          </div>
+
+          <!-- VIP Quick Demo Sign In -->
+          <div class="auth-demo-divider mt-4">
+            <span>OR 1-CLICK INSTANT ACCESS</span>
+          </div>
+          <div class="auth-demo-buttons">
+            <button type="button" class="btn btn-outline btn-sm w-100" id="chk-gate-demo-julian">
+              👑 Instant Sign In as Julian Vance (VIP Member)
+            </button>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  `;
+
+  // Attach Events
+  container.querySelector('#chk-gate-back-btn')?.addEventListener('click', () => {
+    sounds.playClick();
+    store.setView('catalog');
+  });
+
+  container.querySelector('#chk-gate-signin-btn')?.addEventListener('click', () => {
+    sounds.playClick();
+    openAuthModal('login', {
+      redirectTo: 'checkout',
+      notice: '<strong>Sign In Required:</strong> Please sign in to complete your purchase.'
+    });
+  });
+
+  container.querySelector('#chk-gate-register-btn')?.addEventListener('click', () => {
+    sounds.playClick();
+    openAuthModal('register', {
+      redirectTo: 'checkout',
+      notice: '<strong>Registration:</strong> Create your 7th June account to complete your purchase.'
+    });
+  });
+
+  container.querySelector('#chk-gate-demo-julian')?.addEventListener('click', () => {
+    sounds.playSuccess();
+    const user = {
+      isLoggedIn: true,
+      role: 'customer',
+      name: 'Julian Vance',
+      email: 'julian.vance@7thjune.com',
+      phone: '+233 24 555 7788',
+      tier: 'Platinum Titan VIP',
+      points: 3450,
+      avatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=400&q=80',
+      addresses: [
+        {
+          id: 'addr-1',
+          type: 'Primary Office (Ghana)',
+          fullName: 'Julian Vance',
+          address: '7th June Tech Tower, Suite 400',
+          city: 'Accra',
+          region: 'Airport Residential Area',
+          country: 'Ghana',
+          phone: '+233 24 555 7788',
+          isDefault: true
+        },
+        {
+          id: 'addr-2',
+          type: 'Secondary Dispatch (USA)',
+          fullName: 'Julian Vance',
+          address: '742 Evergreen Terrace, Suite 800',
+          city: 'San Francisco',
+          region: 'CA 94107',
+          country: 'United States',
+          phone: '+1 (415) 890-4321',
+          isDefault: false
+        }
+      ]
+    };
+    store.setUser(user);
+    ui.showToast({
+      title: 'Welcome back, Julian!',
+      message: 'Signed in as Julian Vance. Saved delivery addresses loaded.',
+      type: 'success'
+    });
+    renderCheckoutView(container);
   });
 }

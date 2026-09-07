@@ -7,6 +7,7 @@ import { store } from './state.js';
 import { convertPrice } from './currency.js';
 import { ui } from './ui.js';
 import { sounds } from './audio.js';
+import { openAuthModal } from './auth-modal.js';
 
 export function initCartDrawer() {
   const drawer = document.getElementById('cart-drawer');
@@ -289,6 +290,21 @@ function attachCartDrawerEvents(body, footer) {
 
   // Checkout Button
   footer.querySelector('#drawer-checkout-btn')?.addEventListener('click', () => {
+    sounds.playClick();
+    const isLoggedIn = !!(store.state.user && store.state.user.isLoggedIn);
+    if (!isLoggedIn) {
+      ui.toggleDrawer('cart-drawer', false);
+      ui.showToast({
+        title: 'Sign In Required',
+        message: 'Please sign in or create an account to proceed to checkout.',
+        type: 'info'
+      });
+      openAuthModal('login', {
+        redirectTo: 'checkout',
+        notice: '<strong>Sign In Required:</strong> Please sign in or create an account to proceed with checkout.'
+      });
+      return;
+    }
     ui.toggleDrawer('cart-drawer', false);
     store.setView('checkout');
   });

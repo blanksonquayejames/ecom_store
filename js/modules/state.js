@@ -33,12 +33,23 @@ class Store {
         inStock: p.inStock !== undefined ? p.inStock : ((p.stockCount ?? p.stock ?? 15) > 0)
       })),
       promoCodes: savedPromoCodes ? JSON.parse(savedPromoCodes) : PROMO_CODES,
-      adminSession: savedAdminSession ? JSON.parse(savedAdminSession) : {
-        isLoggedIn: false,
-        name: 'Kwame Blankson',
-        role: 'Chief Technology Officer & Administrator',
-        email: 'admin@7thjune.com'
-      },
+      adminSession: (() => {
+        let u = savedUser ? JSON.parse(savedUser) : null;
+        if (u && u.isLoggedIn && u.role === 'admin') {
+          return {
+            isLoggedIn: true,
+            name: u.name,
+            role: u.tier || 'Chief Technology Officer & Administrator',
+            email: u.email
+          };
+        }
+        return {
+          isLoggedIn: false,
+          name: '',
+          role: '',
+          email: ''
+        };
+      })(),
       cart: savedCart ? JSON.parse(savedCart) : [
         {
           id: 'cart-init-1',
@@ -101,14 +112,52 @@ class Store {
           ]
         }
       ],
-      user: savedUser ? JSON.parse(savedUser) : {
-        isLoggedIn: true,
-        name: 'Julian Vance',
-        email: 'julian.vance@7thjune.com',
-        tier: '7th June Platinum VIP',
-        points: 2450,
-        avatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=400&q=80'
-      },
+      user: (() => {
+        let parsed = savedUser ? JSON.parse(savedUser) : null;
+        const defaultAddresses = [
+          {
+            id: 'addr-1',
+            type: 'Primary Office (Ghana)',
+            fullName: 'Julian Vance',
+            address: '7th June Tech Tower, Suite 400',
+            city: 'Accra',
+            region: 'Airport Residential Area',
+            country: 'Ghana',
+            phone: '+233 24 555 7788',
+            isDefault: true
+          },
+          {
+            id: 'addr-2',
+            type: 'Secondary Dispatch (USA)',
+            fullName: 'Julian Vance',
+            address: '742 Evergreen Terrace, Suite 800',
+            city: 'San Francisco',
+            region: 'CA 94107',
+            country: 'United States',
+            phone: '+1 (415) 890-4321',
+            isDefault: false
+          }
+        ];
+        if (!parsed) {
+          return {
+            isLoggedIn: false,
+            role: 'customer',
+            name: 'Guest Shopper',
+            email: '',
+            phone: '',
+            tier: 'Guest Member',
+            points: 0,
+            avatar: 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&w=400&q=80',
+            addresses: []
+          };
+        }
+        if (!parsed.role) parsed.role = 'customer';
+        if (!parsed.addresses || !Array.isArray(parsed.addresses) || parsed.addresses.length === 0) {
+          parsed.addresses = defaultAddresses;
+        }
+        if (!parsed.phone) parsed.phone = '+233 24 555 7788';
+        return parsed;
+      })(),
       filters: {
         category: 'All Products',
         query: '',
@@ -369,31 +418,151 @@ class Store {
     return newOrder;
   }
 
-  // --- User Authentication ---
   setUser(userData) {
     this.state.user = { ...this.state.user, isLoggedIn: true, ...userData };
+    if (this.state.user.role === 'admin') {
+      this.state.adminSession = {
+        isLoggedIn: true,
+        name: this.state.user.name,
+        role: this.state.user.tier || 'Chief Technology Officer & Administrator',
+        email: this.state.user.email
+      };
+      localStorage.setItem('aura_admin_session', JSON.stringify(this.state.adminSession));
+      this.notify('admin_session_changed', this.state.adminSession);
+    } else {
+      this.state.adminSession = {
+        isLoggedIn: false,
+        name: '',
+        role: '',
+        email: ''
+      };
+      localStorage.removeItem('aura_admin_session');
+      this.notify('admin_session_changed', this.state.adminSession);
+    }
     localStorage.setItem('aura_user', JSON.stringify(this.state.user));
     this.notify('user_updated', this.state.user);
+  }
+
+  updateUserProfile(updates) {
+    if (!this.state.user) return;
+    this.state.user = {
+      ...this.state.user,
+      ...updates
+    };
+    localStorage.setItem('aura_user', JSON.stringify(this.state.user));
+    this.notify('user_updated', this.state.user);
+    return this.state.user;
+  }
+
+  addAddress(addressData) {
+    if (!this.state.user) return null;
+    if (!this.state.user.addresses) this.state.user.addresses = [];
+    
+    const newAddress = {
+      id: `addr-${Date.now()}`,
+      fullName: addressData.fullName || this.state.user.name,
+      type: addressData.type || 'Office',
+      address: addressData.address || '',
+      city: addressData.city || '',
+      region: addressData.region || '',
+      country: addressData.country || 'Ghana',
+      phone: addressData.phone || this.state.user.phone || '',
+      isDefault: Boolean(addressData.isDefault) || this.state.user.addresses.length === 0
+    };
+
+    if (newAddress.isDefault) {
+      this.state.user.addresses.forEach(a => a.isDefault = false);
+    }
+
+    this.state.user.addresses.push(newAddress);
+    localStorage.setItem('aura_user', JSON.stringify(this.state.user));
+    this.notify('user_updated', this.state.user);
+    return newAddress;
+  }
+
+  updateAddress(addressId, updatedData) {
+    if (!this.state.user || !this.state.user.addresses) return null;
+    const idx = this.state.user.addresses.findIndex(a => a.id === addressId);
+    if (idx === -1) return null;
+
+    if (updatedData.isDefault) {
+      this.state.user.addresses.forEach(a => a.isDefault = false);
+    }
+
+    this.state.user.addresses[idx] = {
+      ...this.state.user.addresses[idx],
+      ...updatedData
+    };
+
+    localStorage.setItem('aura_user', JSON.stringify(this.state.user));
+    this.notify('user_updated', this.state.user);
+    return this.state.user.addresses[idx];
+  }
+
+  deleteAddress(addressId) {
+    if (!this.state.user || !this.state.user.addresses) return false;
+    const prevDefault = this.state.user.addresses.find(a => a.id === addressId)?.isDefault;
+    this.state.user.addresses = this.state.user.addresses.filter(a => a.id !== addressId);
+    
+    // If the default was deleted, assign default to the first one remaining
+    if (prevDefault && this.state.user.addresses.length > 0) {
+      this.state.user.addresses[0].isDefault = true;
+    }
+
+    localStorage.setItem('aura_user', JSON.stringify(this.state.user));
+    this.notify('user_updated', this.state.user);
+    return true;
+  }
+
+  setDefaultAddress(addressId) {
+    if (!this.state.user || !this.state.user.addresses) return false;
+    let found = false;
+    this.state.user.addresses.forEach(a => {
+      if (a.id === addressId) {
+        a.isDefault = true;
+        found = true;
+      } else {
+        a.isDefault = false;
+      }
+    });
+
+    if (found) {
+      localStorage.setItem('aura_user', JSON.stringify(this.state.user));
+      this.notify('user_updated', this.state.user);
+    }
+    return found;
   }
 
   logout() {
     this.state.user = {
       isLoggedIn: false,
+      role: 'customer',
       name: 'Guest Shopper',
       email: 'guest@7thjune.com',
+      phone: '+233 24 555 7788',
       tier: 'Guest Account',
       points: 0,
-      avatar: 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&w=400&q=80'
+      avatar: 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&w=400&q=80',
+      addresses: []
+    };
+    this.state.adminSession = {
+      isLoggedIn: false,
+      name: '',
+      role: '',
+      email: ''
     };
     localStorage.removeItem('aura_user');
+    localStorage.removeItem('aura_admin_session');
     this.notify('user_updated', this.state.user);
+    this.notify('admin_session_changed', this.state.adminSession);
   }
 
   // --- Navigation & View Controller ---
-  setView(page, productId = null) {
-    this.state.currentView = { page, productId };
+  setView(page, productId = null, options = {}) {
+    const tab = options.tab || null;
+    this.state.currentView = { page, productId, tab };
     window.scrollTo({ top: 0, behavior: 'smooth' });
-    this.notify('view_changed', this.state.currentView);
+    this.notify('view_changed', { ...this.state.currentView, options });
   }
 
   setQuickView(productId) {

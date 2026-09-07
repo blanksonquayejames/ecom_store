@@ -19,23 +19,85 @@ document.addEventListener('DOMContentLoaded', () => {
   initApp();
 });
 
+function parseHashRoute() {
+  const hash = window.location.hash.replace(/^#\/?/, '').trim();
+  if (!hash) return { page: 'catalog', productId: null, tab: null };
+
+  const parts = hash.split('/');
+  const route = parts[0].toLowerCase();
+  const sub = parts[1] || null;
+
+  switch (route) {
+    case 'catalog':
+      return { page: 'catalog', productId: null, tab: null };
+    case 'product':
+    case 'pdp':
+      return { page: 'pdp', productId: sub, tab: null };
+    case 'checkout':
+      return { page: 'checkout', productId: null, tab: null };
+    case 'account':
+      return { page: 'account', productId: null, tab: sub || 'overview' };
+    case 'admin':
+      return { page: 'admin', productId: null, tab: sub || 'overview' };
+    default:
+      return { page: 'catalog', productId: null, tab: null };
+  }
+}
+
+function syncHash(page, productId = null, tab = null) {
+  let targetHash = '#/catalog';
+  if (page === 'pdp' && productId) {
+    targetHash = `#/product/${productId}`;
+  } else if (page === 'checkout') {
+    targetHash = '#/checkout';
+  } else if (page === 'account') {
+    targetHash = tab ? `#/account/${tab}` : '#/account/overview';
+  } else if (page === 'admin') {
+    targetHash = tab ? `#/admin/${tab}` : '#/admin/overview';
+  }
+  if (window.location.hash !== targetHash) {
+    history.replaceState(null, '', targetHash);
+  }
+}
+
 function initApp() {
   // Apply saved theme
   document.documentElement.setAttribute('data-theme', store.state.theme);
 
   // Initialize UI & Components
   ui.init();
+  window.ui = ui;
+  window.store = store;
   initCartDrawer();
   initAuthModal();
   updateCartBadges();
 
   // Setup Global Header & Navigation
   setupHeaderEvents();
+  setupUserHubDropdown();
   setupGlobalSearch();
 
-  // Subscribe to View changes
-  store.subscribe('view_changed', ({ page, productId }) => {
-    handleRoute(page, productId);
+  // Parse initial route from URL Hash
+  const initialRoute = parseHashRoute();
+  store.state.currentView = {
+    page: initialRoute.page,
+    productId: initialRoute.productId,
+    tab: initialRoute.tab
+  };
+
+  // Subscribe to View changes from store
+  store.subscribe('view_changed', ({ page, productId, tab, options = {} }) => {
+    handleRoute(page, productId, tab, !options.skipHash);
+  });
+
+  // Listen to browser Back / Forward Navigation (hashchange)
+  window.addEventListener('hashchange', () => {
+    const route = parseHashRoute();
+    if (store.state.currentView.page !== route.page ||
+        store.state.currentView.productId !== route.productId ||
+        store.state.currentView.tab !== route.tab) {
+      store.setView(route.page, route.productId, { tab: route.tab, skipHash: true });
+    }
   });
 
   store.subscribe('quick_view_changed', (productId) => {
@@ -44,9 +106,15 @@ function initApp() {
     }
   });
 
-  store.subscribe('user_updated', () => {
-    if (store.state.currentView.page === 'account') {
-      handleRoute('account');
+  store.subscribe('user_updated', (user) => {
+    updateHeaderUserStatus(user);
+    const mainView = document.getElementById('app-main-view');
+    if (store.state.currentView.page === 'account' && mainView) {
+      renderAccountView(mainView, store.state.currentView.tab || 'overview');
+    } else if (store.state.currentView.page === 'admin' && mainView) {
+      renderAdminView(mainView, store.state.currentView.tab || 'overview');
+    } else if (store.state.currentView.page === 'checkout' && mainView) {
+      renderCheckoutView(mainView);
     }
   });
 
@@ -57,16 +125,21 @@ function initApp() {
     }
   });
 
-  // Initial Route Render
-  handleRoute(store.state.currentView.page, store.state.currentView.productId);
+  // Initial render
+  updateHeaderUserStatus(store.state.user);
+  handleRoute(store.state.currentView.page, store.state.currentView.productId, store.state.currentView.tab, false);
 }
 
-function handleRoute(page, productId) {
+function handleRoute(page, productId = null, tab = null, updateHash = true) {
   const mainViewContainer = document.getElementById('app-main-view');
   if (!mainViewContainer) return;
 
   // Toggle header elements based on active view
   updateHeaderLayoutForView(page);
+
+  if (updateHash) {
+    syncHash(page, productId, tab);
+  }
 
   switch (page) {
     case 'catalog':
@@ -79,10 +152,10 @@ function handleRoute(page, productId) {
       renderCheckoutView(mainViewContainer);
       break;
     case 'account':
-      renderAccountView(mainViewContainer);
+      renderAccountView(mainViewContainer, tab || 'overview');
       break;
     case 'admin':
-      renderAdminView(mainViewContainer);
+      renderAdminView(mainViewContainer, tab || 'overview');
       break;
     default:
       renderCatalogView(mainViewContainer);
@@ -90,27 +163,138 @@ function handleRoute(page, productId) {
 }
 
 function updateHeaderLayoutForView(page) {
-  const isAccount = page === 'account';
-  const isAdmin = page === 'admin';
   document.body.setAttribute('data-view', page);
 
   const announcementBar = document.getElementById('top-announcement-bar') || document.querySelector('.announcement-bar');
   const searchWrap = document.querySelector('.header-search-wrap');
   const currencyWrap = document.querySelector('.currency-selector-wrap');
-  const accountBtn = document.getElementById('header-account-btn');
+  const userHubWrap = document.getElementById('header-user-hub-wrap');
   const cartBtn = document.getElementById('header-cart-btn');
 
-  if (announcementBar) announcementBar.style.display = (isAccount || isAdmin) ? 'none' : '';
-  if (searchWrap) searchWrap.style.display = (isAccount || isAdmin) ? 'none' : '';
-  if (currencyWrap) currencyWrap.style.display = (isAccount || isAdmin) ? 'none' : '';
-  if (accountBtn) accountBtn.style.display = (isAccount || isAdmin) ? 'none' : '';
-  if (cartBtn) cartBtn.style.display = isAdmin ? 'none' : '';
+  if (announcementBar) announcementBar.style.display = (page === 'account' || page === 'admin') ? 'none' : '';
+  if (searchWrap) searchWrap.style.display = (page === 'account' || page === 'admin') ? 'none' : '';
+  if (currencyWrap) currencyWrap.style.display = (page === 'admin') ? 'none' : '';
+  if (userHubWrap) userHubWrap.style.display = (page === 'admin') ? 'none' : '';
+  if (cartBtn) cartBtn.style.display = (page === 'admin') ? 'none' : '';
+}
+
+function updateHeaderUserStatus(user) {
+  const avatarWrap = document.getElementById('header-account-avatar-wrap');
+  const dropdownAvatar = document.getElementById('dropdown-user-avatar');
+  const dropdownName = document.getElementById('dropdown-user-name');
+  const dropdownTier = document.getElementById('dropdown-user-tier');
+  const dropdownAdminItem = document.getElementById('dropdown-admin-item');
+  const dropdownAdminDivider = document.getElementById('dropdown-admin-divider');
+
+  const isAdmin = Boolean(user && user.isLoggedIn && user.role === 'admin');
+  if (dropdownAdminItem) dropdownAdminItem.style.display = isAdmin ? 'block' : 'none';
+  if (dropdownAdminDivider) dropdownAdminDivider.style.display = isAdmin ? 'block' : 'none';
+
+  if (user && user.isLoggedIn) {
+    if (avatarWrap) {
+      avatarWrap.innerHTML = `
+        <img src="${user.avatar}" alt="${user.name}" class="header-user-avatar-img" />
+        <span class="header-user-online-dot"></span>
+      `;
+    }
+    if (dropdownAvatar) dropdownAvatar.src = user.avatar;
+    if (dropdownName) dropdownName.textContent = user.name;
+    if (dropdownTier) dropdownTier.textContent = user.tier;
+  } else {
+    if (avatarWrap) {
+      avatarWrap.innerHTML = `
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
+          <circle cx="12" cy="7" r="4" />
+        </svg>
+      `;
+    }
+    if (dropdownAvatar) dropdownAvatar.src = 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&w=400&q=80';
+    if (dropdownName) dropdownName.textContent = 'Guest Shopper';
+    if (dropdownTier) dropdownTier.textContent = 'Sign In to Access VIP Club';
+  }
+}
+
+function setupUserHubDropdown() {
+  const accountBtn = document.getElementById('header-account-btn');
+  const dropdown = document.getElementById('header-user-dropdown');
+  const logoutBtn = document.getElementById('dropdown-link-logout');
+
+  if (!accountBtn || !dropdown) return;
+
+  accountBtn.addEventListener('click', (e) => {
+    e.stopPropagation();
+    sounds.playClick();
+
+    if (!store.state.user || !store.state.user.isLoggedIn) {
+      openAuthModal('login');
+      return;
+    }
+
+    const isOpen = dropdown.style.display === 'block';
+    dropdown.style.display = isOpen ? 'none' : 'block';
+    accountBtn.setAttribute('aria-expanded', !isOpen);
+  });
+
+  // Close dropdown on click outside
+  document.addEventListener('click', (e) => {
+    if (!dropdown.contains(e.target) && !accountBtn.contains(e.target)) {
+      dropdown.style.display = 'none';
+      accountBtn.setAttribute('aria-expanded', 'false');
+    }
+  });
+
+  // Dropdown Links Click Handler
+  dropdown.querySelectorAll('a').forEach(link => {
+    link.addEventListener('click', (e) => {
+      e.preventDefault();
+      sounds.playClick();
+      dropdown.style.display = 'none';
+      const href = link.getAttribute('href');
+      if (href) {
+        window.location.hash = href;
+      }
+    });
+  });
+
+  // Dropdown Logout Click Handler
+  logoutBtn?.addEventListener('click', async (e) => {
+    e.preventDefault();
+    sounds.playClick();
+    dropdown.style.display = 'none';
+
+    const isAdmin = Boolean(store.state.user && store.state.user.role === 'admin');
+    const confirmed = await ui.confirm({
+      title: isAdmin ? 'Sign Out of Administrator Account?' : 'Sign Out of 7th June Account?',
+      message: `Are you sure you want to sign out, <strong>${store.state.user?.name || 'Valued Client'}</strong>?`,
+      subMessage: isAdmin 
+        ? 'Your admin console session will be closed and you will browse as a guest.' 
+        : 'Your saved cart items will be preserved, but you will need to sign back in to view your orders.',
+      confirmText: 'Sign Out',
+      cancelText: 'Stay Signed In',
+      type: 'warning',
+      icon: '🚪'
+    });
+
+    if (!confirmed) return;
+
+    sounds.playClick();
+    store.logout();
+    ui.showToast({
+      title: 'Signed Out',
+      message: 'You have signed out of your account.',
+      type: 'info'
+    });
+    window.location.hash = '#/catalog';
+    store.setView('catalog');
+  });
 }
 
 function setupHeaderEvents() {
   // Brand Logo Click
   document.getElementById('brand-logo-btn')?.addEventListener('click', () => {
     sounds.playClick();
+    window.location.hash = '#/catalog';
     store.setView('catalog');
   });
 
@@ -126,32 +310,13 @@ function setupHeaderEvents() {
         message: `Prices automatically converted with live exchange rates.`,
         type: 'info'
       });
-      // Re-render active view to update all displayed currencies
-      handleRoute(store.state.currentView.page, store.state.currentView.productId);
+      handleRoute(store.state.currentView.page, store.state.currentView.productId, store.state.currentView.tab, false);
     });
   }
 
   // Bag / Cart Drawer Button
   document.getElementById('header-cart-btn')?.addEventListener('click', () => {
     ui.toggleDrawer('cart-drawer', true);
-  });
-
-  // Account Header Button
-  document.getElementById('header-account-btn')?.addEventListener('click', () => {
-    sounds.playClick();
-    store.setView('account');
-  });
-
-  // Admin Portal Button (Header & Footer)
-  document.getElementById('header-admin-btn')?.addEventListener('click', () => {
-    sounds.playClick();
-    store.setView('admin');
-  });
-
-  document.getElementById('footer-admin-link')?.addEventListener('click', (e) => {
-    e.preventDefault();
-    sounds.playClick();
-    store.setView('admin');
   });
 
   // Announcement Bar Promo Click

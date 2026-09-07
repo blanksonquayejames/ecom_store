@@ -7,6 +7,8 @@ import { store } from './state.js';
 import { ui } from './ui.js';
 import { sounds } from './audio.js';
 
+let authCallback = null;
+
 export function initAuthModal() {
   const modal = document.getElementById('auth-modal');
   if (!modal) return;
@@ -14,16 +16,53 @@ export function initAuthModal() {
   setupAuthEvents();
 }
 
-export function openAuthModal(mode = 'login') {
+export function openAuthModal(mode = 'login', options = {}) {
   const modal = document.getElementById('auth-modal');
   if (!modal) return;
+
+  if (typeof options === 'function') {
+    authCallback = options;
+  } else if (options && typeof options.onSuccess === 'function') {
+    authCallback = options.onSuccess;
+  } else if (options && options.redirectTo) {
+    authCallback = () => {
+      store.setView(options.redirectTo);
+    };
+  } else {
+    authCallback = null;
+  }
+
+  const noticeEl = document.getElementById('auth-modal-notice');
+  if (noticeEl) {
+    if (options && options.notice) {
+      noticeEl.innerHTML = options.notice;
+      noticeEl.style.display = 'block';
+    } else {
+      noticeEl.style.display = 'none';
+      noticeEl.innerHTML = '';
+    }
+  }
 
   setAuthMode(mode);
   ui.openModal('auth-modal');
 }
 
 export function closeAuthModal() {
+  const noticeEl = document.getElementById('auth-modal-notice');
+  if (noticeEl) {
+    noticeEl.style.display = 'none';
+    noticeEl.innerHTML = '';
+  }
   ui.closeModal('auth-modal');
+}
+
+function triggerAuthSuccess(user) {
+  closeAuthModal();
+  if (authCallback) {
+    const cb = authCallback;
+    authCallback = null;
+    cb(user);
+  }
 }
 
 function setAuthMode(mode) {
@@ -68,23 +107,28 @@ function setupAuthEvents() {
     e.preventDefault();
     sounds.playClick();
     const email = document.getElementById('login-email')?.value.trim() || 'julian.vance@7thjune.com';
-    const name = email.split('@')[0].replace('.', ' ').replace(/\b\w/g, l => l.toUpperCase()) || 'Valued Client';
+    const isAdmin = email.toLowerCase().includes('admin');
+    const name = isAdmin ? 'Kwame Blankson' : (email.split('@')[0].replace('.', ' ').replace(/\b\w/g, l => l.toUpperCase()) || 'Valued Client');
     const firstName = name.trim().split(' ')[0] || 'Valued Client';
 
     const user = {
       isLoggedIn: true,
+      role: isAdmin ? 'admin' : 'customer',
       name: name,
       email: email,
-      tier: '7th June Gold VIP',
-      points: 1250,
-      avatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=400&q=80'
+      phone: isAdmin ? '+233 24 555 8899' : '+233 24 555 7788',
+      tier: isAdmin ? 'Chief Technology Officer & Administrator' : '7th June Gold VIP',
+      points: isAdmin ? 9999 : 1250,
+      avatar: isAdmin 
+        ? 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=400&q=80'
+        : 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=400&q=80'
     };
 
     store.setUser(user);
-    closeAuthModal();
+    triggerAuthSuccess(user);
     ui.showToast({
-      title: `Welcome back, ${firstName}!`,
-      message: `Great to see you again. Your order history and saved delivery addresses are ready.`,
+      title: isAdmin ? `Welcome, Administrator ${firstName}!` : `Welcome back, ${firstName}!`,
+      message: isAdmin ? `Administrator session activated with store management permissions.` : `Order history and delivery addresses loaded.`,
       type: 'success'
     });
   });
@@ -99,15 +143,17 @@ function setupAuthEvents() {
 
     const user = {
       isLoggedIn: true,
+      role: 'customer',
       name: name,
       email: email,
+      phone: '+233 24 555 7788',
       tier: '7th June VIP Member',
       points: 500,
       avatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=400&q=80'
     };
 
     store.setUser(user);
-    closeAuthModal();
+    triggerAuthSuccess(user);
     ui.showToast({
       title: `Welcome to 7th June, ${firstName}!`,
       message: `Your VIP account has been created with 500 bonus reward points.`,
@@ -115,28 +161,90 @@ function setupAuthEvents() {
     });
   });
 
-  // 1-Click Demo Profiles
+  // 1-Click VIP Customer Profile (Julian Vance)
   document.getElementById('demo-login-julian')?.addEventListener('click', () => {
     sounds.playClick();
     const user = {
       isLoggedIn: true,
+      role: 'customer',
       name: 'Julian Vance',
       email: 'julian.vance@7thjune.com',
+      phone: '+233 24 555 7788',
       tier: 'Platinum Titan VIP',
       points: 3450,
-      avatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=400&q=80'
+      avatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=400&q=80',
+      addresses: [
+        {
+          id: 'addr-1',
+          type: 'Primary Office (Ghana)',
+          fullName: 'Julian Vance',
+          address: '7th June Tech Tower, Suite 400',
+          city: 'Accra',
+          region: 'Airport Residential Area',
+          country: 'Ghana',
+          phone: '+233 24 555 7788',
+          isDefault: true
+        },
+        {
+          id: 'addr-2',
+          type: 'Secondary Dispatch (USA)',
+          fullName: 'Julian Vance',
+          address: '742 Evergreen Terrace, Suite 800',
+          city: 'San Francisco',
+          region: 'CA 94107',
+          country: 'United States',
+          phone: '+1 (415) 890-4321',
+          isDefault: false
+        }
+      ]
     };
     store.setUser(user);
-    closeAuthModal();
+    triggerAuthSuccess(user);
     ui.showToast({
       title: `Welcome back, Julian!`,
-      message: `Signed in as Julian Vance. Order history & saved addresses loaded.`,
+      message: `Signed in as Julian Vance (VIP Member).`,
+      type: 'success'
+    });
+  });
+
+  // 1-Click Administrator Profile (Kwame Blankson)
+  document.getElementById('demo-login-admin')?.addEventListener('click', () => {
+    sounds.playSuccess();
+    const adminUser = {
+      isLoggedIn: true,
+      role: 'admin',
+      name: 'Kwame Blankson',
+      email: 'admin@7thjune.com',
+      phone: '+233 24 555 8899',
+      tier: 'Chief Technology Officer & Administrator',
+      points: 9999,
+      avatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=400&q=80',
+      addresses: [
+        {
+          id: 'addr-admin-1',
+          type: '7th June Headquarters (Vault)',
+          fullName: 'Kwame Blankson (Admin)',
+          address: '7th June Tech Tower, Suite 400',
+          city: 'Accra',
+          region: 'Airport Residential Area',
+          country: 'Ghana',
+          phone: '+233 24 555 8899',
+          isDefault: true
+        }
+      ]
+    };
+    store.setUser(adminUser);
+    triggerAuthSuccess(adminUser);
+    ui.showToast({
+      title: 'Administrator Verified',
+      message: 'Signed in as Chief Administrator Kwame Blankson.',
       type: 'success'
     });
   });
 
   document.getElementById('demo-login-guest')?.addEventListener('click', () => {
     sounds.playClick();
+    authCallback = null;
     store.logout();
     closeAuthModal();
     ui.showToast({

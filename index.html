@@ -145,23 +145,77 @@
           </select>
         </div>
 
-        <!-- Store Admin Portal -->
-        <button class="header-icon-btn admin-portal-btn" id="header-admin-btn" title="Store Admin Portal" aria-label="Admin Portal">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <rect x="3" y="3" width="7" height="7" rx="1"></rect>
-            <rect x="14" y="3" width="7" height="7" rx="1"></rect>
-            <rect x="14" y="14" width="7" height="7" rx="1"></rect>
-            <rect x="3" y="14" width="7" height="7" rx="1"></rect>
-          </svg>
-        </button>
-
-        <!-- Account Hub -->
-        <button class="header-icon-btn" id="header-account-btn" title="Customer Account Hub" aria-label="Account">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
-            <circle cx="12" cy="7" r="4" />
-          </svg>
-        </button>
+        <!-- Account Hub & Interactive User Menu -->
+        <div class="header-user-hub-wrap" id="header-user-hub-wrap">
+          <button class="header-icon-btn header-account-btn" id="header-account-btn" title="Customer Account Hub" aria-label="Account" aria-expanded="false">
+            <span class="header-account-avatar-placeholder" id="header-account-avatar-wrap">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
+                <circle cx="12" cy="7" r="4" />
+              </svg>
+            </span>
+          </button>
+          
+          <!-- Interactive Quick Dropdown -->
+          <div class="header-user-dropdown" id="header-user-dropdown" style="display: none;">
+            <div class="user-dropdown-header">
+              <div class="user-dropdown-avatar-wrap">
+                <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=120&q=80" alt="User Avatar" class="user-dropdown-avatar" id="dropdown-user-avatar" />
+              </div>
+              <div class="user-dropdown-meta">
+                <strong class="user-dropdown-name" id="dropdown-user-name">Julian Vance</strong>
+                <span class="user-dropdown-tier" id="dropdown-user-tier">Platinum Titan VIP</span>
+              </div>
+            </div>
+            <div class="user-dropdown-divider"></div>
+            <ul class="user-dropdown-links">
+              <li>
+                <a href="#/account/overview" class="dropdown-link-item" id="dropdown-link-overview">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+                  <span>Account Dashboard</span>
+                </a>
+              </li>
+              <li>
+                <a href="#/account/orders" class="dropdown-link-item" id="dropdown-link-orders">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="7" width="20" height="14" rx="2" ry="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg>
+                  <span>Order History & Tracking</span>
+                </a>
+              </li>
+              <li>
+                <a href="#/account/addresses" class="dropdown-link-item" id="dropdown-link-addresses">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+                  <span>Saved Delivery Addresses</span>
+                </a>
+              </li>
+              <li>
+                <a href="#/account/profile" class="dropdown-link-item" id="dropdown-link-profile">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+                  <span>Profile & Security</span>
+                </a>
+              </li>
+              <li>
+                <a href="#/account/rewards" class="dropdown-link-item" id="dropdown-link-rewards">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+                  <span>VIP Rewards Club</span>
+                </a>
+              </li>
+              <li class="user-dropdown-divider" id="dropdown-admin-divider" style="display: none;"></li>
+              <li id="dropdown-admin-item" style="display: none;">
+                <a href="#/admin/overview" class="dropdown-link-item text-primary" id="dropdown-link-admin">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+                  <span>Store Administration Console</span>
+                </a>
+              </li>
+              <li class="user-dropdown-divider"></li>
+              <li>
+                <button type="button" class="dropdown-link-item text-muted" id="dropdown-link-logout">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+                  <span>Sign Out</span>
+                </button>
+              </li>
+            </ul>
+          </div>
+        </div>
 
         <!-- Cart Button -->
         <button class="header-cart-btn" id="header-cart-btn" aria-label="Shopping Cart">
@@ -221,6 +275,7 @@
           <img src="image/7th June logo.png" alt="7th June Logo" class="auth-logo-img" />
           <h2 id="auth-modal-title">Welcome to 7th June Computers</h2>
           <p class="auth-modal-sub">Sign in to track orders, save shipping addresses, and unlock VIP points.</p>
+          <div class="auth-modal-notice" id="auth-modal-notice" style="display: none;"></div>
         </div>
 
         <div class="auth-tabs-row">
@@ -246,7 +301,7 @@
               <span class="checkmark"></span>
               <span>Remember me</span>
             </label>
-            <a href="#" class="forgot-link" onclick="alert('Password reset link sent to your email.');">Forgot
+            <a href="#" class="forgot-link" onclick="event.preventDefault(); window.ui?.showToast({ title: 'Password Reset', message: 'Password recovery instructions dispatched to your email.', type: 'info' });">Forgot
               Password?</a>
           </div>
           <button type="submit" class="btn btn-primary w-100 mt-3 btn-lg">
@@ -279,10 +334,13 @@
         </div>
         <div class="auth-demo-buttons">
           <button type="button" class="btn btn-secondary btn-sm flex-1" id="demo-login-julian">
-            👑 VIP Profile (Julian)
+            👑 VIP Customer (Julian)
+          </button>
+          <button type="button" class="btn btn-primary btn-sm flex-1" id="demo-login-admin">
+            🛡️ Administrator (Kwame)
           </button>
           <button type="button" class="btn btn-ghost btn-sm flex-1" id="demo-login-guest">
-            👤 Guest Shopper
+            👤 Guest
           </button>
         </div>
       </div>
@@ -348,15 +406,116 @@
               <label>Original / Strikethrough Price (USD)</label>
               <input type="number" class="custom-input" id="modal-prod-orig-price" min="1" step="0.01" placeholder="249" />
             </div>
-            <div class="form-group flex-1">
-              <label>Initial Stock Count</label>
-              <input type="number" class="custom-input" id="modal-prod-stock" min="0" placeholder="25" required />
-            </div>
           </div>
 
-          <div class="form-group">
-            <label>Hero Image URL</label>
-            <input type="url" class="custom-input" id="modal-prod-img" placeholder="https://images.unsplash.com/..." required />
+          <!-- Dedicated Inventory Stock Management Section -->
+          <div class="form-group modal-stock-manager-group">
+            <div class="form-label-row">
+              <label class="form-label-bold" id="modal-stock-label">Inventory Stock Management (Units in Vault)</label>
+              <span class="stock-status-preview-pill pill-ok" id="modal-stock-status-pill">In Stock</span>
+            </div>
+            <div class="modal-stock-control-bar">
+              <div class="modal-stock-stepper-wrap">
+                <button type="button" class="modal-stepper-btn modal-stock-dec" id="modal-stock-dec-btn" title="Reduce Stock (-1)" aria-label="Reduce stock">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                </button>
+                <input type="number" class="custom-input modal-stock-input text-center" id="modal-prod-stock" min="0" max="9999" placeholder="25" required />
+                <button type="button" class="modal-stepper-btn modal-stock-inc" id="modal-stock-inc-btn" title="Add Stock (+1)" aria-label="Add stock">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                </button>
+              </div>
+              <div class="modal-stock-quick-chips">
+                <button type="button" class="stock-quick-chip chip-subtle" data-delta="-5" title="Reduce 5 units">-5</button>
+                <button type="button" class="stock-quick-chip" data-delta="+5" title="Add 5 units">+5</button>
+                <button type="button" class="stock-quick-chip" data-delta="+10" title="Add 10 units">+10</button>
+                <button type="button" class="stock-quick-chip" data-delta="+25" title="Add 25 units">+25</button>
+                <button type="button" class="stock-quick-chip chip-zero" data-set="0" title="Mark Out of Stock">Mark 0</button>
+              </div>
+            </div>
+            <span class="form-field-hint">Add or reduce units using buttons, quick adjustment chips, or direct entry. Changes update live store inventory upon saving.</span>
+          </div>
+
+          <!-- Product Photography File Upload Component -->
+          <div class="form-group product-upload-group">
+            <div class="form-label-row">
+              <label class="form-label-bold">Product Photography (Normal File Upload)</label>
+              <span class="form-label-subtext">PNG, JPG, or WEBP (Auto-optimized)</span>
+            </div>
+
+            <!-- Drag & Drop Zone -->
+            <div class="product-dropzone" id="modal-prod-dropzone">
+              <input type="file" id="modal-prod-file-input" accept="image/png, image/jpeg, image/webp, image/svg+xml" class="dropzone-hidden-input" />
+              
+              <!-- Empty Dropzone State -->
+              <div class="dropzone-empty-state" id="dropzone-empty-state">
+                <div class="dropzone-icon-circle">
+                  <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                    <polyline points="17 8 12 3 7 8"/>
+                    <line x1="12" y1="3" x2="12" y2="15"/>
+                  </svg>
+                </div>
+                <div class="dropzone-text-block">
+                  <p class="dropzone-primary-text"><strong>Click to browse files</strong> or drag & drop hardware photo</p>
+                  <p class="dropzone-secondary-text">Studio photo, product render, or peripheral photography</p>
+                </div>
+                <button type="button" class="btn btn-secondary btn-sm dropzone-browse-trigger" id="modal-prod-browse-btn">
+                  Choose Image File
+                </button>
+              </div>
+
+              <!-- Uploaded Image Preview State -->
+              <div class="dropzone-preview-state" id="dropzone-preview-state" style="display: none;">
+                <div class="dropzone-preview-card">
+                  <div class="preview-thumbnail-wrap">
+                    <img src="" alt="Product Preview" id="modal-prod-preview-img" class="dropzone-thumbnail-img" />
+                  </div>
+                  <div class="dropzone-meta-wrap">
+                    <span class="preview-filename" id="modal-prod-filename">uploaded-hardware.jpg</span>
+                    <div class="preview-tags-row">
+                      <span class="preview-filesize" id="modal-prod-filesize">Optimized</span>
+                      <span class="preview-status-pill">✓ Ready to Publish</span>
+                    </div>
+                  </div>
+                  <div class="dropzone-actions-wrap">
+                    <button type="button" class="btn btn-secondary btn-xs" id="dropzone-replace-btn" title="Choose another file">
+                      Replace Image
+                    </button>
+                    <button type="button" class="btn btn-ghost btn-xs text-danger" id="dropzone-remove-btn" title="Remove current photo">
+                      Remove
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Hidden field holding active base64 Data URL or image path -->
+            <input type="hidden" id="modal-prod-img" required />
+
+            <!-- Collapsible Shortcuts / Preset Library -->
+            <div class="upload-alternatives-bar mt-2">
+              <button type="button" class="link-helper-btn" id="toggle-preset-gallery-btn">
+                <span>✦ Or pick from 7th June high-res hardware library</span>
+              </button>
+              <button type="button" class="link-helper-btn text-muted" id="toggle-url-fallback-btn">
+                <span>Or use direct URL</span>
+              </button>
+            </div>
+
+            <!-- Curated Hardware Presets Tray -->
+            <div class="presets-gallery-tray" id="presets-gallery-tray" style="display: none;">
+              <div class="presets-grid" id="presets-grid">
+                <!-- Dynamically populated hardware preset thumbnails -->
+              </div>
+            </div>
+
+            <!-- Optional Direct URL Input -->
+            <div class="url-fallback-wrap mt-2" id="url-fallback-wrap" style="display: none;">
+              <div class="input-with-button">
+                <input type="url" class="custom-input custom-input-sm" id="modal-prod-url-fallback" placeholder="Paste external image URL (e.g. https://images.unsplash.com/...)" />
+                <button type="button" class="btn btn-secondary btn-sm" id="apply-url-fallback-btn">Apply URL</button>
+              </div>
+            </div>
           </div>
 
           <div class="form-group">
@@ -371,6 +530,113 @@
             </button>
           </div>
         </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- Customer Saved Address Modal (Add / Edit) -->
+  <div class="modal" id="account-address-modal" role="dialog" aria-modal="true" aria-labelledby="address-modal-title">
+    <div class="modal-dialog modal-md">
+      <button class="modal-close-btn" id="address-modal-close-btn" aria-label="Close Address Modal">&times;</button>
+      <div class="admin-modal-wrap">
+        <div class="admin-modal-header">
+          <h2 id="address-modal-title">Add Delivery Address</h2>
+          <p>Save verified shipping destination for white-glove courier & express delivery.</p>
+        </div>
+
+        <form id="account-address-form" class="account-address-form">
+          <input type="hidden" id="modal-address-id" />
+
+          <div class="form-row">
+            <div class="form-group flex-1">
+              <label>Address Label / Type</label>
+              <input type="text" class="custom-input" id="modal-address-type" placeholder="e.g. Primary Office, Home Studio, Vault" required />
+            </div>
+            <div class="form-group flex-1">
+              <label>Full Recipient Name</label>
+              <input type="text" class="custom-input" id="modal-address-name" placeholder="Kwame Mensah" required />
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label>Street Address / Building / Suite</label>
+            <input type="text" class="custom-input" id="modal-address-street" placeholder="7th June Tech Tower, Suite 400" required />
+          </div>
+
+          <div class="form-row">
+            <div class="form-group flex-1">
+              <label>City</label>
+              <input type="text" class="custom-input" id="modal-address-city" placeholder="Accra" required />
+            </div>
+            <div class="form-group flex-1">
+              <label>State / Region / Postal</label>
+              <input type="text" class="custom-input" id="modal-address-region" placeholder="Greater Accra (Airport Residential)" required />
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group flex-1">
+              <label>Country</label>
+              <select class="custom-select" id="modal-address-country">
+                <option value="Ghana" selected>Ghana</option>
+                <option value="United States">United States</option>
+                <option value="United Kingdom">United Kingdom</option>
+                <option value="Nigeria">Nigeria</option>
+                <option value="Canada">Canada</option>
+                <option value="Germany">Germany</option>
+              </select>
+            </div>
+            <div class="form-group flex-1">
+              <label>Contact Phone (for Courier SMS & MoMo)</label>
+              <input type="tel" class="custom-input" id="modal-address-phone" placeholder="+233 24 555 7788" required />
+            </div>
+          </div>
+
+          <div class="form-group mt-2">
+            <label class="custom-checkbox">
+              <input type="checkbox" id="modal-address-default" />
+              <span class="checkmark"></span>
+              <span>Set as default primary delivery destination</span>
+            </label>
+          </div>
+
+          <div class="admin-modal-actions mt-3">
+            <button type="button" class="btn btn-ghost" id="address-modal-cancel-btn">Cancel</button>
+            <button type="submit" class="btn btn-primary" id="address-modal-save-btn">
+              Save Address
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modern Confirmation Prompt Modal -->
+  <div class="modal confirm-dialog-modal" id="confirm-modal" role="dialog" aria-modal="true" aria-labelledby="confirm-modal-title">
+    <div class="modal-dialog modal-sm">
+      <div class="confirm-card animate-scale-up">
+        <button class="modal-close-btn confirm-close-btn" id="confirm-modal-close-btn" aria-label="Close Dialog">&times;</button>
+        
+        <div class="confirm-icon-wrap confirm-theme-danger" id="confirm-modal-icon-wrap">
+          <span class="confirm-icon-symbol" id="confirm-modal-icon">⚠️</span>
+        </div>
+
+        <div class="confirm-body">
+          <h3 class="confirm-title" id="confirm-modal-title">Are you sure?</h3>
+          <p class="confirm-message" id="confirm-modal-message">Please confirm this action to proceed.</p>
+          <div class="confirm-submessage-box" id="confirm-modal-submessage-box" style="display: none;">
+            <span id="confirm-modal-submessage"></span>
+          </div>
+        </div>
+
+        <div class="confirm-actions">
+          <button type="button" class="btn btn-secondary confirm-btn-cancel flex-1" id="confirm-modal-cancel-btn">
+            Cancel
+          </button>
+          <button type="button" class="btn btn-danger confirm-btn-action flex-1" id="confirm-modal-action-btn">
+            Confirm
+          </button>
+        </div>
       </div>
     </div>
   </div>
@@ -430,11 +696,11 @@
         <div class="footer-links-col">
           <h4>Client Services</h4>
           <ul>
-            <li><a href="#" onclick="document.getElementById('header-account-btn').click()">Private Account Hub</a></li>
+            <li><a href="#/account/overview">Private Account Hub</a></li>
+            <li><a href="#/account/orders">Track Orders & Shipments</a></li>
+            <li><a href="#/account/addresses">Delivery Destinations</a></li>
             <li><a href="#" onclick="document.getElementById('header-cart-btn').click()">7th June Cart</a></li>
-            <li><a href="#">Zurich Vault Custody & Transit</a></li>
-            <li><a href="#">3-Year Global Hardware Warranty</a></li>
-            <li><a href="#" id="footer-admin-link">Store Administration (Admin Portal)</a></li>
+            <li><a href="#/account/profile">Client Security & Privacy</a></li>
           </ul>
         </div>
 
@@ -442,7 +708,7 @@
           <h4>7th June Dispatch</h4>
           <p>Receive exclusive invitations to limited artisan runs and private showroom releases.</p>
           <form class="footer-newsletter-form"
-            onsubmit="event.preventDefault(); alert('You have been subscribed to 7th June Dispatch.');">
+            onsubmit="event.preventDefault(); window.ui?.showToast({ title: 'VIP Dispatch Subscribed', message: 'You have been subscribed to exclusive 7th June showroom releases.', type: 'success' }); this.reset();">
             <input type="email" placeholder="Enter your private email" required />
             <button type="submit" class="btn btn-primary btn-sm">Subscribe</button>
           </form>

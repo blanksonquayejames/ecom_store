@@ -7,6 +7,7 @@ import { store } from './state.js';
 import { convertPrice } from './currency.js';
 import { ui } from './ui.js';
 import { sounds } from './audio.js';
+import { openAuthModal } from './auth-modal.js';
 
 export function renderProductDetailPage(container, productId) {
   const product = store.state.products.find(p => p.id === productId) || store.state.products[0];
@@ -548,6 +549,20 @@ function attachPdpEvents(container, product, state) {
     stickyBuyBtn.addEventListener('click', () => {
       sounds.playClick();
       store.addToCart(product, state.getSelectedColor(), state.getSelectedOption(), state.getQuantity());
+      
+      const isLoggedIn = !!(store.state.user && store.state.user.isLoggedIn);
+      if (!isLoggedIn) {
+        ui.showToast({
+          title: 'Sign In Required',
+          message: 'Please sign in or create an account to proceed to checkout.',
+          type: 'info'
+        });
+        openAuthModal('login', {
+          redirectTo: 'checkout',
+          notice: '<strong>Sign In Required:</strong> Please sign in or create an account to complete your purchase.'
+        });
+        return;
+      }
       store.setView('checkout');
     });
   }
@@ -558,6 +573,20 @@ function attachPdpEvents(container, product, state) {
     buyNowBtn.addEventListener('click', () => {
       sounds.playClick();
       store.addToCart(product, state.getSelectedColor(), state.getSelectedOption(), state.getQuantity());
+
+      const isLoggedIn = !!(store.state.user && store.state.user.isLoggedIn);
+      if (!isLoggedIn) {
+        ui.showToast({
+          title: 'Sign In Required',
+          message: 'Please sign in or create an account to proceed to checkout.',
+          type: 'info'
+        });
+        openAuthModal('login', {
+          redirectTo: 'checkout',
+          notice: '<strong>Sign In Required:</strong> Please sign in or create an account to complete your purchase.'
+        });
+        return;
+      }
       store.setView('checkout');
     });
   }

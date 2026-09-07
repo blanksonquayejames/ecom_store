@@ -9,14 +9,33 @@ import { convertPrice } from './currency.js';
 import { sounds } from './audio.js';
 import { ui } from './ui.js';
 import { showOrderReceiptModal } from './account-view.js';
+import { openAuthModal } from './auth-modal.js';
 import { CATEGORIES } from '../data/products.js';
 
 let activeAdminTab = 'overview'; // 'overview' | 'products' | 'orders' | 'promos' | 'customers' | 'settings'
 
-export function renderAdminView(container) {
-  const { adminSession } = store.state;
+function getTabLabel(tab) {
+  switch (tab) {
+    case 'overview': return 'Overview & Analytics';
+    case 'products': return 'Products & Inventory';
+    case 'orders': return 'Orders & MoMo Gateway';
+    case 'promos': return 'Promo Codes & Discounts';
+    case 'customers': return 'Customer Loyalty & Accounts';
+    case 'settings': return 'Store Settings & Operations';
+    default: return 'Overview';
+  }
+}
 
-  if (!adminSession || !adminSession.isLoggedIn) {
+export function renderAdminView(container, subTab = null) {
+  const { user, currentView } = store.state;
+  if (subTab) {
+    activeAdminTab = subTab;
+  } else if (currentView && currentView.tab) {
+    activeAdminTab = currentView.tab;
+  }
+
+  const isAdmin = Boolean(user && user.isLoggedIn && user.role === 'admin');
+  if (!isAdmin) {
     renderAdminLoginGate(container);
     return;
   }
@@ -25,95 +44,107 @@ export function renderAdminView(container) {
 }
 
 /**
- * 1. Admin Security Checkpoint Gate
+ * 1. Admin Security Checkpoint Gate (Role-based User Auth)
  */
 function renderAdminLoginGate(container) {
+  const { user } = store.state;
+  const isCustomerLoggedIn = Boolean(user && user.isLoggedIn);
+
   container.innerHTML = `
     <div class="admin-auth-wrapper animate-fade-in">
       <div class="admin-auth-card">
         <div class="admin-auth-header text-center">
           <div class="admin-shield-icon">🛡️</div>
-          <h2 class="admin-auth-title">7th June Admin Portal</h2>
-          <p class="admin-auth-sub">Restricted access for authorized store managers and system administrators.</p>
+          <h2 class="admin-auth-title">Administrator Portal</h2>
+          <p class="admin-auth-sub">Enterprise access restricted exclusively to authenticated Store Administrators.</p>
         </div>
 
-        <form class="admin-auth-form" id="admin-login-form">
-          <div class="form-group">
-            <label>Security Admin PIN / Passcode</label>
-            <input type="password" class="custom-input" id="admin-pin-input" placeholder="Enter PIN (Demo: 7788)" value="7788" required />
+        <div class="admin-gate-status-card mb-3">
+          <div class="gate-status-avatar">
+            <img src="${(user && user.avatar) || 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&w=120&q=80'}" alt="User Avatar" />
           </div>
-
-          <button type="submit" class="btn btn-primary w-100 btn-lg mt-2" id="admin-submit-pin">
-            Unlock Store Administration
-          </button>
-        </form>
-
-        <div class="auth-demo-divider mt-4">
-          <span>OR 1-CLICK QUICK ACCESS</span>
+          <div class="gate-status-text">
+            <span class="gate-status-label">Current Account State</span>
+            <strong class="gate-status-name">${isCustomerLoggedIn ? user.name : 'Guest Shopper'}</strong>
+            <span class="gate-status-badge ${isCustomerLoggedIn ? 'badge-customer' : 'badge-guest'}">
+              ${isCustomerLoggedIn ? (user.tier || 'Customer Account') : 'Unauthenticated Guest'}
+            </span>
+          </div>
         </div>
 
-        <div class="admin-demo-actions mt-2">
-          <button type="button" class="btn btn-secondary w-100" id="admin-quick-demo-btn">
-            👑 Sign In as Kwame Blankson (Administrator)
+        <div class="admin-gate-prompt-text text-center mb-3">
+          ${isCustomerLoggedIn 
+            ? `Your current account (<strong>${user.name}</strong>) is a Customer profile and lacks Administrator clearance. Sign in with an Administrator account to access store management.` 
+            : `You are currently browsing as a guest. Please sign in with an Administrator profile to access the store management console.`
+          }
+        </div>
+
+        <div class="admin-gate-actions">
+          <button type="button" class="btn btn-primary w-100 btn-lg" id="admin-gate-login-admin-btn">
+            👑 Sign In as Administrator (Kwame Blankson)
           </button>
+          
+          <button type="button" class="btn btn-secondary w-100 mt-2" id="admin-gate-open-modal-btn">
+            🔑 Sign In with User Account
+          </button>
+
           <button type="button" class="btn btn-ghost w-100 mt-2" id="admin-return-store-btn">
             ← Return to Live Customer Store
           </button>
         </div>
 
-        <div class="admin-security-footer">
-          <span>🔒 256-bit Encrypted Local Admin Session</span>
+        <div class="admin-security-footer mt-4">
+          <span>🔒 Role-Based Access Control • Verified Admin Session</span>
         </div>
       </div>
     </div>
   `;
 
-  // PIN Form Submission
-  container.querySelector('#admin-login-form')?.addEventListener('submit', (e) => {
-    e.preventDefault();
-    const pin = container.querySelector('#admin-pin-input')?.value.trim();
-    if (pin === '7788' || pin.length >= 4) {
-      sounds.playSuccess();
-      store.setAdminSession(true, {
-        name: 'Kwame Blankson',
-        role: 'Chief Technology Officer & Administrator',
-        email: 'admin@7thjune.com'
-      });
-      ui.showToast({
-        title: 'Admin Session Activated',
-        message: 'Welcome back, Kwame Blankson! Admin suite unlocked.',
-        type: 'success'
-      });
-      renderAdminView(container);
-    } else {
-      sounds.playPop();
-      ui.showToast({
-        title: 'Access Denied',
-        message: 'Invalid Admin PIN. Use demo passcode: 7788',
-        type: 'error'
-      });
-    }
-  });
-
-  // 1-Click Demo Admin Login
-  container.querySelector('#admin-quick-demo-btn')?.addEventListener('click', () => {
+  // 1-Click Authenticate as Admin Kwame Blankson
+  container.querySelector('#admin-gate-login-admin-btn')?.addEventListener('click', () => {
     sounds.playSuccess();
-    store.setAdminSession(true, {
+    const adminUser = {
+      isLoggedIn: true,
+      role: 'admin',
       name: 'Kwame Blankson',
-      role: 'Chief Technology Officer & Administrator',
-      email: 'admin@7thjune.com'
-    });
+      email: 'admin@7thjune.com',
+      phone: '+233 24 555 8899',
+      tier: 'Chief Technology Officer & Administrator',
+      points: 9999,
+      avatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=400&q=80',
+      addresses: [
+        {
+          id: 'addr-admin-1',
+          type: '7th June Headquarters (Vault)',
+          fullName: 'Kwame Blankson (Admin)',
+          address: '7th June Tech Tower, Suite 400',
+          city: 'Accra',
+          region: 'Airport Residential Area',
+          country: 'Ghana',
+          phone: '+233 24 555 8899',
+          isDefault: true
+        }
+      ]
+    };
+    store.setUser(adminUser);
     ui.showToast({
       title: 'Administrator Verified',
       message: 'Logged in as Chief Administrator Kwame Blankson.',
       type: 'success'
     });
-    renderAdminView(container);
+    renderAdminView(container, activeAdminTab);
+  });
+
+  // Open the standard user authentication modal
+  container.querySelector('#admin-gate-open-modal-btn')?.addEventListener('click', () => {
+    sounds.playClick();
+    openAuthModal('login');
   });
 
   // Return to Storefront
   container.querySelector('#admin-return-store-btn')?.addEventListener('click', () => {
     sounds.playClick();
+    window.location.hash = '#/catalog';
     store.setView('catalog');
   });
 }
@@ -122,64 +153,90 @@ function renderAdminLoginGate(container) {
  * 2. Main Admin Dashboard Controller & View
  */
 function renderAdminDashboard(container) {
-  const { adminSession, currency } = store.state;
+  const { user, products, orders, promoCodes } = store.state;
+  const adminName = (user && user.name) || 'Kwame Blankson';
+  const adminRole = (user && user.tier) || 'Chief Technology Officer & Administrator';
+  const initials = adminName.split(' ').map(n => n[0]).join('').substring(0, 2).toUpperCase() || 'KB';
 
   container.innerHTML = `
     <div class="admin-portal-wrapper animate-fade-in">
       
-      <!-- Top Admin Banner Bar -->
+      <!-- Top Executive Admin Bar -->
       <div class="admin-top-bar">
         <div class="container admin-top-bar-inner">
           <div class="admin-brand-group">
             <img src="image/7th June logo.png" alt="7th June Logo" class="admin-brand-logo" />
             <div>
-              <div class="admin-brand-title">7TH JUNE COMPUTERS • ADMIN SUITE</div>
-              <div class="admin-brand-badge">${adminSession.role || 'System Administrator'}</div>
+              <div class="admin-brand-title">7TH JUNE COMPUTERS • ENTERPRISE CONSOLE</div>
+              <div class="admin-system-status">
+                <span class="status-live-dot"></span>
+                <span>Production Live • MoMo Gateway Active</span>
+              </div>
             </div>
           </div>
 
           <div class="admin-user-controls">
             <button class="btn btn-secondary btn-sm" id="admin-view-storefront-btn">
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
-              View Live Store
+              <span>Return to Live Store</span>
             </button>
-            <div class="admin-user-chip">
-              <span class="admin-avatar">KB</span>
-              <span class="admin-user-name">${adminSession.name || 'Kwame Blankson'}</span>
+            <div class="admin-user-chip" title="${adminRole}">
+              <span class="admin-avatar">${initials}</span>
+              <div class="admin-user-text">
+                <span class="admin-user-name">${adminName}</span>
+                <span class="admin-user-role-sub">${adminRole}</span>
+              </div>
             </div>
-            <button class="btn btn-ghost btn-sm" id="admin-logout-btn" title="Sign out of Admin">
+            <button class="btn btn-ghost btn-sm" id="admin-logout-btn" title="Sign out of Admin Session">
               Sign Out
             </button>
           </div>
         </div>
       </div>
 
-      <!-- Main Admin Body with Navigation Tabs -->
+      <!-- Main Admin Body with Breadcrumbs & Tabs -->
       <div class="container admin-body-container mt-3">
+        
+        <!-- Interactive Breadcrumbs -->
+        <nav class="admin-breadcrumb-nav mb-3" aria-label="Admin Navigation Breadcrumb">
+          <a href="#/catalog" class="admin-breadcrumb-link" id="admin-bread-store">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+            Storefront
+          </a>
+          <span class="breadcrumb-sep">/</span>
+          <a href="#/admin/overview" class="admin-breadcrumb-link" id="admin-bread-console">Admin Console</a>
+          <span class="breadcrumb-sep">/</span>
+          <span class="breadcrumb-active" id="admin-active-breadcrumb">${getTabLabel(activeAdminTab)}</span>
+        </nav>
+
         <div class="admin-nav-tabs">
           <button class="admin-tab-btn ${activeAdminTab === 'overview' ? 'is-active' : ''}" data-tab="overview">
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
-            Overview
+            <span>Overview</span>
           </button>
           <button class="admin-tab-btn ${activeAdminTab === 'products' ? 'is-active' : ''}" data-tab="products">
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
-            Products & Inventory
+            <span>Products & Inventory</span>
+            <span class="admin-tab-badge">${products.length}</span>
           </button>
           <button class="admin-tab-btn ${activeAdminTab === 'orders' ? 'is-active' : ''}" data-tab="orders">
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
-            Orders & MoMo
+            <span>Orders & MoMo</span>
+            <span class="admin-tab-badge">${orders.length}</span>
           </button>
           <button class="admin-tab-btn ${activeAdminTab === 'promos' ? 'is-active' : ''}" data-tab="promos">
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
-            Promo Codes
+            <span>Promo Codes</span>
+            <span class="admin-tab-badge">${Object.keys(promoCodes).length}</span>
           </button>
           <button class="admin-tab-btn ${activeAdminTab === 'customers' ? 'is-active' : ''}" data-tab="customers">
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
-            Customers
+            <span>Customers</span>
+            <span class="admin-tab-badge">1 VIP</span>
           </button>
           <button class="admin-tab-btn ${activeAdminTab === 'settings' ? 'is-active' : ''}" data-tab="settings">
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
-            Store Settings
+            <span>Store Settings</span>
           </button>
         </div>
 
@@ -408,11 +465,10 @@ function renderProductsTab() {
                   ${prod.originalPrice ? `<span class="original-price-sub">${convertPrice(prod.originalPrice, currency).formatted}</span>` : ''}
                 </td>
                 <td style="text-align: center;">
-                  <div class="stock-adjust-stepper">
-                    <button class="stepper-btn stock-dec-btn" data-id="${prod.id}">-</button>
-                    <span class="stock-number">${prod.stockCount !== undefined ? prod.stockCount : (prod.stock !== undefined ? prod.stock : 0)}</span>
-                    <button class="stepper-btn stock-inc-btn" data-id="${prod.id}">+</button>
-                  </div>
+                  <span class="admin-stock-qty-display ${Number(prod.stockCount !== undefined ? prod.stockCount : (prod.stock !== undefined ? prod.stock : 0)) <= 5 ? (Number(prod.stockCount !== undefined ? prod.stockCount : (prod.stock !== undefined ? prod.stock : 0)) === 0 ? 'stock-zero' : 'stock-low') : 'stock-normal'}">
+                    <strong>${prod.stockCount !== undefined ? prod.stockCount : (prod.stock !== undefined ? prod.stock : 0)}</strong>
+                    <span class="stock-unit-label">units</span>
+                  </span>
                 </td>
                 <td>
                   ${Number(prod.stockCount !== undefined ? prod.stockCount : (prod.stock !== undefined ? prod.stock : 0)) > 5 ? `
@@ -757,15 +813,43 @@ function attachAdminDashboardEvents(container) {
   });
 
   // Admin Logout
-  container.querySelector('#admin-logout-btn')?.addEventListener('click', () => {
+  container.querySelector('#admin-logout-btn')?.addEventListener('click', async () => {
+    const confirmed = await ui.confirm({
+      title: 'Exit Admin Console & Sign Out?',
+      message: 'Are you sure you want to end your executive administrative session?',
+      subMessage: 'All catalog and inventory updates are saved. You will return to the live storefront as a guest.',
+      confirmText: 'Sign Out of Admin',
+      cancelText: 'Stay in Console',
+      type: 'warning',
+      icon: '🛡️'
+    });
+
+    if (!confirmed) return;
+
     sounds.playClick();
-    store.setAdminSession(false);
+    store.logout();
     ui.showToast({
       title: 'Signed Out',
-      message: 'Admin session closed securely.',
+      message: 'Admin session closed securely. Returned to live storefront.',
       type: 'info'
     });
-    renderAdminView(container);
+    window.location.hash = '#/catalog';
+    store.setView('catalog');
+  });
+
+  // Breadcrumb Store Link
+  container.querySelector('#admin-bread-store')?.addEventListener('click', (e) => {
+    e.preventDefault();
+    sounds.playClick();
+    window.location.hash = '#/catalog';
+    store.setView('catalog');
+  });
+
+  // Breadcrumb Console Link
+  container.querySelector('#admin-bread-console')?.addEventListener('click', (e) => {
+    e.preventDefault();
+    sounds.playClick();
+    switchToTab(container, 'overview');
   });
 
   // Tab Navigation Switcher
@@ -773,15 +857,7 @@ function attachAdminDashboardEvents(container) {
     btn.addEventListener('click', () => {
       sounds.playClick();
       const tab = btn.dataset.tab;
-      activeAdminTab = tab;
-      container.querySelectorAll('.admin-tab-btn').forEach(b => b.classList.remove('is-active'));
-      btn.classList.add('is-active');
-
-      const pane = container.querySelector('#admin-pane-content');
-      if (pane) {
-        pane.innerHTML = renderActiveAdminPaneContent(tab);
-        attachPaneSpecificEvents(container, tab);
-      }
+      switchToTab(container, tab);
     });
   });
 
@@ -824,28 +900,6 @@ function attachPaneSpecificEvents(container, tab) {
       openProductModal();
     });
 
-    // Stock Stepper Increment
-    container.querySelectorAll('.stock-inc-btn').forEach(btn => {
-      btn.addEventListener('click', () => {
-        sounds.playPop();
-        const id = btn.dataset.id;
-        store.adjustProductStock(id, 1);
-        container.querySelector('#admin-pane-content').innerHTML = renderProductsTab();
-        attachPaneSpecificEvents(container, 'products');
-      });
-    });
-
-    // Stock Stepper Decrement
-    container.querySelectorAll('.stock-dec-btn').forEach(btn => {
-      btn.addEventListener('click', () => {
-        sounds.playPop();
-        const id = btn.dataset.id;
-        store.adjustProductStock(id, -1);
-        container.querySelector('#admin-pane-content').innerHTML = renderProductsTab();
-        attachPaneSpecificEvents(container, 'products');
-      });
-    });
-
     // Edit Product Button
     container.querySelectorAll('.admin-edit-prod-btn').forEach(btn => {
       btn.addEventListener('click', () => {
@@ -857,10 +911,22 @@ function attachPaneSpecificEvents(container, tab) {
 
     // Delete Product Button
     container.querySelectorAll('.admin-del-prod-btn').forEach(btn => {
-      btn.addEventListener('click', () => {
+      btn.addEventListener('click', async () => {
         const id = btn.dataset.id;
         const prod = store.state.products.find(p => p.id === id);
-        if (prod && confirm(`Delete "${prod.name}" permanently from the catalog?`)) {
+        if (!prod) return;
+
+        const confirmed = await ui.confirm({
+          title: 'Delete Hardware Product?',
+          message: `Are you sure you want to permanently delete <strong>"${prod.name}"</strong> from the store catalog?`,
+          subMessage: 'This hardware item will be removed immediately from public listings, category shelves, and customer wishlists.',
+          confirmText: 'Permanently Delete',
+          cancelText: 'Keep Product',
+          type: 'danger',
+          icon: '🗑️'
+        });
+
+        if (confirmed) {
           sounds.playSuccess();
           store.deleteProduct(id);
           ui.showToast({
@@ -973,14 +1039,24 @@ function attachPaneSpecificEvents(container, tab) {
 
     // Delete promo
     container.querySelectorAll('.admin-del-promo-btn').forEach(btn => {
-      btn.addEventListener('click', () => {
+      btn.addEventListener('click', async () => {
         const code = btn.dataset.code;
-        if (confirm(`Deactivate promo code "${code}"?`)) {
+        const confirmed = await ui.confirm({
+          title: 'Deactivate Promo Code?',
+          message: `Are you sure you want to deactivate discount code <strong>"${code}"</strong>?`,
+          subMessage: 'Customers will no longer be able to claim discounts with this voucher code at checkout.',
+          confirmText: 'Deactivate Code',
+          cancelText: 'Keep Active',
+          type: 'danger',
+          icon: '🏷️'
+        });
+
+        if (confirmed) {
           sounds.playPop();
           store.deletePromoCode(code);
           ui.showToast({
-            title: `Code ${code} Removed`,
-            message: `Promo code ${code} deactivated.`,
+            title: `Code ${code} Deactivated`,
+            message: `Promo code ${code} was deactivated from checkout.`,
             type: 'info'
           });
           container.querySelector('#admin-pane-content').innerHTML = renderPromosTab();
@@ -1010,8 +1086,18 @@ function attachPaneSpecificEvents(container, tab) {
 
   // Settings Tab
   if (tab === 'settings') {
-    container.querySelector('#admin-reset-demo-btn')?.addEventListener('click', () => {
-      if (confirm('Reset catalog and promo codes to default factory settings?')) {
+    container.querySelector('#admin-reset-demo-btn')?.addEventListener('click', async () => {
+      const confirmed = await ui.confirm({
+        title: 'Restore Factory Defaults?',
+        message: 'Are you sure you want to reset the store catalog and promo codes to default factory settings?',
+        subMessage: 'All newly added products, edited specifications, and custom discounts will be reverted.',
+        confirmText: 'Restore Defaults',
+        cancelText: 'Cancel',
+        type: 'danger',
+        icon: '⚠️'
+      });
+
+      if (confirmed) {
         sounds.playSuccess();
         store.resetStoreData();
         ui.showToast({
@@ -1028,9 +1114,14 @@ function attachPaneSpecificEvents(container, tab) {
 
 function switchToTab(container, tabName) {
   activeAdminTab = tabName;
+  window.location.hash = `#/admin/${tabName}`;
   container.querySelectorAll('.admin-tab-btn').forEach(b => {
     b.classList.toggle('is-active', b.dataset.tab === tabName);
   });
+  const breadcrumbActive = container.querySelector('#admin-active-breadcrumb');
+  if (breadcrumbActive) {
+    breadcrumbActive.textContent = getTabLabel(tabName);
+  }
   const pane = container.querySelector('#admin-pane-content');
   if (pane) {
     pane.innerHTML = renderActiveAdminPaneContent(tabName);
@@ -1039,7 +1130,274 @@ function switchToTab(container, tabName) {
 }
 
 /**
- * 6. Product Add / Edit Modal Controller
+ * Hardware Preset Library for 1-Click Fast Fill
+ */
+const HARDWARE_PRESETS = [
+  {
+    name: 'ApexPro Magnetic Keyboard',
+    category: 'Keyboards & Keycaps',
+    url: 'https://images.unsplash.com/photo-1587829741301-dc798b83add3?auto=format&fit=crop&w=1000&q=85'
+  },
+  {
+    name: 'ViperStrike 8K Optical Mouse',
+    category: 'Mice & Precision',
+    url: 'https://images.unsplash.com/photo-1615663245857-ac93bb7c39e7?auto=format&fit=crop&w=1000&q=85'
+  },
+  {
+    name: 'Acoustic Studio Headset',
+    category: 'Audio & Headsets',
+    url: 'https://images.unsplash.com/photo-1546435770-a3e426bf472b?auto=format&fit=crop&w=1000&q=85'
+  },
+  {
+    name: 'UltraWide OLED Gaming Display',
+    category: 'Monitors & Mounts',
+    url: 'https://images.unsplash.com/photo-1527443224154-c4a3942d3acf?auto=format&fit=crop&w=1000&q=85'
+  },
+  {
+    name: 'Precision Desk Mat Desk Pad',
+    category: 'Desk Setup & Mats',
+    url: 'https://images.unsplash.com/photo-1598550476439-6847785fcea6?auto=format&fit=crop&w=1000&q=85'
+  },
+  {
+    name: 'Thunderbolt Quad Workstation Dock',
+    category: 'Hubs & Docks',
+    url: 'https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?auto=format&fit=crop&w=1000&q=85'
+  }
+];
+
+/**
+ * Client-Side Canvas Image Compression Helper
+ * Resizes large camera/phone photos to max 1200px and converts to optimized Data URL
+ * to avoid browser localStorage quota exhaustion.
+ */
+function compressAndReadImage(file, maxWidth = 1200, quality = 0.85) {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      const img = new Image();
+      img.onload = () => {
+        let width = img.width;
+        let height = img.height;
+
+        if (width > maxWidth) {
+          height = Math.round((height * maxWidth) / width);
+          width = maxWidth;
+        }
+
+        const canvas = document.createElement('canvas');
+        canvas.width = width;
+        canvas.height = height;
+        const ctx = canvas.getContext('2d');
+        ctx.drawImage(img, 0, 0, width, height);
+
+        const dataUrl = canvas.toDataURL('image/jpeg', quality);
+        resolve({
+          dataUrl,
+          fileName: file.name,
+          fileSize: `${Math.round(dataUrl.length * 0.75 / 1024)} KB`,
+          originalSize: `${Math.round(file.size / 1024)} KB`
+        });
+      };
+      img.onerror = () => {
+        resolve({
+          dataUrl: e.target.result,
+          fileName: file.name,
+          fileSize: `${Math.round(file.size / 1024)} KB`,
+          originalSize: `${Math.round(file.size / 1024)} KB`
+        });
+      };
+      img.src = e.target.result;
+    };
+    reader.onerror = reject;
+    reader.readAsDataURL(file);
+  });
+}
+
+/**
+ * Controller for Product Photography Drag-and-Drop Image Uploader
+ */
+function setupProductImageDropzone() {
+  const dropzone = document.getElementById('modal-prod-dropzone');
+  if (!dropzone) return;
+
+  const fileInput = document.getElementById('modal-prod-file-input');
+  const browseBtn = document.getElementById('modal-prod-browse-btn');
+  const replaceBtn = document.getElementById('dropzone-replace-btn');
+  const removeBtn = document.getElementById('dropzone-remove-btn');
+  const hiddenInput = document.getElementById('modal-prod-img');
+  const emptyState = document.getElementById('dropzone-empty-state');
+  const previewState = document.getElementById('dropzone-preview-state');
+  const previewImg = document.getElementById('modal-prod-preview-img');
+  const filenameSpan = document.getElementById('modal-prod-filename');
+  const filesizeSpan = document.getElementById('modal-prod-filesize');
+  const togglePresetsBtn = document.getElementById('toggle-preset-gallery-btn');
+  const presetsTray = document.getElementById('presets-gallery-tray');
+  const toggleUrlBtn = document.getElementById('toggle-url-fallback-btn');
+  const urlWrap = document.getElementById('url-fallback-wrap');
+  const applyUrlBtn = document.getElementById('apply-url-fallback-btn');
+  const urlInput = document.getElementById('modal-prod-url-fallback');
+
+  function setActiveImage(dataUrl, fileName = 'uploaded-hardware.jpg', fileSize = 'Optimized') {
+    if (hiddenInput) hiddenInput.value = dataUrl;
+    if (previewImg) previewImg.src = dataUrl;
+    if (filenameSpan) filenameSpan.textContent = fileName;
+    if (filesizeSpan) filesizeSpan.textContent = fileSize;
+    if (emptyState) emptyState.style.display = 'none';
+    if (previewState) previewState.style.display = 'block';
+    dropzone.classList.add('has-file');
+    dropzone.classList.remove('has-error');
+  }
+
+  function clearActiveImage() {
+    if (hiddenInput) hiddenInput.value = '';
+    if (previewImg) previewImg.src = '';
+    if (fileInput) fileInput.value = '';
+    if (emptyState) emptyState.style.display = 'flex';
+    if (previewState) previewState.style.display = 'none';
+    dropzone.classList.remove('has-file');
+  }
+
+  // Populate presets grid if empty
+  if (presetsTray && !presetsTray.dataset.populated) {
+    presetsTray.dataset.populated = 'true';
+    const grid = presetsTray.querySelector('#presets-grid') || presetsTray;
+    grid.innerHTML = HARDWARE_PRESETS.map(p => `
+      <div class="preset-card-chip" data-url="${p.url}" data-name="${p.name}">
+        <img src="${p.url}" alt="${p.name}" />
+        <span>${p.name}</span>
+      </div>
+    `).join('');
+
+    presetsTray.querySelectorAll('.preset-card-chip').forEach(chip => {
+      chip.addEventListener('click', (e) => {
+        e.preventDefault();
+        sounds.playClick();
+        const url = chip.dataset.url;
+        const name = chip.dataset.name;
+        setActiveImage(url, `${name}.jpg`, 'Catalog Preset');
+        presetsTray.style.display = 'none';
+        ui.showToast({
+          title: 'Preset Photo Applied',
+          message: `Loaded photography for "${name}".`,
+          type: 'info'
+        });
+      });
+    });
+  }
+
+  // Handle selected file upload
+  async function handleFile(file) {
+    if (!file) return;
+    if (!file.type.startsWith('image/')) {
+      ui.showToast({
+        title: 'Unsupported File Format',
+        message: 'Please select an image file (PNG, JPG, WEBP, SVG).',
+        type: 'error'
+      });
+      return;
+    }
+
+    try {
+      const result = await compressAndReadImage(file);
+      setActiveImage(result.dataUrl, result.fileName, result.fileSize);
+      sounds.playSuccess();
+      ui.showToast({
+        title: 'Photo Uploaded & Optimized',
+        message: `"${result.fileName}" (${result.fileSize}) ready for catalog.`,
+        type: 'success'
+      });
+    } catch (err) {
+      console.error(err);
+      ui.showToast({
+        title: 'Upload Failed',
+        message: 'Unable to process image file. Please try another image.',
+        type: 'error'
+      });
+    }
+  }
+
+  // Bind dropzone listeners only once
+  if (!dropzone.dataset.bound) {
+    dropzone.dataset.bound = 'true';
+
+    dropzone.addEventListener('dragover', (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      dropzone.classList.add('is-dragover');
+    });
+
+    dropzone.addEventListener('dragleave', (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      dropzone.classList.remove('is-dragover');
+    });
+
+    dropzone.addEventListener('drop', (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      dropzone.classList.remove('is-dragover');
+      if (e.dataTransfer && e.dataTransfer.files && e.dataTransfer.files.length > 0) {
+        handleFile(e.dataTransfer.files[0]);
+      }
+    });
+
+    browseBtn?.addEventListener('click', (e) => {
+      e.preventDefault();
+      fileInput?.click();
+    });
+
+    replaceBtn?.addEventListener('click', (e) => {
+      e.preventDefault();
+      fileInput?.click();
+    });
+
+    removeBtn?.addEventListener('click', (e) => {
+      e.preventDefault();
+      sounds.playPop();
+      clearActiveImage();
+    });
+
+    fileInput?.addEventListener('change', (e) => {
+      if (e.target.files && e.target.files.length > 0) {
+        handleFile(e.target.files[0]);
+      }
+    });
+
+    togglePresetsBtn?.addEventListener('click', (e) => {
+      e.preventDefault();
+      if (presetsTray) {
+        presetsTray.style.display = presetsTray.style.display === 'none' ? 'block' : 'none';
+      }
+    });
+
+    toggleUrlBtn?.addEventListener('click', (e) => {
+      e.preventDefault();
+      if (urlWrap) {
+        urlWrap.style.display = urlWrap.style.display === 'none' ? 'block' : 'none';
+      }
+    });
+
+    applyUrlBtn?.addEventListener('click', (e) => {
+      e.preventDefault();
+      const val = urlInput?.value.trim();
+      if (val) {
+        setActiveImage(val, 'custom-url.jpg', 'Direct Link');
+        if (urlWrap) urlWrap.style.display = 'none';
+        sounds.playSuccess();
+        ui.showToast({
+          title: 'Image URL Linked',
+          message: 'External image linked to product.',
+          type: 'info'
+        });
+      }
+    });
+  }
+
+  return { setActiveImage, clearActiveImage };
+}
+
+/**
+ * 6. Product Add / Edit Modal Controller (with Normal File Upload)
  */
 export function openProductModal(product = null) {
   const modal = document.getElementById('admin-product-modal');
@@ -1056,11 +1414,93 @@ export function openProductModal(product = null) {
   document.getElementById('modal-prod-name').value = isEdit ? product.name : '';
   document.getElementById('modal-prod-price').value = isEdit ? product.price : '199';
   document.getElementById('modal-prod-orig-price').value = isEdit ? (product.originalPrice || '') : '249';
-  document.getElementById('modal-prod-stock').value = isEdit ? (product.stockCount !== undefined ? product.stockCount : (product.stock !== undefined ? product.stock : 15)) : '20';
   document.getElementById('modal-prod-category').value = isEdit ? product.category : (CATEGORIES[1] || 'Keyboards & Keycaps');
   document.getElementById('modal-prod-badge').value = isEdit ? (product.badge || 'NEW') : 'NEW';
-  document.getElementById('modal-prod-img').value = isEdit ? product.heroImage : 'https://images.unsplash.com/photo-1587829741301-dc798b83add3?auto=format&fit=crop&w=1000&q=85';
   document.getElementById('modal-prod-desc').value = isEdit ? product.description : 'High-precision engineering mastercraft hardware with quantum response.';
+
+  // Stock Management Controller in Edit Modal
+  const initialStock = isEdit 
+    ? (product.stockCount !== undefined ? product.stockCount : (product.stock !== undefined ? product.stock : 15)) 
+    : 20;
+  const stockInput = document.getElementById('modal-prod-stock');
+  const stockLabel = document.getElementById('modal-stock-label');
+  const stockStatusPill = document.getElementById('modal-stock-status-pill');
+  const decBtn = document.getElementById('modal-stock-dec-btn');
+  const incBtn = document.getElementById('modal-stock-inc-btn');
+
+  if (stockInput) stockInput.value = initialStock;
+  if (stockLabel) {
+    stockLabel.textContent = isEdit 
+      ? `Vault Stock Management (${product.name})` 
+      : 'Initial Vault Stock Allocation';
+  }
+
+  const updateStockPill = () => {
+    const qty = Number(stockInput?.value) || 0;
+    if (!stockStatusPill) return;
+    if (qty <= 0) {
+      stockStatusPill.textContent = 'Out of Stock (0 units)';
+      stockStatusPill.className = 'stock-status-preview-pill pill-out';
+    } else if (qty <= 5) {
+      stockStatusPill.textContent = `Low Stock (${qty} units left)`;
+      stockStatusPill.className = 'stock-status-preview-pill pill-low';
+    } else {
+      stockStatusPill.textContent = `In Stock (${qty} units)`;
+      stockStatusPill.className = 'stock-status-preview-pill pill-ok';
+    }
+  };
+
+  updateStockPill();
+
+  if (stockInput) {
+    stockInput.oninput = updateStockPill;
+    stockInput.onchange = updateStockPill;
+  }
+
+  if (decBtn && stockInput) {
+    decBtn.onclick = (e) => {
+      e.preventDefault();
+      sounds.playClick();
+      const current = Number(stockInput.value) || 0;
+      stockInput.value = Math.max(0, current - 1);
+      updateStockPill();
+    };
+  }
+
+  if (incBtn && stockInput) {
+    incBtn.onclick = (e) => {
+      e.preventDefault();
+      sounds.playClick();
+      const current = Number(stockInput.value) || 0;
+      stockInput.value = current + 1;
+      updateStockPill();
+    };
+  }
+
+  // Quick Chips inside Edit Modal
+  modal.querySelectorAll('.stock-quick-chip').forEach(chip => {
+    chip.onclick = (e) => {
+      e.preventDefault();
+      sounds.playClick();
+      if (!stockInput) return;
+      if (chip.dataset.set !== undefined) {
+        stockInput.value = Number(chip.dataset.set);
+      } else if (chip.dataset.delta !== undefined) {
+        const delta = Number(chip.dataset.delta);
+        const current = Number(stockInput.value) || 0;
+        stockInput.value = Math.max(0, current + delta);
+      }
+      updateStockPill();
+    };
+  });
+
+  // Setup Image Dropzone
+  const dropzoneCtrl = setupProductImageDropzone();
+  if (isEdit && product.heroImage) {
+    dropzoneCtrl?.setActiveImage(product.heroImage, `${product.name.toLowerCase().replace(/\s+/g, '-')}.jpg`, 'Current Photo');
+  } else {
+    dropzoneCtrl?.clearActiveImage();
+  }
 
   ui.openModal('admin-product-modal');
 
@@ -1077,6 +1517,19 @@ export function openProductModal(product = null) {
     const badge = document.getElementById('modal-prod-badge').value.trim();
     const heroImage = document.getElementById('modal-prod-img').value.trim();
     const description = document.getElementById('modal-prod-desc').value.trim();
+
+    // Verify an image was uploaded or chosen
+    if (!heroImage) {
+      sounds.playPop();
+      const dropzone = document.getElementById('modal-prod-dropzone');
+      dropzone?.classList.add('has-error');
+      ui.showToast({
+        title: 'Product Photo Required',
+        message: 'Please upload an image file or choose from the preset hardware library.',
+        type: 'warning'
+      });
+      return;
+    }
 
     if (id) {
       // Edit Existing
@@ -1120,7 +1573,7 @@ export function openProductModal(product = null) {
     // Refresh active admin pane
     const mainContainer = document.getElementById('app-main-view');
     if (mainContainer && store.state.currentView.page === 'admin') {
-      renderAdminView(mainContainer);
+      renderAdminView(mainContainer, activeAdminTab);
     }
   };
 
