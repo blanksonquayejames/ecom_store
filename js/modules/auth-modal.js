@@ -106,7 +106,44 @@ function setupAuthEvents() {
   document.getElementById('auth-form-login')?.addEventListener('submit', (e) => {
     e.preventDefault();
     sounds.playClick();
-    const email = document.getElementById('login-email')?.value.trim() || 'julian.vance@7thjune.com';
+    const inputVal = document.getElementById('login-email')?.value.trim() || 'julian.vance@7thjune.com';
+    
+    // Check if credentials match a Sub-Admin
+    const subAdmin = store.findSubAdmin(inputVal);
+    if (subAdmin) {
+      const permLabels = (subAdmin.permissions || ['orders']).map(p => {
+        if (p === 'orders') return 'Order Status';
+        if (p === 'products') return 'Products';
+        if (p === 'customers') return 'Customers';
+        if (p === 'settings') return 'Settings';
+        return p;
+      }).join(', ');
+
+      const user = {
+        isLoggedIn: true,
+        role: 'sub-admin',
+        name: subAdmin.name,
+        username: subAdmin.username,
+        email: subAdmin.email,
+        permissions: subAdmin.permissions || ['orders'],
+        phone: '+233 24 555 4422',
+        tier: `Sub-Admin (${permLabels})`,
+        points: 500,
+        avatar: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=400&q=80',
+        addresses: []
+      };
+
+      store.setUser(user);
+      triggerAuthSuccess(user);
+      ui.showToast({
+        title: `Welcome, Sub-Admin ${subAdmin.name}!`,
+        message: `Session verified with ${permLabels} access limits.`,
+        type: 'success'
+      });
+      return;
+    }
+
+    const email = inputVal;
     const isAdmin = email.toLowerCase().includes('admin');
     const name = isAdmin ? 'Kwame Blankson' : (email.split('@')[0].replace('.', ' ').replace(/\b\w/g, l => l.toUpperCase()) || 'Valued Client');
     const firstName = name.trim().split(' ')[0] || 'Valued Client';
@@ -128,7 +165,7 @@ function setupAuthEvents() {
     triggerAuthSuccess(user);
     ui.showToast({
       title: isAdmin ? `Welcome, Administrator ${firstName}!` : `Welcome back, ${firstName}!`,
-      message: isAdmin ? `Administrator session activated with store management permissions.` : `Order history and delivery addresses loaded.`,
+      message: isAdmin ? `Administrator session activated with full store management permissions.` : `Order history and delivery addresses loaded.`,
       type: 'success'
     });
   });
@@ -238,6 +275,38 @@ function setupAuthEvents() {
     ui.showToast({
       title: 'Administrator Verified',
       message: 'Signed in as Chief Administrator Kwame Blankson.',
+      type: 'success'
+    });
+  });
+
+  // 1-Click Sub-Administrator Profile (John - Order Status Access)
+  document.getElementById('demo-login-subadmin')?.addEventListener('click', () => {
+    sounds.playSuccess();
+    const sub = store.findSubAdmin('john') || {
+      id: 'sub-admin-john',
+      name: 'John',
+      username: 'john',
+      email: 'john@7thjune.com',
+      permissions: ['orders']
+    };
+    const subUser = {
+      isLoggedIn: true,
+      role: 'sub-admin',
+      name: sub.name,
+      username: sub.username,
+      email: sub.email,
+      permissions: sub.permissions || ['orders'],
+      phone: '+233 24 555 4422',
+      tier: 'Sub-Admin (Order Status Access)',
+      points: 500,
+      avatar: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=400&q=80',
+      addresses: []
+    };
+    store.setUser(subUser);
+    triggerAuthSuccess(subUser);
+    ui.showToast({
+      title: 'Sub-Admin John Verified',
+      message: 'Signed in with Order Status access limits.',
       type: 'success'
     });
   });

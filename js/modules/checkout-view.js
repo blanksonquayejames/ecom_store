@@ -149,7 +149,6 @@ export function renderCheckoutView(container) {
             <div class="checkout-step-content is-active" id="chk-step-1">
               <div class="step-header">
                 <h3>Contact & Insured Delivery Address</h3>
-                <p>Provide your delivery location for our insured white-glove logistics network.</p>
               </div>
 
               ${user.addresses && user.addresses.length > 0 ? `
@@ -181,7 +180,7 @@ export function renderCheckoutView(container) {
                     <input type="text" class="custom-input" id="chk-name" value="${formData.fullName}" placeholder="Julian Vance" required />
                   </div>
                   <div class="form-group flex-1">
-                    <label>Phone Number (Courier Dispatch)</label>
+                    <label>Phone Number</label>
                     <input type="tel" class="custom-input" id="chk-phone" value="${formData.phone}" placeholder="+233 24 555 7788" />
                   </div>
                 </div>
@@ -234,7 +233,6 @@ export function renderCheckoutView(container) {
             <div class="checkout-step-content" id="chk-step-2" style="display: none;">
               <div class="step-header">
                 <h3>Select Delivery Method</h3>
-                <p>All tiers include tamper-proof titanium sealed containers and full transit insurance.</p>
               </div>
 
               <div class="shipping-tiers-list">
@@ -379,37 +377,12 @@ export function renderCheckoutView(container) {
                 `).join('')}
               </div>
 
-              <div class="summary-divider"></div>
-
-              <!-- Promo Code Input in Checkout -->
-              <div class="chk-promo-wrap">
-                ${appliedPromo ? `
-                  <div class="promo-active-chip">
-                    <span><strong>${appliedPromo.code}</strong> (${appliedPromo.description})</span>
-                    <button class="promo-remove-btn" id="chk-remove-promo">&times;</button>
-                  </div>
-                ` : `
-                  <div class="promo-input-group">
-                    <input type="text" class="custom-input custom-input-sm" id="chk-promo-input" placeholder="Promo code (optional)" />
-                    <button class="btn btn-secondary btn-sm" id="chk-apply-promo-btn">Apply</button>
-                  </div>
-                `}
-              </div>
-
-              <div class="summary-divider"></div>
-
               <!-- Cost breakdown -->
               <div class="chk-cost-breakdown">
                 <div class="chk-cost-row">
                   <span>Subtotal</span>
                   <span>${convertPrice(summary.subtotal, currency).formatted}</span>
                 </div>
-                ${summary.discount > 0 ? `
-                  <div class="chk-cost-row line-discount">
-                    <span>Promo Discount</span>
-                    <span>-${convertPrice(summary.discount, currency).formatted}</span>
-                  </div>
-                ` : ''}
                 <div class="chk-cost-row">
                   <span>White Glove Logistics</span>
                   <span>${summary.shipping === 0 ? '<strong class="text-green">COMPLIMENTARY</strong>' : convertPrice(summary.shipping, currency).formatted}</span>
@@ -421,18 +394,6 @@ export function renderCheckoutView(container) {
                 <div class="chk-cost-row total-row">
                   <span>Total Amount</span>
                   <span class="total-price">${convertPrice(summary.total, currency).formatted}</span>
-                </div>
-              </div>
-
-              <!-- Trust Badges -->
-              <div class="chk-trust-badges">
-                <div class="trust-badge-item">
-                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
-                  <span>256-Bit Encrypted Vault</span>
-                </div>
-                <div class="trust-badge-item">
-                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
-                  <span>100% Insured Delivery</span>
                 </div>
               </div>
 
@@ -580,28 +541,6 @@ function attachCheckoutEvents(container, formData) {
         formData.momoNetwork = radio.value;
       }
     });
-  });
-
-  // Promo Code in Checkout
-  const promoInput = container.querySelector('#chk-promo-input');
-  const promoBtn = container.querySelector('#chk-apply-promo-btn');
-  if (promoBtn && promoInput) {
-    promoBtn.addEventListener('click', () => {
-      const code = promoInput.value.trim();
-      if (!code) return;
-      const res = store.applyPromo(code);
-      if (res.success) {
-        ui.showToast({ title: 'Promo Activated', message: `${res.promo.description} discount applied!`, type: 'success' });
-        renderCheckoutView(container);
-      } else {
-        ui.showToast({ title: 'Invalid Code', message: res.message, type: 'error' });
-      }
-    });
-  }
-
-  container.querySelector('#chk-remove-promo')?.addEventListener('click', () => {
-    store.removePromo();
-    renderCheckoutView(container);
   });
 
   // PLACE ORDER BUTTON (MoMo Gateway)
@@ -766,17 +705,6 @@ export function renderOrderConfirmation(container, order) {
                   <strong>${order.paymentMethod || 'Mobile Money (MTN MoMo)'}</strong>
                   <span class="momo-status-tag">Status: <strong>PAID & VERIFIED</strong></span>
                   ${order.momoTransactionId ? `<small class="momo-ref-tag">MoMo Ref: ${order.momoTransactionId}</small>` : ''}
-                </div>
-              </div>
-
-              <div class="meta-divider"></div>
-
-              <h3>Aura Loyalty Points Awarded</h3>
-              <div class="loyalty-award-badge">
-                <span class="award-icon">✦</span>
-                <div>
-                  <strong>+${Math.floor(order.total)} Aura Privilege Points</strong>
-                  <span>Credited to your Platinum Concierge account.</span>
                 </div>
               </div>
             </div>

@@ -10541,4 +10541,177 @@ body[data-view="account"] .header-inner {
   font-size: 0.75rem;
   color: var(--text-muted, #64748b);
   margin-top: 0.15rem;
-}
+}
+
+/* ==========================================================================
+   SUB-ADMIN & MAIN ADMIN MULTI-TIER MANAGEMENT STYLES
+   ========================================================================== */
+
+.admin-gate-role-sections {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.admin-gate-tier-box {
+  background: var(--bg-surface, #ffffff);
+  border: 1.5px solid var(--border-subtle, #e2e8f0);
+  border-radius: var(--radius-lg, 12px);
+  padding: 1.25rem;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+  transition: all 0.2s ease;
+}
+
+.admin-gate-tier-box:hover {
+  border-color: #3b82f6;
+  box-shadow: 0 4px 14px rgba(59, 130, 246, 0.1);
+}
+
+.gate-tier-header {
+  display: flex;
+  align-items: center;
+  gap: 0.85rem;
+}
+
+.gate-tier-icon {
+  font-size: 1.6rem;
+  width: 44px;
+  height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #f1f5f9;
+  border-radius: 10px;
+}
+
+[data-theme="dark"] .gate-tier-icon {
+  background: #1e293b;
+}
+
+.gate-tier-title {
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--text-primary, #0f172a);
+}
+
+.admin-subadmin-quick-form {
+  background: #f8fafc;
+  padding: 0.85rem;
+  border-radius: 8px;
+  border: 1px solid #e2e8f0;
+}
+
+[data-theme="dark"] .admin-subadmin-quick-form {
+  background: #0f172a;
+  border-color: #334155;
+}
+
+.subadmin-permissions-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.65rem;
+}
+
+.perm-option-card {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+  padding: 0.75rem;
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+[data-theme="dark"] .perm-option-card {
+  background: #1e293b;
+  border-color: #334155;
+}
+
+.perm-option-card:hover {
+  border-color: #3b82f6;
+  background: #eff6ff;
+}
+
+[data-theme="dark"] .perm-option-card:hover {
+  background: rgba(59, 130, 246, 0.15);
+}
+
+.perm-option-info {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+}
+
+.perm-option-info strong {
+  font-size: 0.85rem;
+  color: var(--text-primary, #0f172a);
+}
+
+.perm-option-info span {
+  font-size: 0.75rem;
+  color: var(--text-muted, #64748b);
+  line-height: 1.35;
+}
+
+.admin-avatar-sm {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: #1e3a8a;
+  color: #ffffff;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.75rem;
+  font-weight: 700;
+}
+
+.staff-role-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  font-size: 0.75rem;
+  font-weight: 700;
+  padding: 0.25rem 0.65rem;
+  border-radius: 9999px;
+  background: #eff6ff;
+  color: #1e40af;
+  border: 1px solid #bfdbfe;
+}
+
+.badge-pill {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.2rem 0.55rem;
+  border-radius: 6px;
+  font-size: 0.725rem;
+  font-weight: 600;
+}
+
+.bg-blue-subtle {
+  background: #eff6ff;
+}
+
+.bg-green-subtle {
+  background: #ecfdf5;
+}
+
+.bg-gray-subtle {
+  background: #f1f5f9;
+  color: #475569;
+}
+
+.subadmin-guidance-card {
+  padding: 1rem;
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 10px;
+}
+
+[data-theme="dark"] .subadmin-guidance-card {
+  background: #1e293b;
+  border-color: #334155;
+}
+

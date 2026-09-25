@@ -24,8 +24,24 @@ class Store {
     const savedProducts = localStorage.getItem('aura_products');
     const savedPromoCodes = localStorage.getItem('aura_promo_codes');
     const savedAdminSession = localStorage.getItem('aura_admin_session');
+    const savedSubAdmins = localStorage.getItem('aura_sub_admins');
+
+    const defaultSubAdmins = [
+      {
+        id: 'sub-admin-john',
+        name: 'John',
+        username: 'john',
+        email: 'john@7thjune.com',
+        password: 'password123',
+        role: 'sub-admin',
+        permissions: ['orders'], // Access limited to order status & fulfillment
+        status: 'Active',
+        createdAt: '2026-09-20'
+      }
+    ];
 
     return {
+      subAdmins: savedSubAdmins ? JSON.parse(savedSubAdmins) : defaultSubAdmins,
       products: savedProducts ? JSON.parse(savedProducts) : PRODUCTS.map(p => ({
         ...p,
         stockCount: p.stockCount !== undefined ? p.stockCount : (p.stock !== undefined ? p.stock : 15),
@@ -402,7 +418,7 @@ class Store {
       timeline: [
         { step: 'Order Placed & Verified', time: 'Just now', completed: true },
         { step: 'Aura Artisan Vault Allocation', time: 'In Progress', completed: false },
-        { step: 'White Glove Courier Dispatch', time: 'Estimated 24-48 hours', completed: false },
+        { step: 'Order Dispatch & Transit', time: 'Estimated 24-48 hours', completed: false },
         { step: 'Delivery at Concierge', time: 'Estimated 3-4 business days', completed: false }
       ]
     };
@@ -736,6 +752,61 @@ class Store {
     localStorage.removeItem('aura_promo_codes');
     this.notify('products_updated', this.state.products);
     this.notify('promos_updated', this.state.promoCodes);
+  }
+
+  // --- Sub-Admin Access Control Management ---
+  getSubAdmins() {
+    return this.state.subAdmins || [];
+  }
+
+  addSubAdmin(subAdminData) {
+    const id = `sub-${Date.now().toString(36)}`;
+    const newSubAdmin = {
+      id,
+      name: subAdminData.name || 'Sub-Admin',
+      username: (subAdminData.username || subAdminData.name.toLowerCase().replace(/\s+/g, '')).trim(),
+      email: (subAdminData.email || '').trim().toLowerCase(),
+      password: subAdminData.password || 'password123',
+      role: 'sub-admin',
+      permissions: Array.isArray(subAdminData.permissions) ? subAdminData.permissions : ['orders'],
+      status: 'Active',
+      createdAt: new Date().toISOString().split('T')[0],
+      ...subAdminData
+    };
+    if (!this.state.subAdmins) this.state.subAdmins = [];
+    this.state.subAdmins.push(newSubAdmin);
+    localStorage.setItem('aura_sub_admins', JSON.stringify(this.state.subAdmins));
+    this.notify('sub_admins_updated', this.state.subAdmins);
+    return newSubAdmin;
+  }
+
+  updateSubAdmin(id, updates) {
+    if (!this.state.subAdmins) return null;
+    const idx = this.state.subAdmins.findIndex(s => s.id === id);
+    if (idx > -1) {
+      this.state.subAdmins[idx] = { ...this.state.subAdmins[idx], ...updates };
+      localStorage.setItem('aura_sub_admins', JSON.stringify(this.state.subAdmins));
+      this.notify('sub_admins_updated', this.state.subAdmins);
+      return this.state.subAdmins[idx];
+    }
+    return null;
+  }
+
+  deleteSubAdmin(id) {
+    if (!this.state.subAdmins) return false;
+    this.state.subAdmins = this.state.subAdmins.filter(s => s.id !== id);
+    localStorage.setItem('aura_sub_admins', JSON.stringify(this.state.subAdmins));
+    this.notify('sub_admins_updated', this.state.subAdmins);
+    return true;
+  }
+
+  findSubAdmin(identifier) {
+    if (!this.state.subAdmins || !identifier) return null;
+    const clean = identifier.trim().toLowerCase();
+    return this.state.subAdmins.find(s => 
+      s.username.toLowerCase() === clean || 
+      s.email.toLowerCase() === clean
+    );
   }
 }
 

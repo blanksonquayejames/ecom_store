@@ -669,7 +669,7 @@ function renderRewardsTab(user, currency) {
           <ul class="tier-perks-list">
             <li>✓ 2.0x Double Points Multiplier</li>
             <li>✓ White Glove Same-Day Vault Courier</li>
-            <li>✓ Lifetime 3-Year Hardware Warranty</li>
+            <li>✓ 6-Month Hardware Warranty</li>
             <li>✓ Private Showroom Consultations</li>
           </ul>
         </div>
@@ -1242,7 +1242,7 @@ export function showOrderReceiptModal(order) {
           <div class="receipt-security-note">
             <span class="shield-icon">🛡️</span>
             <div>
-              <strong>7th June 3-Year Hardware Protection</strong>
+              <strong>7th June 6-Month Hardware Protection</strong>
               <p>This electronic receipt is your official proof of purchase for genuine warranty coverage and concierge technical support in Ghana.</p>
             </div>
           </div>

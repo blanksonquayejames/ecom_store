@@ -66,7 +66,7 @@ export function renderCatalogView(container) {
             </div>
             <div class="metric-sep"></div>
             <div class="metric-item">
-              <div class="metric-val">3-Year</div>
+              <div class="metric-val">6-Month</div>
               <div class="metric-lbl">Hardware Care</div>
             </div>
             <div class="metric-sep"></div>

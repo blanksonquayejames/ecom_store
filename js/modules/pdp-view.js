@@ -73,22 +73,6 @@ export function renderProductDetailPage(container, productId) {
               `).join('')}
             </div>
 
-            <!-- Authenticity & Security Guarantee Callouts -->
-            <div class="pdp-guarantee-box">
-              <div class="guarantee-item">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--color-accent)" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
-                <div>
-                  <strong>3-Year 7th June Care Warranty</strong>
-                  <span>Global hardware replacement & dedicated VIP technician support.</span>
-                </div>
-              </div>
-              <div class="guarantee-item">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--color-accent)" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-                <div>
-                  <strong>30-Day Risk-Free Performance Trial</strong>
-                  <span>Full return guarantee with complimentary courier return pickup.</span>
-                </div>
-              </div>
             </div>
           </div>
 
@@ -268,13 +252,13 @@ export function renderProductDetailPage(container, productId) {
                 </div>
                 <div class="shipping-card">
                   <div class="shipping-icon">🛡️</div>
-                  <h4>3-Year 7th June Warranty</h4>
-                  <p>Comprehensive 36-month worldwide warranty covering component craftsmanship, switch replacements, and firmware optimizations.</p>
+                  <h4>6 Month Warranty</h4>
+                  <p>Comprehensive 6-month warranty covering component craftsmanship, switch replacements, and hardware optimizations.</p>
                 </div>
                 <div class="shipping-card">
                   <div class="shipping-icon">🔄</div>
-                  <h4>30-Day Hassle-Free Returns</h4>
-                  <p>If you are not 100% satisfied with your accessory, return it within 30 days for a full refund or free replacement.</p>
+                  <h4>7 Days Free Return</h4>
+                  <p>If you are not 100% satisfied with your accessory, return it within 7 days for a full refund or free replacement.</p>
                 </div>
               </div>
             </div>
@@ -287,7 +271,6 @@ export function renderProductDetailPage(container, productId) {
           <section class="pdp-suggested-section animate-fade-in" id="pdp-suggested-section">
             <div class="suggested-section-header">
               <div class="suggested-title-group">
-                <span class="suggested-badge">⚡ SETUP SYNERGY</span>
                 <h2 class="suggested-title">Suggested Accessories & Pairings</h2>
                 <p class="suggested-subtitle">Complete your setup with frequently bought and complementary high-performance peripherals.</p>
               </div>

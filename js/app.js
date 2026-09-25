@@ -186,7 +186,7 @@ function updateHeaderUserStatus(user) {
   const dropdownAdminItem = document.getElementById('dropdown-admin-item');
   const dropdownAdminDivider = document.getElementById('dropdown-admin-divider');
 
-  const isAdmin = Boolean(user && user.isLoggedIn && user.role === 'admin');
+  const isAdmin = Boolean(user && user.isLoggedIn && (user.role === 'admin' || user.role === 'sub-admin'));
   if (dropdownAdminItem) dropdownAdminItem.style.display = isAdmin ? 'block' : 'none';
   if (dropdownAdminDivider) dropdownAdminDivider.style.display = isAdmin ? 'block' : 'none';
 
@@ -263,7 +263,9 @@ function setupUserHubDropdown() {
     sounds.playClick();
     dropdown.style.display = 'none';
 
-    const isAdmin = Boolean(store.state.user && store.state.user.role === 'admin');
+    const isAdmin = Boolean(store.state.user && (store.state.user.role === 'admin' || store.state.user.role === 'sub-admin'));
+    const isSubAdmin = Boolean(store.state.user && store.state.user.role === 'sub-admin');
+    const roleTitle = isSubAdmin ? 'Sub-Administrator' : 'Administrator';
     const confirmed = await ui.confirm({
       title: isAdmin ? 'Sign Out of Administrator Account?' : 'Sign Out of 7th June Account?',
       message: `Are you sure you want to sign out, <strong>${store.state.user?.name || 'Valued Client'}</strong>?`,
@@ -317,18 +319,6 @@ function setupHeaderEvents() {
   // Bag / Cart Drawer Button
   document.getElementById('header-cart-btn')?.addEventListener('click', () => {
     ui.toggleDrawer('cart-drawer', true);
-  });
-
-  // Announcement Bar Promo Click
-  document.getElementById('announcement-promo-click')?.addEventListener('click', () => {
-    store.applyPromo('SAVE20');
-    ui.showToast({
-      title: 'Code SAVE20 Applied',
-      message: '20% discount code added to your order summary.',
-      type: 'success',
-      actionText: 'View Cart',
-      onAction: () => ui.toggleDrawer('cart-drawer', true)
-    });
   });
 }
 
