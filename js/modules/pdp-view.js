@@ -35,12 +35,6 @@ export function renderProductDetailPage(container, productId) {
     <div class="pdp-wrapper animate-fade-in">
       <div class="container">
         
-        <!-- Breadcrumbs Navigation -->
-        <nav class="pdp-breadcrumbs">
-          <button class="breadcrumb-link" id="breadcrumb-home">Collection</button>
-          <span class="breadcrumb-separator">/</span>
-          <span class="breadcrumb-current">${product.name}</span>
-        </nav>
 
         <!-- Main Product Grid: Gallery Left + Configuration Right -->
         <div class="pdp-main-grid">
