@@ -63,15 +63,15 @@ export function renderProductDetailPage(container, productId) {
             </div>
 
             <!-- Thumbnail Strip -->
-            <div class="pdp-thumbnails-strip" id="pdp-thumbs-strip">
-              ${galleryList.map((img, idx) => `
-                <button class="pdp-thumb-btn ${idx === 0 ? 'is-active' : ''}" data-img="${img}" data-idx="${idx}" aria-label="Product image ${idx + 1}">
-                  <img src="${img}" alt="Thumbnail ${idx + 1}" loading="lazy" />
-                </button>
-              `).join('')}
-            </div>
-
-            </div>
+            ${galleryList.length > 1 ? `
+              <div class="pdp-thumbnails-strip" id="pdp-thumbs-strip">
+                ${galleryList.map((img, idx) => `
+                  <button class="pdp-thumb-btn ${idx === 0 ? 'is-active' : ''}" data-img="${img}" data-idx="${idx}" aria-label="Product image ${idx + 1}">
+                    <img src="${img}" alt="Thumbnail ${idx + 1}" loading="lazy" />
+                  </button>
+                `).join('')}
+              </div>
+            ` : ''}
           </div>
 
           <!-- Right: Details, Variants & Purchase -->
@@ -82,55 +82,62 @@ export function renderProductDetailPage(container, productId) {
                 <span class="score">${product.rating.toFixed(2)}</span>
                 <a href="#reviews-tab" class="reviews-link" id="scroll-to-reviews">(${product.reviewsCount} verified reviews)</a>
               </div>
+              <div class="pdp-stock-badge">
+                <span class="stock-pulse"></span>
+                <span>In Stock • Ready to Ship</span>
+              </div>
             </div>
 
             <h1 class="pdp-title">${product.name}</h1>
             <p class="pdp-tagline">${product.tagline}</p>
 
             <!-- Pricing Box -->
-            <div class="pdp-price-box">
-              <div class="pdp-current-price" id="pdp-price-display">${currentPriceObj.formatted}</div>
-              ${originalPriceObj ? `<div class="pdp-original-price">${originalPriceObj.formatted}</div>` : ''}
-              ${discountPercent > 0 ? `<div class="pdp-savings-pill">Save ${discountPercent}%</div>` : ''}
+            <div class="pdp-price-card">
+              <div class="pdp-price-box">
+                <div class="pdp-current-price" id="pdp-price-display">${currentPriceObj.formatted}</div>
+                ${originalPriceObj ? `<div class="pdp-original-price">${originalPriceObj.formatted}</div>` : ''}
+                ${discountPercent > 0 ? `<div class="pdp-savings-pill">Save ${discountPercent}%</div>` : ''}
+              </div>
+              <div class="pdp-price-note">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+                <span>Tax included. Fast courier delivery dispatched in 24 hours.</span>
+              </div>
             </div>
 
             <p class="pdp-description">${product.description}</p>
 
-            <div class="pdp-divider"></div>
-
-
-
-            <!-- Option / Layout / Cable Variants -->
-            ${product.storageOptions && product.storageOptions.length > 0 ? `
-              <div class="pdp-variant-section">
-                <div class="variant-label-row">
-                  <span class="variant-label">Configuration Option:</span>
-                  <span class="variant-value" id="selected-option-name">${selectedOption}</span>
-                </div>
-                <div class="pdp-option-pills">
-                  ${product.storageOptions.map((opt, idx) => `
-                    <button class="pdp-option-btn ${idx === 0 ? 'is-active' : ''}" data-option="${opt}">
-                      ${opt}
-                    </button>
-                  `).join('')}
-                </div>
+            <!-- Micro Guarantee Highlights -->
+            <div class="pdp-guarantee-badges">
+              <div class="guarantee-pill">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+                <span>6 Month Warranty</span>
               </div>
-            ` : ''}
+              <div class="guarantee-pill">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"/></svg>
+                <span>7 Days Free Return</span>
+              </div>
+              <div class="guarantee-pill">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="1" y="3" width="15" height="13"/><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg>
+                <span>Express Courier Dispatch</span>
+              </div>
+            </div>
+
+            <div class="pdp-divider"></div>
 
             <!-- Quantity & Call-to-Action Buttons -->
             <div class="pdp-actions-row">
               <div class="pdp-qty-wrap">
-                <button class="qty-btn" id="pdp-qty-minus" aria-label="Decrease quantity">-</button>
+                <button class="qty-btn" id="pdp-qty-minus" aria-label="Decrease quantity">−</button>
                 <span class="qty-val" id="pdp-qty-val">1</span>
                 <button class="qty-btn" id="pdp-qty-plus" aria-label="Increase quantity">+</button>
               </div>
 
-              <button class="btn btn-primary btn-lg flex-1" id="pdp-add-cart-btn">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
+              <button class="btn btn-primary btn-lg pdp-main-add-btn" id="pdp-add-cart-btn">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
                 <span>Add to Cart</span>
               </button>
 
-              <button class="btn btn-secondary btn-lg" id="pdp-buy-now-btn">
+              <button class="btn btn-secondary btn-lg pdp-main-buy-btn" id="pdp-buy-now-btn">
                 <span>Buy Now</span>
               </button>
             </div>
