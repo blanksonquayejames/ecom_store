@@ -76,10 +76,6 @@ export function renderProductDetailPage(container, productId) {
                 <span class="score">${product.rating.toFixed(2)}</span>
                 <a href="#reviews-tab" class="reviews-link" id="scroll-to-reviews">(${product.reviewsCount} verified reviews)</a>
               </div>
-              <div class="pdp-stock-badge">
-                <span class="stock-pulse"></span>
-                <span>In Stock • Ready to Ship</span>
-              </div>
             </div>
 
             <h1 class="pdp-title">${product.name}</h1>
@@ -280,11 +276,11 @@ export function renderProductDetailPage(container, productId) {
             <!-- Suggested Products Cards Grid -->
             <div class="suggested-products-grid" id="suggested-products-grid">
               ${suggestedProducts.map(item => {
-                const itemPrice = convertPrice(item.price, currency);
-                const itemOrigPrice = item.originalPrice ? convertPrice(item.originalPrice, currency) : null;
-                const itemDiscount = item.originalPrice ? Math.round(((item.originalPrice - item.price) / item.originalPrice) * 100) : 0;
+    const itemPrice = convertPrice(item.price, currency);
+    const itemOrigPrice = item.originalPrice ? convertPrice(item.originalPrice, currency) : null;
+    const itemDiscount = item.originalPrice ? Math.round(((item.originalPrice - item.price) / item.originalPrice) * 100) : 0;
 
-                return `
+    return `
                   <div class="suggested-product-card" data-id="${item.id}">
                     <div class="suggested-img-wrap" data-nav-id="${item.id}">
                       <img src="${item.heroImage}" alt="${item.name}" class="suggested-img" loading="lazy" />
@@ -309,7 +305,7 @@ export function renderProductDetailPage(container, productId) {
                     </div>
                   </div>
                 `;
-              }).join('')}
+  }).join('')}
             </div>
           </section>
         ` : ''}
@@ -404,7 +400,7 @@ function attachPdpEvents(container, product, state) {
       touchEndY = e.changedTouches[0].screenY;
       const diffX = touchEndX - touchStartX;
       const diffY = touchEndY - touchStartY;
-      
+
       // Horizontal swipe detected and larger than vertical drift
       if (Math.abs(diffX) > 35 && Math.abs(diffX) > Math.abs(diffY) && galleryImgs.length > 1) {
         sounds.playClick();
@@ -459,7 +455,7 @@ function attachPdpEvents(container, product, state) {
     addCartBtn.addEventListener('click', () => {
       sounds.playClick();
       store.addToCart(product, state.getSelectedColor(), state.getSelectedOption(), state.getQuantity());
-      
+
       const origText = addCartBtn.innerHTML;
       addCartBtn.innerHTML = `✓ Added to Cart`;
       addCartBtn.classList.add('btn-added-state');
@@ -529,7 +525,7 @@ function attachPdpEvents(container, product, state) {
     stickyBuyBtn.addEventListener('click', () => {
       sounds.playClick();
       store.addToCart(product, state.getSelectedColor(), state.getSelectedOption(), state.getQuantity());
-      
+
       const isLoggedIn = !!(store.state.user && store.state.user.isLoggedIn);
       if (!isLoggedIn) {
         ui.showToast({
@@ -578,7 +574,7 @@ function attachPdpEvents(container, product, state) {
       const targetTab = tabBtn.dataset.tab;
       container.querySelectorAll('.pdp-tab-btn').forEach(b => b.classList.remove('is-active'));
       container.querySelectorAll('.pdp-tab-pane').forEach(p => p.classList.remove('is-active'));
-      
+
       tabBtn.classList.add('is-active');
       container.querySelector(`#${targetTab}`)?.classList.add('is-active');
     });

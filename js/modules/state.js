@@ -473,7 +473,7 @@ class Store {
   addAddress(addressData) {
     if (!this.state.user) return null;
     if (!this.state.user.addresses) this.state.user.addresses = [];
-    
+
     const newAddress = {
       id: `addr-${Date.now()}`,
       fullName: addressData.fullName || this.state.user.name,
@@ -519,7 +519,7 @@ class Store {
     if (!this.state.user || !this.state.user.addresses) return false;
     const prevDefault = this.state.user.addresses.find(a => a.id === addressId)?.isDefault;
     this.state.user.addresses = this.state.user.addresses.filter(a => a.id !== addressId);
-    
+
     // If the default was deleted, assign default to the first one remaining
     if (prevDefault && this.state.user.addresses.length > 0) {
       this.state.user.addresses[0].isDefault = true;
@@ -803,8 +803,8 @@ class Store {
   findSubAdmin(identifier) {
     if (!this.state.subAdmins || !identifier) return null;
     const clean = identifier.trim().toLowerCase();
-    return this.state.subAdmins.find(s => 
-      s.username.toLowerCase() === clean || 
+    return this.state.subAdmins.find(s =>
+      s.username.toLowerCase() === clean ||
       s.email.toLowerCase() === clean
     );
   }
