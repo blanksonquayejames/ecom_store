@@ -1487,7 +1487,7 @@ img {
 }
 
 .hero-card-price {
-  font-size: 1.25rem;
+  font-size: 1.05rem;
   font-weight: 800;
   color: var(--text-primary);
   display: flex;
@@ -1996,13 +1996,13 @@ img {
 }
 
 .card-price {
-  font-size: 1.15rem;
+  font-size: 0.95rem;
   font-weight: 800;
   color: var(--text-primary);
 }
 
 .card-original-price {
-  font-size: 0.8125rem;
+  font-size: 0.75rem;
   color: var(--text-muted);
   text-decoration: line-through;
 }
@@ -2226,7 +2226,7 @@ img {
 }
 
 .sticky-bar-price {
-  font-size: 0.95rem;
+  font-size: 0.85rem;
   font-weight: 800;
   color: #3B82F6;
 }
@@ -2274,7 +2274,7 @@ img {
 /* PDP Details Right */
 .pdp-meta-header {
   display: flex;
-  justify-content: space-between;
+  justify-content: flex-start;
   align-items: center;
   margin-bottom: var(--space-sm);
 }
@@ -2331,13 +2331,13 @@ img {
 }
 
 .pdp-current-price {
-  font-size: 2rem;
+  font-size: 1.5rem;
   font-weight: 800;
   color: var(--text-primary);
 }
 
 .pdp-original-price {
-  font-size: 1.25rem;
+  font-size: 0.95rem;
   color: var(--text-muted);
   text-decoration: line-through;
 }
@@ -2568,13 +2568,13 @@ img {
 }
 
 .bundle-total-price {
-  font-size: 1.25rem;
+  font-size: 1.05rem;
   font-weight: 800;
   color: #1E3A8A;
 }
 
 .bundle-orig-price {
-  font-size: 0.8125rem;
+  font-size: 0.75rem;
   color: var(--text-muted);
   text-decoration: line-through;
 }
@@ -3004,13 +3004,13 @@ img {
 }
 
 .suggested-price .curr-price {
-  font-size: 1.05rem;
+  font-size: 0.9rem;
   font-weight: 800;
   color: #1E3A8A;
 }
 
 .suggested-price .old-price {
-  font-size: 0.75rem;
+  font-size: 0.7rem;
   color: var(--text-muted);
   text-decoration: line-through;
 }
@@ -4848,7 +4848,7 @@ img {
 }
 
 .quick-view-price {
-  font-size: 1.5rem;
+  font-size: 1.2rem;
   font-weight: 800;
   color: #3B82F6;
   margin-bottom: var(--space-md);
@@ -5680,13 +5680,13 @@ img {
   }
 
   .card-price {
-    font-size: 0.92rem;
+    font-size: 0.82rem;
     font-weight: 800;
     color: var(--text-primary);
   }
 
   .card-original-price {
-    font-size: 0.7rem;
+    font-size: 0.65rem;
   }
 
   .btn-add-cart {
@@ -5902,7 +5902,7 @@ img {
   }
 
   .pdp-current-price {
-    font-size: 1.85rem !important;
+    font-size: 1.35rem !important;
     font-weight: 900 !important;
     color: #1E3A8A !important;
     letter-spacing: -0.02em;
@@ -5910,7 +5910,7 @@ img {
   }
 
   .pdp-original-price {
-    font-size: 1.1rem !important;
+    font-size: 0.88rem !important;
     color: #94A3B8 !important;
     text-decoration: line-through;
   }
@@ -7370,7 +7370,7 @@ img {
   }
 
   .card-price {
-    font-size: 0.85rem;
+    font-size: 0.78rem;
   }
 }
 
@@ -7688,8 +7688,17 @@ body[data-view="account"] .header-inner {
 }
 
 @keyframes pulseDot {
-  0%, 100% { transform: scale(1); opacity: 1; }
-  50% { transform: scale(1.4); opacity: 0.5; }
+
+  0%,
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+
+  50% {
+    transform: scale(1.4);
+    opacity: 0.5;
+  }
 }
 
 /* Order Confirmation MoMo Card */
@@ -8009,19 +8018,17 @@ body[data-view="account"] .header-inner {
 .receipt-barcode-lines {
   height: 28px;
   width: 180px;
-  background: repeating-linear-gradient(
-    90deg,
-    #0f172a 0px,
-    #0f172a 2px,
-    transparent 2px,
-    transparent 4px,
-    #0f172a 4px,
-    #0f172a 7px,
-    transparent 7px,
-    transparent 9px,
-    #0f172a 9px,
-    #0f172a 12px
-  );
+  background: repeating-linear-gradient(90deg,
+      #0f172a 0px,
+      #0f172a 2px,
+      transparent 2px,
+      transparent 4px,
+      #0f172a 4px,
+      #0f172a 7px,
+      transparent 7px,
+      transparent 9px,
+      #0f172a 9px,
+      #0f172a 12px);
   opacity: 0.85;
 }
 
@@ -8087,10 +8094,12 @@ body[data-view="account"] .header-inner {
   body * {
     visibility: hidden;
   }
+
   #receipt-modal,
   #receipt-modal * {
     visibility: visible;
   }
+
   #receipt-modal {
     position: absolute;
     left: 0;
@@ -8101,15 +8110,18 @@ body[data-view="account"] .header-inner {
     background: #FFFFFF !important;
     display: block !important;
   }
+
   .modal-dialog {
     max-width: 100% !important;
     box-shadow: none !important;
     border: none !important;
   }
+
   .no-print,
   .modal-close-btn {
     display: none !important;
   }
+
   .receipt-card {
     padding: 1rem !important;
   }
@@ -8119,14 +8131,17 @@ body[data-view="account"] .header-inner {
   .receipt-card {
     padding: 1.5rem;
   }
+
   .receipt-header {
     flex-direction: column;
     align-items: flex-start;
   }
+
   .receipt-title-box {
     text-align: left;
     align-items: flex-start;
   }
+
   .receipt-finance-wrap {
     grid-template-columns: 1fr;
   }
@@ -8349,10 +8364,21 @@ body[data-view="account"] .header-inner {
   font-size: 1.1rem;
 }
 
-.bg-blue-light { background: #eff6ff; }
-.bg-purple-light { background: #f5f3ff; }
-.bg-green-light { background: #f0fdf4; }
-.bg-yellow-light { background: #fefce8; }
+.bg-blue-light {
+  background: #eff6ff;
+}
+
+.bg-purple-light {
+  background: #f5f3ff;
+}
+
+.bg-green-light {
+  background: #f0fdf4;
+}
+
+.bg-yellow-light {
+  background: #fefce8;
+}
 
 .stat-value {
   font-family: var(--font-display);
@@ -8526,9 +8552,20 @@ body[data-view="account"] .header-inner {
   text-transform: uppercase;
 }
 
-.stock-pill-ok { background: #dcfce7; color: #166534; }
-.stock-pill-low { background: #fef3c7; color: #92400e; }
-.stock-pill-out { background: #fee2e2; color: #991b1b; }
+.stock-pill-ok {
+  background: #dcfce7;
+  color: #166534;
+}
+
+.stock-pill-low {
+  background: #fef3c7;
+  color: #92400e;
+}
+
+.stock-pill-out {
+  background: #fee2e2;
+  color: #991b1b;
+}
 
 /* Status Badges */
 .status-badge-chip {
@@ -8539,10 +8576,25 @@ body[data-view="account"] .header-inner {
   border-radius: 9999px;
 }
 
-.status-processing { background: #eff6ff; color: #1d4ed8; }
-.status-in-transit { background: #fef3c7; color: #b45309; }
-.status-delivered { background: #dcfce7; color: #15803d; }
-.status-cancelled { background: #fee2e2; color: #b91c1c; }
+.status-processing {
+  background: #eff6ff;
+  color: #1d4ed8;
+}
+
+.status-in-transit {
+  background: #fef3c7;
+  color: #b45309;
+}
+
+.status-delivered {
+  background: #dcfce7;
+  color: #15803d;
+}
+
+.status-cancelled {
+  background: #fee2e2;
+  color: #b91c1c;
+}
 
 .momo-channel-chip {
   display: inline-flex;
@@ -8733,6 +8785,7 @@ body[data-view="account"] .header-inner {
     flex-direction: column;
     align-items: flex-start;
   }
+
   .admin-kpi-grid {
     grid-template-columns: 1fr;
   }
@@ -9056,8 +9109,15 @@ body[data-view="account"] .header-inner {
 }
 
 @keyframes dropdownPop {
-  from { opacity: 0; transform: translateY(-8px) scale(0.97); }
-  to { opacity: 1; transform: translateY(0) scale(1); }
+  from {
+    opacity: 0;
+    transform: translateY(-8px) scale(0.97);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
 }
 
 .user-dropdown-header {
@@ -9200,9 +9260,20 @@ body[data-view="account"] .header-inner {
 }
 
 @keyframes pulseGreen {
-  0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.5); }
-  70% { transform: scale(1); box-shadow: 0 0 0 6px rgba(16, 185, 129, 0); }
-  100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(16, 185, 129, 0); }
+  0% {
+    transform: scale(0.95);
+    box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.5);
+  }
+
+  70% {
+    transform: scale(1);
+    box-shadow: 0 0 0 6px rgba(16, 185, 129, 0);
+  }
+
+  100% {
+    transform: scale(0.95);
+    box-shadow: 0 0 0 0 rgba(16, 185, 129, 0);
+  }
 }
 
 .admin-tab-badge,
@@ -9542,7 +9613,9 @@ body[data-view="account"] .header-inner {
   border-radius: 9999px;
 }
 
-.address-street, .address-region, .address-contact {
+.address-street,
+.address-region,
+.address-contact {
   margin: 0.25rem 0;
   font-size: 0.875rem;
   color: #475569;
@@ -9724,6 +9797,7 @@ body[data-view="account"] .header-inner {
     grid-template-columns: 1fr;
     gap: 0.75rem;
   }
+
   .account-two-col-grid {
     grid-template-columns: 1fr;
   }
@@ -10714,4 +10788,3 @@ body[data-view="account"] .header-inner {
   background: #1e293b;
   border-color: #334155;
 }
-

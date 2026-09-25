@@ -39,8 +39,6 @@ export function renderProductDetailPage(container, productId) {
         <nav class="pdp-breadcrumbs">
           <button class="breadcrumb-link" id="breadcrumb-home">Collection</button>
           <span class="breadcrumb-separator">/</span>
-          <span class="breadcrumb-link">${product.category}</span>
-          <span class="breadcrumb-separator">/</span>
           <span class="breadcrumb-current">${product.name}</span>
         </nav>
 
@@ -79,7 +77,6 @@ export function renderProductDetailPage(container, productId) {
           <!-- Right: Details, Variants & Purchase -->
           <div class="pdp-details-col">
             <div class="pdp-meta-header">
-              <span class="pdp-category-tag">${product.category}</span>
               <div class="pdp-rating-row">
                 <span class="stars">★★★★★</span>
                 <span class="score">${product.rating.toFixed(2)}</span>
@@ -296,7 +293,6 @@ export function renderProductDetailPage(container, productId) {
                       </button>
                     </div>
                     <div class="suggested-info">
-                      <span class="suggested-category">${item.category}</span>
                       <h4 class="suggested-name" data-nav-id="${item.id}">${item.name}</h4>
                       <div class="suggested-stars">★★★★★ <span>(${item.rating.toFixed(2)})</span></div>
                       <div class="suggested-price-row">
@@ -725,7 +721,6 @@ export function renderQuickViewModal(productId) {
         <img src="${product.heroImage}" alt="${product.name}" class="quick-view-img" />
       </div>
       <div class="quick-view-details">
-        <div class="card-category">${product.category}</div>
         <h2 class="quick-view-title">${product.name}</h2>
         <div class="quick-view-price">${currentPriceObj.formatted}</div>
         <p class="quick-view-desc">${product.description}</p>
