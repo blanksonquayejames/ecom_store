@@ -67,7 +67,7 @@
             </button>
 
             <!-- Category Dropdown Menu -->
-            <ul class="search-category-menu" id="search-category-menu" role="listbox" style="display: none;">
+            <ul class="search-category-menu" id="search-category-menu" role="listbox">
               <li class="search-category-item is-selected" data-category="All Products" data-short-label="All"
                 role="option">
                 <span>All Departments</span>
@@ -136,9 +136,36 @@
       <!-- Header Action Controls (Currency, Sound, Theme, Wishlist, Account, Bag) -->
       <div class="header-actions">
 
-        <!-- Multi-Currency Selector (Cedis & USD) -->
-        <div class="currency-selector-wrap">
-          <select id="currency-selector" class="currency-select" aria-label="Select Currency">
+        <!-- Multi-Currency Selector (Cedis & USD) Custom Hover Dropdown -->
+        <div class="currency-dropdown-wrap" id="currency-dropdown-wrap">
+          <button type="button" class="currency-trigger-btn" id="currency-trigger-btn" aria-haspopup="listbox"
+            aria-expanded="false" title="Switch Currency (Hover to browse)">
+            <span class="currency-flag-icon" id="currency-display-flag">🇬🇭</span>
+            <span class="currency-display-code" id="currency-display-code">GHS</span>
+            <span class="currency-display-symbol" id="currency-display-symbol">(GH₵)</span>
+            <svg class="currency-caret" width="10" height="6" viewBox="0 0 10 6" fill="currentColor">
+              <path d="M0 0.5L5 5.5L10 0.5H0Z" />
+            </svg>
+          </button>
+          <ul class="currency-menu" id="currency-menu" role="listbox">
+            <li class="currency-item is-selected" data-currency="GHS" role="option">
+              <span class="curr-flag">🇬🇭</span>
+              <div class="curr-details">
+                <span class="curr-code">GHS</span>
+                <span class="curr-name">Ghanaian Cedi (GH₵)</span>
+              </div>
+              <span class="curr-check">✓</span>
+            </li>
+            <li class="currency-item" data-currency="USD" role="option">
+              <span class="curr-flag">🇺🇸</span>
+              <div class="curr-details">
+                <span class="curr-code">USD</span>
+                <span class="curr-name">US Dollar ($)</span>
+              </div>
+              <span class="curr-check">✓</span>
+            </li>
+          </ul>
+          <select id="currency-selector" class="sr-only" style="display: none;" aria-hidden="true" tabindex="-1">
             <option value="GHS">GHS (GH₵)</option>
             <option value="USD">USD ($)</option>
           </select>
@@ -146,7 +173,8 @@
 
         <!-- Account Hub & Interactive User Menu -->
         <div class="header-user-hub-wrap" id="header-user-hub-wrap">
-          <button class="header-icon-btn header-account-btn" id="header-account-btn" title="Customer Account Hub" aria-label="Account" aria-expanded="false">
+          <button class="header-icon-btn header-account-btn" id="header-account-btn" title="Customer Account Hub"
+            aria-label="Account" aria-expanded="false">
             <span class="header-account-avatar-placeholder" id="header-account-avatar-wrap">
               <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                 <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
@@ -154,12 +182,13 @@
               </svg>
             </span>
           </button>
-          
+
           <!-- Interactive Quick Dropdown -->
-          <div class="header-user-dropdown" id="header-user-dropdown" style="display: none;">
+          <div class="header-user-dropdown" id="header-user-dropdown">
             <div class="user-dropdown-header">
               <div class="user-dropdown-avatar-wrap">
-                <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=120&q=80" alt="User Avatar" class="user-dropdown-avatar" id="dropdown-user-avatar" />
+                <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=120&q=80"
+                  alt="User Avatar" class="user-dropdown-avatar" id="dropdown-user-avatar" />
               </div>
               <div class="user-dropdown-meta">
                 <strong class="user-dropdown-name" id="dropdown-user-name">Julian Vance</strong>
@@ -170,45 +199,69 @@
             <ul class="user-dropdown-links">
               <li>
                 <a href="#/account/overview" class="dropdown-link-item" id="dropdown-link-overview">
-                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
+                    <polyline points="9 22 9 12 15 12 15 22" />
+                  </svg>
                   <span>Account Dashboard</span>
                 </a>
               </li>
               <li>
                 <a href="#/account/orders" class="dropdown-link-item" id="dropdown-link-orders">
-                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="7" width="20" height="14" rx="2" ry="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg>
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <rect x="2" y="7" width="20" height="14" rx="2" ry="2" />
+                    <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16" />
+                  </svg>
                   <span>Order History & Tracking</span>
                 </a>
               </li>
               <li>
                 <a href="#/account/addresses" class="dropdown-link-item" id="dropdown-link-addresses">
-                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" />
+                    <circle cx="12" cy="10" r="3" />
+                  </svg>
                   <span>Saved Delivery Addresses</span>
                 </a>
               </li>
               <li>
                 <a href="#/account/profile" class="dropdown-link-item" id="dropdown-link-profile">
-                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
+                    <circle cx="12" cy="7" r="4" />
+                  </svg>
                   <span>Profile & Security</span>
                 </a>
               </li>
               <li>
                 <a href="#/account/rewards" class="dropdown-link-item" id="dropdown-link-rewards">
-                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <polygon
+                      points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" />
+                  </svg>
                   <span>VIP Rewards Club</span>
                 </a>
               </li>
               <li class="user-dropdown-divider" id="dropdown-admin-divider" style="display: none;"></li>
               <li id="dropdown-admin-item" style="display: none;">
                 <a href="#/admin/overview" class="dropdown-link-item text-primary" id="dropdown-link-admin">
-                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <rect x="3" y="3" width="7" height="7" />
+                    <rect x="14" y="3" width="7" height="7" />
+                    <rect x="14" y="14" width="7" height="7" />
+                    <rect x="3" y="14" width="7" height="7" />
+                  </svg>
                   <span>Store Administration Console</span>
                 </a>
               </li>
               <li class="user-dropdown-divider"></li>
               <li>
                 <button type="button" class="dropdown-link-item text-muted" id="dropdown-link-logout">
-                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
+                    <polyline points="16 17 21 12 16 7" />
+                    <line x1="21" y1="12" x2="9" y2="12" />
+                  </svg>
                   <span>Sign Out</span>
                 </button>
               </li>
@@ -300,7 +353,8 @@
               <span class="checkmark"></span>
               <span>Remember me</span>
             </label>
-            <a href="#" class="forgot-link" onclick="event.preventDefault(); window.ui?.showToast({ title: 'Password Reset', message: 'Password recovery instructions dispatched to your email.', type: 'info' });">Forgot
+            <a href="#" class="forgot-link"
+              onclick="event.preventDefault(); window.ui?.showToast({ title: 'Password Reset', message: 'Password recovery instructions dispatched to your email.', type: 'info' });">Forgot
               Password?</a>
           </div>
           <button type="submit" class="btn btn-primary w-100 mt-3 btn-lg">
@@ -364,7 +418,8 @@
   <!-- Admin Add / Edit Product Modal -->
   <div class="modal" id="admin-product-modal" role="dialog" aria-modal="true" aria-labelledby="admin-prod-modal-title">
     <div class="modal-dialog modal-lg">
-      <button class="modal-close-btn" id="admin-prod-modal-close" aria-label="Close Modal" onclick="document.getElementById('admin-product-modal').classList.remove('is-open'); document.getElementById('global-backdrop').classList.remove('is-active'); document.body.classList.remove('no-scroll');">&times;</button>
+      <button class="modal-close-btn" id="admin-prod-modal-close" aria-label="Close Modal"
+        onclick="document.getElementById('admin-product-modal').classList.remove('is-open'); document.getElementById('global-backdrop').classList.remove('is-active'); document.body.classList.remove('no-scroll');">&times;</button>
       <div class="admin-modal-wrap">
         <div class="admin-modal-header">
           <h2 id="admin-prod-modal-title">Add New Hardware Product</h2>
@@ -376,7 +431,8 @@
 
           <div class="form-group">
             <label>Product Name / Model Title</label>
-            <input type="text" class="custom-input" id="modal-prod-name" placeholder="e.g. ApexPro V4 Magnetic Rapid-Trigger Keyboard" required />
+            <input type="text" class="custom-input" id="modal-prod-name"
+              placeholder="e.g. ApexPro V4 Magnetic Rapid-Trigger Keyboard" required />
           </div>
 
           <div class="form-row">
@@ -395,18 +451,21 @@
             </div>
             <div class="form-group flex-1">
               <label>Merchandising Badge</label>
-              <input type="text" class="custom-input" id="modal-prod-badge" placeholder="NEW, FLAGSHIP, SALE, etc." value="NEW" />
+              <input type="text" class="custom-input" id="modal-prod-badge" placeholder="NEW, FLAGSHIP, SALE, etc."
+                value="NEW" />
             </div>
           </div>
 
           <div class="form-row">
             <div class="form-group flex-1">
               <label>Selling Price (USD base)</label>
-              <input type="number" class="custom-input" id="modal-prod-price" min="1" step="0.01" placeholder="199" required />
+              <input type="number" class="custom-input" id="modal-prod-price" min="1" step="0.01" placeholder="199"
+                required />
             </div>
             <div class="form-group flex-1">
               <label>Original / Strikethrough Price (USD)</label>
-              <input type="number" class="custom-input" id="modal-prod-orig-price" min="1" step="0.01" placeholder="249" />
+              <input type="number" class="custom-input" id="modal-prod-orig-price" min="1" step="0.01"
+                placeholder="249" />
             </div>
           </div>
 
@@ -418,23 +477,34 @@
             </div>
             <div class="modal-stock-control-bar">
               <div class="modal-stock-stepper-wrap">
-                <button type="button" class="modal-stepper-btn modal-stock-dec" id="modal-stock-dec-btn" title="Reduce Stock (-1)" aria-label="Reduce stock">
-                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                <button type="button" class="modal-stepper-btn modal-stock-dec" id="modal-stock-dec-btn"
+                  title="Reduce Stock (-1)" aria-label="Reduce stock">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                    <line x1="5" y1="12" x2="19" y2="12" />
+                  </svg>
                 </button>
-                <input type="number" class="custom-input modal-stock-input text-center" id="modal-prod-stock" min="0" max="9999" placeholder="25" required />
-                <button type="button" class="modal-stepper-btn modal-stock-inc" id="modal-stock-inc-btn" title="Add Stock (+1)" aria-label="Add stock">
-                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                <input type="number" class="custom-input modal-stock-input text-center" id="modal-prod-stock" min="0"
+                  max="9999" placeholder="25" required />
+                <button type="button" class="modal-stepper-btn modal-stock-inc" id="modal-stock-inc-btn"
+                  title="Add Stock (+1)" aria-label="Add stock">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                    <line x1="12" y1="5" x2="12" y2="19" />
+                    <line x1="5" y1="12" x2="19" y2="12" />
+                  </svg>
                 </button>
               </div>
               <div class="modal-stock-quick-chips">
-                <button type="button" class="stock-quick-chip chip-subtle" data-delta="-5" title="Reduce 5 units">-5</button>
+                <button type="button" class="stock-quick-chip chip-subtle" data-delta="-5"
+                  title="Reduce 5 units">-5</button>
                 <button type="button" class="stock-quick-chip" data-delta="+5" title="Add 5 units">+5</button>
                 <button type="button" class="stock-quick-chip" data-delta="+10" title="Add 10 units">+10</button>
                 <button type="button" class="stock-quick-chip" data-delta="+25" title="Add 25 units">+25</button>
-                <button type="button" class="stock-quick-chip chip-zero" data-set="0" title="Mark Out of Stock">Mark 0</button>
+                <button type="button" class="stock-quick-chip chip-zero" data-set="0" title="Mark Out of Stock">Mark
+                  0</button>
               </div>
             </div>
-            <span class="form-field-hint">Add or reduce units using buttons, quick adjustment chips, or direct entry. Changes update live store inventory upon saving.</span>
+            <span class="form-field-hint">Add or reduce units using buttons, quick adjustment chips, or direct entry.
+              Changes update live store inventory upon saving.</span>
           </div>
 
           <!-- Product Photography File Upload Component -->
@@ -446,22 +516,25 @@
 
             <!-- Drag & Drop Zone -->
             <div class="product-dropzone" id="modal-prod-dropzone">
-              <input type="file" id="modal-prod-file-input" accept="image/png, image/jpeg, image/webp, image/svg+xml" class="dropzone-hidden-input" />
-              
+              <input type="file" id="modal-prod-file-input" accept="image/png, image/jpeg, image/webp, image/svg+xml"
+                class="dropzone-hidden-input" />
+
               <!-- Empty Dropzone State -->
               <div class="dropzone-empty-state" id="dropzone-empty-state">
                 <div class="dropzone-icon-circle">
                   <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
-                    <polyline points="17 8 12 3 7 8"/>
-                    <line x1="12" y1="3" x2="12" y2="15"/>
+                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+                    <polyline points="17 8 12 3 7 8" />
+                    <line x1="12" y1="3" x2="12" y2="15" />
                   </svg>
                 </div>
                 <div class="dropzone-text-block">
-                  <p class="dropzone-primary-text"><strong>Click to browse files</strong> or drag & drop hardware photo</p>
+                  <p class="dropzone-primary-text"><strong>Click to browse files</strong> or drag & drop hardware photo
+                  </p>
                   <p class="dropzone-secondary-text">Studio photo, product render, or peripheral photography</p>
                 </div>
-                <button type="button" class="btn btn-secondary btn-sm dropzone-browse-trigger" id="modal-prod-browse-btn">
+                <button type="button" class="btn btn-secondary btn-sm dropzone-browse-trigger"
+                  id="modal-prod-browse-btn">
                   Choose Image File
                 </button>
               </div>
@@ -480,10 +553,12 @@
                     </div>
                   </div>
                   <div class="dropzone-actions-wrap">
-                    <button type="button" class="btn btn-secondary btn-xs" id="dropzone-replace-btn" title="Choose another file">
+                    <button type="button" class="btn btn-secondary btn-xs" id="dropzone-replace-btn"
+                      title="Choose another file">
                       Replace Image
                     </button>
-                    <button type="button" class="btn btn-ghost btn-xs text-danger" id="dropzone-remove-btn" title="Remove current photo">
+                    <button type="button" class="btn btn-ghost btn-xs text-danger" id="dropzone-remove-btn"
+                      title="Remove current photo">
                       Remove
                     </button>
                   </div>
@@ -514,15 +589,79 @@
             <!-- Optional Direct URL Input -->
             <div class="url-fallback-wrap mt-2" id="url-fallback-wrap" style="display: none;">
               <div class="input-with-button">
-                <input type="url" class="custom-input custom-input-sm" id="modal-prod-url-fallback" placeholder="Paste external image URL (e.g. https://images.unsplash.com/...)" />
+                <input type="url" class="custom-input custom-input-sm" id="modal-prod-url-fallback"
+                  placeholder="Paste external image URL (e.g. https://images.unsplash.com/...)" />
                 <button type="button" class="btn btn-secondary btn-sm" id="apply-url-fallback-btn">Apply URL</button>
               </div>
             </div>
           </div>
 
           <div class="form-group">
-            <label>Product Overview & Specifications Summary</label>
-            <textarea class="custom-input custom-textarea" id="modal-prod-desc" rows="3" placeholder="Enter detailed specs, hardware design, key switch mechanism..." required></textarea>
+            <div class="overview-highlight-header-row">
+              <label for="modal-prod-desc">Product Overview & Specifications Summary</label>
+              <span class="overview-helper-tip">✨ Move pointer over dropdowns to instantly inject highlights</span>
+            </div>
+
+            <!-- Overview Highlight Builder Dropdowns -->
+            <div class="overview-highlight-controls-wrap">
+              <div class="overview-dropdown-group">
+                <!-- Dropdown 1: Hardware Highlights -->
+                <div class="overview-dropdown-wrap" id="hw-highlights-dropdown-wrap">
+                  <button type="button" class="btn btn-glass-sm overview-dropdown-btn" id="hw-highlights-btn" aria-haspopup="listbox" aria-expanded="false">
+                    <span>⚡ Hardware Architecture</span>
+                    <svg class="overview-caret" width="8" height="5" viewBox="0 0 10 6" fill="currentColor"><path d="M0 0.5L5 5.5L10 0.5H0Z"/></svg>
+                  </button>
+                  <ul class="overview-dropdown-menu" id="hw-highlights-menu" role="listbox">
+                    <li data-insert="• Sensor: PAW3395 Ultra-Gaming Optical Sensor (26,000 DPI, 650 IPS)">⚡ PAW3395 26K DPI Sensor</li>
+                    <li data-insert="• Polling Rate: 8,000Hz (0.125ms True Hyper-Polling Latency)">⚡ 8,000Hz Hyper-Polling Rate</li>
+                    <li data-insert="• Switches: Magnetic Hall-Effect Rapid Trigger Analog Switches">⚡ Magnetic Hall-Effect Switches</li>
+                    <li data-insert="• Battery Life: Up to 150 Hours Ultra-Endurance Wireless Operation">⚡ 150h Long-Life Battery</li>
+                    <li data-insert="• Acoustics: Factory Lubed Stabilizers with 5-Layer Acoustic Sound Dampening">⚡ 5-Layer Acoustic Dampening</li>
+                  </ul>
+                </div>
+
+                <!-- Dropdown 2: Build & Connectivity -->
+                <div class="overview-dropdown-wrap" id="build-highlights-dropdown-wrap">
+                  <button type="button" class="btn btn-glass-sm overview-dropdown-btn" id="build-highlights-btn" aria-haspopup="listbox" aria-expanded="false">
+                    <span>🛠️ Build & Connectivity</span>
+                    <svg class="overview-caret" width="8" height="5" viewBox="0 0 10 6" fill="currentColor"><path d="M0 0.5L5 5.5L10 0.5H0Z"/></svg>
+                  </button>
+                  <ul class="overview-dropdown-menu" id="build-highlights-menu" role="listbox">
+                    <li data-insert="• Construction: Aerospace-Grade CNC 6063 Aluminum Chassis">🛠️ CNC 6063 Aluminum Chassis</li>
+                    <li data-insert="• Keycaps: Premium Double-Shot PBT Cherry Profile Keycaps">🛠️ Double-Shot PBT Keycaps</li>
+                    <li data-insert="• Connectivity: Tri-Mode (Ultra-Low Latency 2.4GHz Wireless, Bluetooth 5.3, USB-C)">🛠️ Tri-Mode 2.4G / BT / USB-C</li>
+                    <li data-insert="• Hot-Swap: 5-Pin Hot-Swappable PCB (Supports Cherry, Gateron, Kailh)">🛠️ 5-Pin Hot-Swappable PCB</li>
+                    <li data-insert="• Weight: Ultralight 49g Featherweight Ergonomic Shell">🛠️ 49g Featherweight Shell</li>
+                  </ul>
+                </div>
+
+                <!-- Dropdown 3: Warranty & Service -->
+                <div class="overview-dropdown-wrap" id="warranty-highlights-dropdown-wrap">
+                  <button type="button" class="btn btn-glass-sm overview-dropdown-btn" id="warranty-highlights-btn" aria-haspopup="listbox" aria-expanded="false">
+                    <span>🛡️ Warranty & Service</span>
+                    <svg class="overview-caret" width="8" height="5" viewBox="0 0 10 6" fill="currentColor"><path d="M0 0.5L5 5.5L10 0.5H0Z"/></svg>
+                  </button>
+                  <ul class="overview-dropdown-menu" id="warranty-highlights-menu" role="listbox">
+                    <li data-insert="• Warranty: 6-Month 7th June Comprehensive Hardware Replacement Guarantee">🛡️ 6-Month Replacement Warranty</li>
+                    <li data-insert="• Delivery: Complimentary White-Glove Express Courier with Real-Time Tracking">🛡️ White-Glove Express Delivery</li>
+                    <li data-insert="• Certification: 100% Genuine Certified Hardware with Serialized Anti-Counterfeit Seal">🛡️ 100% Certified Genuine Seal</li>
+                  </ul>
+                </div>
+              </div>
+
+              <!-- Quick Presets -->
+              <div class="overview-presets-strip">
+                <span class="preset-label">Templates:</span>
+                <button type="button" class="overview-preset-chip" data-template="keyboard">⌨️ Keyboard</button>
+                <button type="button" class="overview-preset-chip" data-template="mouse">🖱️ Mouse</button>
+                <button type="button" class="overview-preset-chip" data-template="audio">🎧 Headset</button>
+                <button type="button" class="overview-preset-chip" data-template="mount">🖥️ Monitor Arm</button>
+                <button type="button" class="overview-preset-chip text-muted" data-template="clear">↺ Clear</button>
+              </div>
+            </div>
+
+            <textarea class="custom-input custom-textarea" id="modal-prod-desc" rows="4"
+              placeholder="Enter detailed specs, hardware design, key switch mechanism..." required></textarea>
           </div>
 
           <div class="admin-modal-actions mt-3">
@@ -552,7 +691,8 @@
           <div class="form-row">
             <div class="form-group flex-1">
               <label>Address Label / Type</label>
-              <input type="text" class="custom-input" id="modal-address-type" placeholder="e.g. Primary Office, Home Studio, Vault" required />
+              <input type="text" class="custom-input" id="modal-address-type"
+                placeholder="e.g. Primary Office, Home Studio, Vault" required />
             </div>
             <div class="form-group flex-1">
               <label>Full Recipient Name</label>
@@ -562,7 +702,8 @@
 
           <div class="form-group">
             <label>Street Address / Building / Suite</label>
-            <input type="text" class="custom-input" id="modal-address-street" placeholder="7th June Tech Tower, Suite 400" required />
+            <input type="text" class="custom-input" id="modal-address-street"
+              placeholder="7th June Tech Tower, Suite 400" required />
           </div>
 
           <div class="form-row">
@@ -572,7 +713,8 @@
             </div>
             <div class="form-group flex-1">
               <label>State / Region / Postal</label>
-              <input type="text" class="custom-input" id="modal-address-region" placeholder="Greater Accra (Airport Residential)" required />
+              <input type="text" class="custom-input" id="modal-address-region"
+                placeholder="Greater Accra (Airport Residential)" required />
             </div>
           </div>
 
@@ -614,11 +756,13 @@
   </div>
 
   <!-- Modern Confirmation Prompt Modal -->
-  <div class="modal confirm-dialog-modal" id="confirm-modal" role="dialog" aria-modal="true" aria-labelledby="confirm-modal-title">
+  <div class="modal confirm-dialog-modal" id="confirm-modal" role="dialog" aria-modal="true"
+    aria-labelledby="confirm-modal-title">
     <div class="modal-dialog modal-sm">
       <div class="confirm-card animate-scale-up">
-        <button class="modal-close-btn confirm-close-btn" id="confirm-modal-close-btn" aria-label="Close Dialog">&times;</button>
-        
+        <button class="modal-close-btn confirm-close-btn" id="confirm-modal-close-btn"
+          aria-label="Close Dialog">&times;</button>
+
         <div class="confirm-icon-wrap confirm-theme-danger" id="confirm-modal-icon-wrap">
           <span class="confirm-icon-symbol" id="confirm-modal-icon">⚠️</span>
         </div>

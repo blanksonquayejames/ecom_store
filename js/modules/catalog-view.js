@@ -116,9 +116,44 @@ export function renderCatalogView(container) {
             </div>
 
             <!-- Sort By -->
-            <div class="sort-selector">
-              <label for="catalog-sort" class="sort-label">Sort by:</label>
-              <select id="catalog-sort" class="custom-select">
+            <div class="sort-selector catalog-sort-dropdown-wrap" id="catalog-sort-dropdown-wrap">
+              <label class="sort-label">Sort by:</label>
+              <div class="custom-sort-dropdown" id="custom-sort-dropdown">
+                <button type="button" class="custom-sort-btn" id="catalog-sort-btn" aria-haspopup="listbox" aria-expanded="false" title="Sort Products (Hover or Click)">
+                  <span class="custom-sort-label" id="catalog-sort-label">${
+                    filters.sortBy === 'price-asc' ? 'Price: Low to High' :
+                    filters.sortBy === 'price-desc' ? 'Price: High to Low' :
+                    filters.sortBy === 'rating' ? 'Customer Rating' :
+                    filters.sortBy === 'newest' ? 'New Arrivals' : 'Featured & Trending'
+                  }</span>
+                  <svg class="custom-sort-caret" width="10" height="6" viewBox="0 0 10 6" fill="currentColor">
+                    <path d="M0 0.5L5 5.5L10 0.5H0Z" />
+                  </svg>
+                </button>
+                <ul class="custom-sort-menu" id="catalog-sort-menu" role="listbox">
+                  <li class="custom-sort-item ${filters.sortBy === 'featured' || !filters.sortBy ? 'is-selected' : ''}" data-value="featured" role="option">
+                    <span>Featured & Trending</span>
+                    <span class="sort-check">✓</span>
+                  </li>
+                  <li class="custom-sort-item ${filters.sortBy === 'price-asc' ? 'is-selected' : ''}" data-value="price-asc" role="option">
+                    <span>Price: Low to High</span>
+                    <span class="sort-check">✓</span>
+                  </li>
+                  <li class="custom-sort-item ${filters.sortBy === 'price-desc' ? 'is-selected' : ''}" data-value="price-desc" role="option">
+                    <span>Price: High to Low</span>
+                    <span class="sort-check">✓</span>
+                  </li>
+                  <li class="custom-sort-item ${filters.sortBy === 'rating' ? 'is-selected' : ''}" data-value="rating" role="option">
+                    <span>Customer Rating</span>
+                    <span class="sort-check">✓</span>
+                  </li>
+                  <li class="custom-sort-item ${filters.sortBy === 'newest' ? 'is-selected' : ''}" data-value="newest" role="option">
+                    <span>New Arrivals</span>
+                    <span class="sort-check">✓</span>
+                  </li>
+                </ul>
+              </div>
+              <select id="catalog-sort" style="display:none;" aria-hidden="true" tabindex="-1">
                 <option value="featured" ${filters.sortBy === 'featured' ? 'selected' : ''}>Featured & Trending</option>
                 <option value="price-asc" ${filters.sortBy === 'price-asc' ? 'selected' : ''}>Price: Low to High</option>
                 <option value="price-desc" ${filters.sortBy === 'price-desc' ? 'selected' : ''}>Price: High to Low</option>
@@ -440,13 +475,66 @@ function attachCatalogEvents(container) {
     });
   });
 
-  // Sort Dropdown
+  // Sort Dropdown with instant hover reveal
+  const sortWrap = container.querySelector('#custom-sort-dropdown');
+  const sortBtn = container.querySelector('#catalog-sort-btn');
+  const sortMenu = container.querySelector('#catalog-sort-menu');
+  const sortLabel = container.querySelector('#catalog-sort-label');
   const sortSelect = container.querySelector('#catalog-sort');
-  if (sortSelect) {
-    sortSelect.addEventListener('change', (e) => {
+
+  if (sortWrap && sortBtn && sortMenu) {
+    let sortTimer = null;
+    const openSort = () => {
+      if (sortTimer) clearTimeout(sortTimer);
+      sortMenu.style.display = 'block';
+      sortWrap.classList.add('is-open');
+      sortBtn.setAttribute('aria-expanded', 'true');
+    };
+    const closeSort = (immediate = false) => {
+      if (immediate) {
+        if (sortTimer) clearTimeout(sortTimer);
+        sortMenu.style.display = 'none';
+        sortWrap.classList.remove('is-open');
+        sortBtn.setAttribute('aria-expanded', 'false');
+      } else {
+        if (sortTimer) clearTimeout(sortTimer);
+        sortTimer = setTimeout(() => {
+          sortMenu.style.display = 'none';
+          sortWrap.classList.remove('is-open');
+          sortBtn.setAttribute('aria-expanded', 'false');
+        }, 150);
+      }
+    };
+
+    sortWrap.addEventListener('pointerenter', openSort);
+    sortWrap.addEventListener('pointerleave', () => closeSort(false));
+
+    sortBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
       sounds.playClick();
-      store.setFilter('sortBy', e.target.value);
-      updateProductsList();
+      if (sortWrap.classList.contains('is-open')) closeSort(true);
+      else openSort();
+    });
+
+    sortMenu.querySelectorAll('.custom-sort-item').forEach(item => {
+      item.addEventListener('click', (e) => {
+        e.stopPropagation();
+        sounds.playClick();
+        const val = item.dataset.value;
+        const text = item.querySelector('span')?.textContent || val;
+        if (sortLabel) sortLabel.textContent = text;
+        sortMenu.querySelectorAll('.custom-sort-item').forEach(i => i.classList.remove('is-selected'));
+        item.classList.add('is-selected');
+        closeSort(true);
+
+        if (sortSelect) sortSelect.value = val;
+        store.setFilter('sortBy', val);
+        updateProductsList();
+      });
+    });
+
+    document.addEventListener('click', (e) => {
+      if (!sortWrap.contains(e.target)) closeSort(true);
     });
   }
 

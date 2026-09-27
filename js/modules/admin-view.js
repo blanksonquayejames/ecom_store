@@ -258,13 +258,13 @@ function renderAdminDashboard(container) {
   const adminName = (user && user.name) || (isMainAdmin ? 'Kwame Blankson' : 'Sub-Admin');
 
   // Compute allowed permissions
-  const permissions = isMainAdmin 
-    ? ['overview', 'products', 'orders', 'customers', 'settings', 'subadmins'] 
+  const permissions = isMainAdmin
+    ? ['overview', 'products', 'orders', 'customers', 'settings', 'subadmins']
     : (user.permissions || ['orders']);
 
   const permSummary = (user.permissions || ['orders']).map(p => p === 'orders' ? 'Order Status' : p).join(', ');
-  const adminRoleDisplay = isMainAdmin 
-    ? 'Main Administrator (Full Control)' 
+  const adminRoleDisplay = isMainAdmin
+    ? 'Main Administrator (Full Control)'
     : `Sub-Admin (Access Limit: ${permSummary})`;
 
   const initials = adminName.split(' ').map(n => n[0]).join('').substring(0, 2).toUpperCase() || (isMainAdmin ? 'KB' : 'SA');
@@ -849,14 +849,14 @@ function renderSubAdminsTab() {
               </thead>
               <tbody>
                 ${subAdmins.map(sub => {
-                  const permBadges = (sub.permissions || []).map(p => {
-                    const label = p === 'orders' ? 'Order Status' : (p.charAt(0).toUpperCase() + p.slice(1));
-                    return `<span class="badge-pill bg-blue-subtle text-blue">${label}</span>`;
-                  }).join(' ');
+    const permBadges = (sub.permissions || []).map(p => {
+      const label = p === 'orders' ? 'Order Status' : (p.charAt(0).toUpperCase() + p.slice(1));
+      return `<span class="badge-pill bg-blue-subtle text-blue">${label}</span>`;
+    }).join(' ');
 
-                  const initials = sub.name.split(' ').map(n => n[0]).join('').substring(0, 2).toUpperCase() || 'SA';
+    const initials = sub.name.split(' ').map(n => n[0]).join('').substring(0, 2).toUpperCase() || 'SA';
 
-                  return `
+    return `
                     <tr data-sub-id="${sub.id}">
                       <td>
                         <div class="d-flex align-center gap-2">
@@ -888,7 +888,7 @@ function renderSubAdminsTab() {
                       </td>
                     </tr>
                   `;
-                }).join('')}
+  }).join('')}
               </tbody>
             </table>
           </div>
@@ -1712,8 +1712,8 @@ export function openProductModal(product = null) {
   document.getElementById('modal-prod-desc').value = isEdit ? product.description : 'High-precision engineering mastercraft hardware with quantum response.';
 
   // Stock Management Controller in Edit Modal
-  const initialStock = isEdit 
-    ? (product.stockCount !== undefined ? product.stockCount : (product.stock !== undefined ? product.stock : 15)) 
+  const initialStock = isEdit
+    ? (product.stockCount !== undefined ? product.stockCount : (product.stock !== undefined ? product.stock : 15))
     : 20;
   const stockInput = document.getElementById('modal-prod-stock');
   const stockLabel = document.getElementById('modal-stock-label');
@@ -1723,8 +1723,8 @@ export function openProductModal(product = null) {
 
   if (stockInput) stockInput.value = initialStock;
   if (stockLabel) {
-    stockLabel.textContent = isEdit 
-      ? `Vault Stock Management (${product.name})` 
+    stockLabel.textContent = isEdit
+      ? `Vault Stock Management (${product.name})`
       : 'Initial Vault Stock Allocation';
   }
 
@@ -1794,6 +1794,9 @@ export function openProductModal(product = null) {
   } else {
     dropzoneCtrl?.clearActiveImage();
   }
+
+  // Setup Overview Highlight Dropdowns & Presets
+  setupOverviewHighlightDropdowns();
 
   ui.openModal('admin-product-modal');
 
@@ -1874,3 +1877,93 @@ export function openProductModal(product = null) {
     ui.closeModal('admin-product-modal');
   });
 }
+
+function setupOverviewHighlightDropdowns() {
+  const descEl = document.getElementById('modal-prod-desc');
+  if (!descEl) return;
+
+  // Dropdowns setup with instant hover
+  const dropdownWraps = document.querySelectorAll('.overview-dropdown-wrap');
+  dropdownWraps.forEach(wrap => {
+    const btn = wrap.querySelector('.overview-dropdown-btn');
+    const menu = wrap.querySelector('.overview-dropdown-menu');
+    if (!btn || !menu) return;
+
+    let timer = null;
+    const openMenu = () => {
+      if (timer) clearTimeout(timer);
+      menu.style.display = 'block';
+      wrap.classList.add('is-open');
+      btn.setAttribute('aria-expanded', 'true');
+    };
+    const closeMenu = (immediate = false) => {
+      if (immediate) {
+        if (timer) clearTimeout(timer);
+        menu.style.display = 'none';
+        wrap.classList.remove('is-open');
+        btn.setAttribute('aria-expanded', 'false');
+      } else {
+        if (timer) clearTimeout(timer);
+        timer = setTimeout(() => {
+          menu.style.display = 'none';
+          wrap.classList.remove('is-open');
+          btn.setAttribute('aria-expanded', 'false');
+        }, 150);
+      }
+    };
+
+    wrap.onpointerenter = openMenu;
+    wrap.onpointerleave = () => closeMenu(false);
+    btn.onclick = (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      sounds.playClick();
+      if (wrap.classList.contains('is-open')) closeMenu(true);
+      else openMenu();
+    };
+
+    menu.querySelectorAll('li').forEach(item => {
+      item.onclick = (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        sounds.playClick();
+        const textToInsert = item.dataset.insert;
+        if (textToInsert) {
+          const current = descEl.value.trim();
+          descEl.value = current ? `${current}\n${textToInsert}` : textToInsert;
+          descEl.dispatchEvent(new Event('input', { bubbles: true }));
+          ui.showToast({
+            title: 'Highlight Appended',
+            message: textToInsert.replace(/^•\s*/, ''),
+            type: 'info'
+          });
+        }
+        closeMenu(true);
+      };
+    });
+  });
+
+  // Preset Template Chips
+  const presets = {
+    keyboard: "Engineered for elite esports and coding supremacy.\n• Magnetic Hall-Effect Rapid Trigger Analog Switches (0.1mm - 4.0mm)\n• 8,000Hz True Hyper-Polling Rate with Sub-Millisecond Input Latency\n• CNC 6063 Aluminum Chassis with Double-Shot PBT Keycaps\n• Factory Lubed Stabilizers with 5-Layer Acoustic Dampening",
+    mouse: "Tournament-grade wireless precision engineered for pinpoint accuracy.\n• PAW3395 Ultra-Gaming Optical Sensor (26,000 DPI, 650 IPS)\n• 8,000Hz Wireless Polling Rate with 0.125ms Response\n• Ultralight 49g Featherweight Ergonomic Shell\n• Up to 150 Hours Ultra-Endurance Battery Life",
+    audio: "Studio-grade audiophile acoustics tuned for high-fidelity spatial awareness.\n• 50mm Bio-Cellulose High-Resolution Drivers with Neodymium Magnets\n• Spatial 7.1 Surround Sound Engine with Precise Directional Audio\n• Tri-Mode Wireless & Detachable Broadcast-Grade Condenser Microphone\n• Memory Foam Ear Cushions with Breathable Cooling Gel",
+    mount: "Heavy-duty ergonomic articulating gas-spring arm with smooth dynamic counterbalancing.\n• Aerospace-Grade Aluminum Alloy supports up to 35-inch ultra-wide displays (33 lbs)\n• 360-Degree Rotation, +90/-45 Tilt, 180 Swivel Range\n• Integrated Concealed Cable Management Channel\n• Desk Clamp & Grommet Dual Installation System",
+    clear: ""
+  };
+
+  document.querySelectorAll('.overview-preset-chip').forEach(chip => {
+    chip.onclick = (e) => {
+      e.preventDefault();
+      sounds.playClick();
+      const tpl = chip.dataset.template;
+      if (tpl === 'clear') {
+        descEl.value = '';
+      } else if (presets[tpl]) {
+        descEl.value = presets[tpl];
+      }
+      descEl.dispatchEvent(new Event('input', { bubbles: true }));
+    };
+  });
+}
+

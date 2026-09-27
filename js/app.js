@@ -94,8 +94,8 @@ function initApp() {
   window.addEventListener('hashchange', () => {
     const route = parseHashRoute();
     if (store.state.currentView.page !== route.page ||
-        store.state.currentView.productId !== route.productId ||
-        store.state.currentView.tab !== route.tab) {
+      store.state.currentView.productId !== route.productId ||
+      store.state.currentView.tab !== route.tab) {
       store.setView(route.page, route.productId, { tab: route.tab, skipHash: true });
     }
   });
@@ -216,31 +216,80 @@ function updateHeaderUserStatus(user) {
 }
 
 function setupUserHubDropdown() {
+  const hubWrap = document.getElementById('header-user-hub-wrap');
   const accountBtn = document.getElementById('header-account-btn');
   const dropdown = document.getElementById('header-user-dropdown');
   const logoutBtn = document.getElementById('dropdown-link-logout');
 
-  if (!accountBtn || !dropdown) return;
+  if (!hubWrap || !accountBtn || !dropdown) return;
 
+  let closeTimer = null;
+
+  const openDropdown = () => {
+    if (closeTimer) {
+      clearTimeout(closeTimer);
+      closeTimer = null;
+    }
+    dropdown.style.display = 'block';
+    dropdown.classList.add('is-open');
+    hubWrap.classList.add('is-open');
+    accountBtn.setAttribute('aria-expanded', 'true');
+  };
+
+  const closeDropdown = (immediate = false) => {
+    if (immediate) {
+      if (closeTimer) clearTimeout(closeTimer);
+      closeTimer = null;
+      dropdown.style.display = 'none';
+      dropdown.classList.remove('is-open');
+      hubWrap.classList.remove('is-open');
+      accountBtn.setAttribute('aria-expanded', 'false');
+    } else {
+      if (closeTimer) clearTimeout(closeTimer);
+      closeTimer = setTimeout(() => {
+        dropdown.style.display = 'none';
+        dropdown.classList.remove('is-open');
+        hubWrap.classList.remove('is-open');
+        accountBtn.setAttribute('aria-expanded', 'false');
+      }, 150);
+    }
+  };
+
+  // Immediate reveal when pointer moves over the dropdown
+  hubWrap.addEventListener('pointerenter', () => {
+    openDropdown();
+  });
+
+  hubWrap.addEventListener('pointerleave', () => {
+    closeDropdown(false);
+  });
+
+  // Toggle on click (for mobile touch / direct click)
   accountBtn.addEventListener('click', (e) => {
     e.stopPropagation();
     sounds.playClick();
 
     if (!store.state.user || !store.state.user.isLoggedIn) {
-      openAuthModal('login');
+      if (dropdown.classList.contains('is-open')) {
+        closeDropdown(true);
+      } else {
+        openDropdown();
+      }
       return;
     }
 
-    const isOpen = dropdown.style.display === 'block';
-    dropdown.style.display = isOpen ? 'none' : 'block';
-    accountBtn.setAttribute('aria-expanded', !isOpen);
+    const isOpen = dropdown.classList.contains('is-open') || dropdown.style.display === 'block';
+    if (isOpen) {
+      closeDropdown(true);
+    } else {
+      openDropdown();
+    }
   });
 
   // Close dropdown on click outside
   document.addEventListener('click', (e) => {
-    if (!dropdown.contains(e.target) && !accountBtn.contains(e.target)) {
-      dropdown.style.display = 'none';
-      accountBtn.setAttribute('aria-expanded', 'false');
+    if (!hubWrap.contains(e.target)) {
+      closeDropdown(true);
     }
   });
 
@@ -249,7 +298,7 @@ function setupUserHubDropdown() {
     link.addEventListener('click', (e) => {
       e.preventDefault();
       sounds.playClick();
-      dropdown.style.display = 'none';
+      closeDropdown(true);
       const href = link.getAttribute('href');
       if (href) {
         window.location.hash = href;
@@ -261,16 +310,20 @@ function setupUserHubDropdown() {
   logoutBtn?.addEventListener('click', async (e) => {
     e.preventDefault();
     sounds.playClick();
-    dropdown.style.display = 'none';
+    closeDropdown(true);
+
+    if (!store.state.user || !store.state.user.isLoggedIn) {
+      openAuthModal('login');
+      return;
+    }
 
     const isAdmin = Boolean(store.state.user && (store.state.user.role === 'admin' || store.state.user.role === 'sub-admin'));
     const isSubAdmin = Boolean(store.state.user && store.state.user.role === 'sub-admin');
-    const roleTitle = isSubAdmin ? 'Sub-Administrator' : 'Administrator';
     const confirmed = await ui.confirm({
       title: isAdmin ? 'Sign Out of Administrator Account?' : 'Sign Out of 7th June Account?',
       message: `Are you sure you want to sign out, <strong>${store.state.user?.name || 'Valued Client'}</strong>?`,
-      subMessage: isAdmin 
-        ? 'Your admin console session will be closed and you will browse as a guest.' 
+      subMessage: isAdmin
+        ? 'Your admin console session will be closed and you will browse as a guest.'
         : 'Your saved cart items will be preserved, but you will need to sign back in to view your orders.',
       confirmText: 'Sign Out',
       cancelText: 'Stay Signed In',
@@ -292,6 +345,111 @@ function setupUserHubDropdown() {
   });
 }
 
+function setupCurrencyDropdown() {
+  const currWrap = document.getElementById('currency-dropdown-wrap');
+  const currBtn = document.getElementById('currency-trigger-btn');
+  const currMenu = document.getElementById('currency-menu');
+  const legacySelect = document.getElementById('currency-selector');
+  const flagEl = document.getElementById('currency-display-flag');
+  const codeEl = document.getElementById('currency-display-code');
+  const symEl = document.getElementById('currency-display-symbol');
+
+  if (!currWrap || !currBtn || !currMenu) return;
+
+  const updateCurrencyUI = (currency) => {
+    if (flagEl) flagEl.textContent = currency === 'USD' ? '🇺🇸' : '🇬🇭';
+    if (codeEl) codeEl.textContent = currency;
+    if (symEl) symEl.textContent = currency === 'USD' ? '($)' : '(GH₵)';
+    if (legacySelect) legacySelect.value = currency;
+
+    currMenu.querySelectorAll('.currency-item').forEach(item => {
+      const isMatch = item.dataset.currency === currency;
+      item.classList.toggle('is-selected', isMatch);
+    });
+  };
+
+  updateCurrencyUI(store.state.currency || 'GHS');
+
+  let currTimer = null;
+
+  const openCurrMenu = () => {
+    if (currTimer) {
+      clearTimeout(currTimer);
+      currTimer = null;
+    }
+    currBtn.setAttribute('aria-expanded', 'true');
+    currMenu.style.display = 'block';
+    currMenu.classList.add('is-open');
+    currWrap.classList.add('is-open');
+  };
+
+  const closeCurrMenu = (immediate = false) => {
+    if (immediate) {
+      if (currTimer) clearTimeout(currTimer);
+      currTimer = null;
+      currBtn.setAttribute('aria-expanded', 'false');
+      currMenu.style.display = 'none';
+      currMenu.classList.remove('is-open');
+      currWrap.classList.remove('is-open');
+    } else {
+      if (currTimer) clearTimeout(currTimer);
+      currTimer = setTimeout(() => {
+        currBtn.setAttribute('aria-expanded', 'false');
+        currMenu.style.display = 'none';
+        currMenu.classList.remove('is-open');
+        currWrap.classList.remove('is-open');
+      }, 150);
+    }
+  };
+
+  // Immediate reveal when pointer moves over the dropdown
+  currWrap.addEventListener('pointerenter', () => {
+    openCurrMenu();
+  });
+
+  currWrap.addEventListener('pointerleave', () => {
+    closeCurrMenu(false);
+  });
+
+  // Toggle on click
+  currBtn.addEventListener('click', (e) => {
+    e.stopPropagation();
+    sounds.playClick();
+    if (currMenu.classList.contains('is-open') || currMenu.style.display === 'block') {
+      closeCurrMenu(true);
+    } else {
+      openCurrMenu();
+    }
+  });
+
+  // Select currency option
+  currMenu.querySelectorAll('.currency-item').forEach(item => {
+    item.addEventListener('click', (e) => {
+      e.stopPropagation();
+      sounds.playClick();
+      const newCurr = item.dataset.currency;
+      if (newCurr) {
+        store.setCurrency(newCurr);
+        updateCurrencyUI(newCurr);
+        closeCurrMenu(true);
+        ui.showToast({
+          title: `Currency Changed to ${newCurr}`,
+          message: `Prices automatically converted with live exchange rates.`,
+          type: 'info'
+        });
+        handleRoute(store.state.currentView.page, store.state.currentView.productId, store.state.currentView.tab, false);
+      }
+    });
+  });
+
+  // Close on outside click
+  document.addEventListener('click', (e) => {
+    if (!currWrap.contains(e.target)) {
+      closeCurrMenu(true);
+    }
+  });
+}
+
 function setupHeaderEvents() {
   // Brand Logo Click
   document.getElementById('brand-logo-btn')?.addEventListener('click', () => {
@@ -300,28 +458,14 @@ function setupHeaderEvents() {
     store.setView('catalog');
   });
 
-  // Currency Dropdown
-  const currSelect = document.getElementById('currency-selector');
-  if (currSelect) {
-    currSelect.value = store.state.currency;
-    currSelect.addEventListener('change', (e) => {
-      sounds.playClick();
-      store.setCurrency(e.target.value);
-      ui.showToast({
-        title: `Currency Changed to ${e.target.value}`,
-        message: `Prices automatically converted with live exchange rates.`,
-        type: 'info'
-      });
-      handleRoute(store.state.currentView.page, store.state.currentView.productId, store.state.currentView.tab, false);
-    });
-  }
+  // Setup Custom Currency Dropdown
+  setupCurrencyDropdown();
 
   // Bag / Cart Drawer Button
   document.getElementById('header-cart-btn')?.addEventListener('click', () => {
     ui.toggleDrawer('cart-drawer', true);
   });
 }
-
 
 function setupGlobalSearch() {
   const searchInput = document.getElementById('global-search-input');
@@ -335,15 +479,59 @@ function setupGlobalSearch() {
   if (!searchInput) return;
 
   // --- Department Dropdown Logic ---
-  if (categoryBtn && categoryMenu) {
-    // Toggle Category Menu
+  if (categoryBtn && categoryMenu && searchCategoryWrap) {
+    let catCloseTimer = null;
+
+    const openCatMenu = () => {
+      if (catCloseTimer) {
+        clearTimeout(catCloseTimer);
+        catCloseTimer = null;
+      }
+      categoryBtn.setAttribute('aria-expanded', 'true');
+      categoryMenu.style.display = 'block';
+      categoryMenu.classList.add('is-open');
+      searchCategoryWrap.classList.add('is-open');
+      if (searchDropdown) searchDropdown.style.display = 'none';
+    };
+
+    const closeCatMenu = (immediate = false) => {
+      if (immediate) {
+        if (catCloseTimer) clearTimeout(catCloseTimer);
+        catCloseTimer = null;
+        categoryBtn.setAttribute('aria-expanded', 'false');
+        categoryMenu.style.display = 'none';
+        categoryMenu.classList.remove('is-open');
+        searchCategoryWrap.classList.remove('is-open');
+      } else {
+        if (catCloseTimer) clearTimeout(catCloseTimer);
+        catCloseTimer = setTimeout(() => {
+          categoryBtn.setAttribute('aria-expanded', 'false');
+          categoryMenu.style.display = 'none';
+          categoryMenu.classList.remove('is-open');
+          searchCategoryWrap.classList.remove('is-open');
+        }, 150);
+      }
+    };
+
+    // Immediate reveal when pointer moves over the dropdown
+    searchCategoryWrap.addEventListener('pointerenter', () => {
+      openCatMenu();
+    });
+
+    searchCategoryWrap.addEventListener('pointerleave', () => {
+      closeCatMenu(false);
+    });
+
+    // Toggle Category Menu on click
     categoryBtn.addEventListener('click', (e) => {
       e.stopPropagation();
       sounds.playClick();
-      const isExpanded = categoryBtn.getAttribute('aria-expanded') === 'true';
-      categoryBtn.setAttribute('aria-expanded', !isExpanded);
-      categoryMenu.style.display = isExpanded ? 'none' : 'block';
-      if (searchDropdown) searchDropdown.style.display = 'none';
+      const isExpanded = categoryMenu.classList.contains('is-open') || categoryMenu.style.display === 'block';
+      if (isExpanded) {
+        closeCatMenu(true);
+      } else {
+        openCatMenu();
+      }
     });
 
     // Select Category Item
@@ -359,9 +547,8 @@ function setupGlobalSearch() {
         categoryMenu.querySelectorAll('.search-category-item').forEach(i => i.classList.remove('is-selected'));
         item.classList.add('is-selected');
 
-        // Close Menu
-        categoryBtn.setAttribute('aria-expanded', 'false');
-        categoryMenu.style.display = 'none';
+        // Close Menu immediately
+        closeCatMenu(true);
 
         // Update Store Filter
         store.setFilter('category', selectedCat);

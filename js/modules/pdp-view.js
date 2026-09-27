@@ -35,6 +35,14 @@ export function renderProductDetailPage(container, productId) {
     <div class="pdp-wrapper animate-fade-in">
       <div class="container">
         
+        <!-- Breadcrumbs Navigation -->
+        <nav class="pdp-breadcrumbs" aria-label="Breadcrumb">
+          <span class="breadcrumb-link" id="breadcrumb-home">Store</span>
+          <span class="breadcrumb-sep">/</span>
+          <span class="breadcrumb-link" id="breadcrumb-category">${product.category || 'Hardware'}</span>
+          <span class="breadcrumb-sep">/</span>
+          <span class="breadcrumb-current">${product.name}</span>
+        </nav>
 
         <!-- Main Product Grid: Gallery Left + Configuration Right -->
         <div class="pdp-main-grid">
@@ -137,10 +145,22 @@ export function renderProductDetailPage(container, productId) {
         <!-- Detailed Specifications, Reviews & Delivery Tabs -->
         <div class="pdp-tabs-section" id="pdp-tabs-section">
           
-          <div class="pdp-tabs-nav">
-            <button class="pdp-tab-btn is-active" data-tab="tab-specs">Technical Specifications</button>
-            <button class="pdp-tab-btn" data-tab="tab-reviews" id="reviews-tab-nav">Client Reviews (${product.reviewsCount})</button>
-            <button class="pdp-tab-btn" data-tab="tab-shipping">Shipping & Returns</button>
+          <div class="pdp-tabs-nav" role="tablist">
+            <button class="pdp-tab-btn is-active" data-tab="tab-specs" role="tab" aria-selected="true" id="tab-btn-specs">
+              <span class="tab-btn-icon">📐</span>
+              <span class="tab-label-full">Technical Specifications</span>
+              <span class="tab-label-short">Specs</span>
+            </button>
+            <button class="pdp-tab-btn" data-tab="tab-reviews" id="reviews-tab-nav" role="tab" aria-selected="false">
+              <span class="tab-btn-icon">⭐</span>
+              <span class="tab-label-full">Client Reviews (${product.reviewsCount})</span>
+              <span class="tab-label-short">Reviews (${product.reviewsCount})</span>
+            </button>
+            <button class="pdp-tab-btn" data-tab="tab-shipping" role="tab" aria-selected="false" id="tab-btn-shipping">
+              <span class="tab-btn-icon">🚚</span>
+              <span class="tab-label-full">Shipping & Returns</span>
+              <span class="tab-label-short">Shipping</span>
+            </button>
           </div>
 
           <div class="pdp-tabs-content">
@@ -168,6 +188,18 @@ export function renderProductDetailPage(container, productId) {
                     </li>
                   `).join('')}
                 </ul>
+              </div>
+
+              <!-- Contextual Quick-Switch Footer -->
+              <div class="pdp-tab-footer-nav">
+                <button type="button" class="btn-tab-switch" data-switch="tab-reviews">
+                  <span>⭐ Client Reviews (${product.reviewsCount})</span>
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg>
+                </button>
+                <button type="button" class="btn-tab-switch" data-switch="tab-shipping">
+                  <span>🚚 Shipping & Warranty</span>
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg>
+                </button>
               </div>
             </div>
 
@@ -234,6 +266,18 @@ export function renderProductDetailPage(container, productId) {
                   </div>
                 `).join('')}
               </div>
+
+              <!-- Contextual Quick-Switch Footer -->
+              <div class="pdp-tab-footer-nav">
+                <button type="button" class="btn-tab-switch" data-switch="tab-specs">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="15 18 9 12 15 6"/></svg>
+                  <span>📐 Technical Specifications</span>
+                </button>
+                <button type="button" class="btn-tab-switch" data-switch="tab-shipping">
+                  <span>🚚 Shipping & Warranty</span>
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg>
+                </button>
+              </div>
             </div>
 
             <!-- Tab 3: Shipping & Returns -->
@@ -254,6 +298,18 @@ export function renderProductDetailPage(container, productId) {
                   <h4>7 Days Free Return</h4>
                   <p>If you are not 100% satisfied with your accessory, return it within 7 days for a full refund or free replacement.</p>
                 </div>
+              </div>
+
+              <!-- Contextual Quick-Switch Footer -->
+              <div class="pdp-tab-footer-nav">
+                <button type="button" class="btn-tab-switch" data-switch="tab-specs">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="15 18 9 12 15 6"/></svg>
+                  <span>📐 Technical Specifications</span>
+                </button>
+                <button type="button" class="btn-tab-switch" data-switch="tab-reviews">
+                  <span>⭐ Client Reviews (${product.reviewsCount})</span>
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg>
+                </button>
               </div>
             </div>
 
@@ -345,9 +401,17 @@ export function renderProductDetailPage(container, productId) {
 }
 
 function attachPdpEvents(container, product, state) {
-  // Breadcrumb home
+  // Breadcrumb navigation
   container.querySelector('#breadcrumb-home')?.addEventListener('click', () => {
     sounds.playClick();
+    store.setView('catalog');
+  });
+
+  container.querySelector('#breadcrumb-category')?.addEventListener('click', () => {
+    sounds.playClick();
+    if (product.category) {
+      store.setFilter('category', product.category);
+    }
     store.setView('catalog');
   });
 
@@ -364,10 +428,14 @@ function attachPdpEvents(container, product, state) {
     if (stickyImg) stickyImg.src = newImg;
     if (counterEl) counterEl.textContent = `${currentGalleryIdx + 1} / ${galleryImgs.length}`;
 
+    const thumbsStrip = container.querySelector('#pdp-thumbs-strip');
     container.querySelectorAll('.pdp-thumb-btn').forEach((b, i) => {
       if (i === currentGalleryIdx) {
         b.classList.add('is-active');
-        b.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+        if (thumbsStrip) {
+          const scrollPos = b.offsetLeft - (thumbsStrip.clientWidth / 2) + (b.clientWidth / 2);
+          thumbsStrip.scrollTo({ left: scrollPos, behavior: 'smooth' });
+        }
       } else {
         b.classList.remove('is-active');
       }
@@ -382,27 +450,43 @@ function attachPdpEvents(container, product, state) {
     });
   });
 
-  // Mobile Touch Swipe Gesture for Image Gallery
+  // Mobile Touch Swipe Gesture for Image Gallery (Smooth & non-blocking vertical scroll)
   const galleryWrap = container.querySelector('#pdp-zoom-container');
   if (galleryWrap) {
     let touchStartX = 0;
     let touchStartY = 0;
-    let touchEndX = 0;
-    let touchEndY = 0;
+    let isHorizontalGesture = false;
 
     galleryWrap.addEventListener('touchstart', (e) => {
-      touchStartX = e.changedTouches[0].screenX;
-      touchStartY = e.changedTouches[0].screenY;
+      if (e.touches.length !== 1) return;
+      touchStartX = e.touches[0].clientX;
+      touchStartY = e.touches[0].clientY;
+      isHorizontalGesture = false;
+    }, { passive: true });
+
+    galleryWrap.addEventListener('touchmove', (e) => {
+      if (!touchStartX || !touchStartY || e.touches.length !== 1) return;
+      const currentX = e.touches[0].clientX;
+      const currentY = e.touches[0].clientY;
+      const deltaX = currentX - touchStartX;
+      const deltaY = currentY - touchStartY;
+
+      // If user is moving predominantly vertically, it's page scrolling - do not interfere
+      if (Math.abs(deltaY) > Math.abs(deltaX)) {
+        isHorizontalGesture = false;
+        return;
+      }
+      if (Math.abs(deltaX) > 25) {
+        isHorizontalGesture = true;
+      }
     }, { passive: true });
 
     galleryWrap.addEventListener('touchend', (e) => {
-      touchEndX = e.changedTouches[0].screenX;
-      touchEndY = e.changedTouches[0].screenY;
+      if (!isHorizontalGesture || !touchStartX) return;
+      const touchEndX = e.changedTouches[0].clientX;
       const diffX = touchEndX - touchStartX;
-      const diffY = touchEndY - touchStartY;
 
-      // Horizontal swipe detected and larger than vertical drift
-      if (Math.abs(diffX) > 35 && Math.abs(diffX) > Math.abs(diffY) && galleryImgs.length > 1) {
+      if (Math.abs(diffX) > 40 && galleryImgs.length > 1) {
         sounds.playClick();
         if (diffX < 0) {
           updateGalleryIndex(currentGalleryIdx + 1); // Swipe left -> Next
@@ -410,6 +494,9 @@ function attachPdpEvents(container, product, state) {
           updateGalleryIndex(currentGalleryIdx - 1); // Swipe right -> Prev
         }
       }
+      touchStartX = 0;
+      touchStartY = 0;
+      isHorizontalGesture = false;
     }, { passive: true });
   }
 
@@ -474,23 +561,49 @@ function attachPdpEvents(container, product, state) {
     });
   }
 
-  // Mobile Sticky Bar Visibility on Scroll
+  // Mobile Sticky Bar Visibility on Scroll (Using high-performance IntersectionObserver)
   const stickyBar = container.querySelector('#pdp-mobile-sticky-bar');
   const mainBuyBtn = container.querySelector('#pdp-add-cart-btn');
   if (stickyBar && mainBuyBtn) {
-    const handleScroll = () => {
-      if (window.innerWidth <= 768) {
-        const btnRect = mainBuyBtn.getBoundingClientRect();
-        // If user scrolled past the main buy button, show sticky bar
-        if (btnRect.bottom < 60) {
-          stickyBar.classList.add('is-visible');
-        } else {
-          stickyBar.classList.remove('is-visible');
+    if ('IntersectionObserver' in window) {
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (window.innerWidth <= 768) {
+            if (!entry.isIntersecting && entry.boundingClientRect.top < 100) {
+              stickyBar.classList.add('is-visible');
+            } else {
+              stickyBar.classList.remove('is-visible');
+            }
+          } else {
+            stickyBar.classList.remove('is-visible');
+          }
+        });
+      }, {
+        threshold: 0,
+        rootMargin: '-100px 0px 0px 0px'
+      });
+
+      observer.observe(mainBuyBtn);
+    } else {
+      let ticking = false;
+      const handleScroll = () => {
+        if (!ticking) {
+          window.requestAnimationFrame(() => {
+            if (window.innerWidth <= 768) {
+              const btnRect = mainBuyBtn.getBoundingClientRect();
+              if (btnRect.bottom < 100) {
+                stickyBar.classList.add('is-visible');
+              } else {
+                stickyBar.classList.remove('is-visible');
+              }
+            }
+            ticking = false;
+          });
+          ticking = true;
         }
-      }
-    };
-    window.addEventListener('scroll', handleScroll, { passive: true });
-    handleScroll();
+      };
+      window.addEventListener('scroll', handleScroll, { passive: true });
+    }
   }
 
   // Mobile Sticky Bar Add to Cart
@@ -567,16 +680,46 @@ function attachPdpEvents(container, product, state) {
     });
   }
 
-  // Tabs Switching
+  // Tabs Switching with Intelligent Scroll Anchoring & Responsive Handling
+  const switchPdpTab = (targetTab) => {
+    const tabsSection = container.querySelector('#pdp-tabs-section');
+    container.querySelectorAll('.pdp-tab-btn').forEach(b => {
+      const isMatch = b.dataset.tab === targetTab;
+      b.classList.toggle('is-active', isMatch);
+      b.setAttribute('aria-selected', isMatch ? 'true' : 'false');
+    });
+    container.querySelectorAll('.pdp-tab-pane').forEach(p => {
+      p.classList.toggle('is-active', p.id === targetTab);
+    });
+
+    // Intelligent Scroll Anchoring:
+    // If the tabs section top is scrolled above the screen or past the header,
+    // smoothly anchor the tabs header right below the sticky site header!
+    if (tabsSection) {
+      const headerOffset = window.innerWidth <= 768 ? 116 : 90;
+      const rect = tabsSection.getBoundingClientRect();
+      if (rect.top < headerOffset - 10 || rect.top > window.innerHeight * 0.45) {
+        const targetScrollY = window.pageYOffset + rect.top - headerOffset;
+        window.scrollTo({
+          top: Math.max(0, targetScrollY),
+          behavior: 'smooth'
+        });
+      }
+    }
+  };
+
   container.querySelectorAll('.pdp-tab-btn').forEach(tabBtn => {
     tabBtn.addEventListener('click', () => {
       sounds.playClick();
-      const targetTab = tabBtn.dataset.tab;
-      container.querySelectorAll('.pdp-tab-btn').forEach(b => b.classList.remove('is-active'));
-      container.querySelectorAll('.pdp-tab-pane').forEach(p => p.classList.remove('is-active'));
+      switchPdpTab(tabBtn.dataset.tab);
+    });
+  });
 
-      tabBtn.classList.add('is-active');
-      container.querySelector(`#${targetTab}`)?.classList.add('is-active');
+  // Quick switch buttons inside tab footers
+  container.querySelectorAll('.btn-tab-switch').forEach(btn => {
+    btn.addEventListener('click', () => {
+      sounds.playClick();
+      switchPdpTab(btn.dataset.switch);
     });
   });
 
