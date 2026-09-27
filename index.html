@@ -43,6 +43,15 @@
   <header class="site-header" id="site-header">
     <div class="container header-inner">
 
+      <!-- Mobile Menu Toggle Button (Hamburger) -->
+      <button type="button" class="mobile-menu-toggle-btn" id="mobile-menu-toggle-btn" aria-label="Open Navigation Menu" title="Browse Departments">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+          <line x1="3" y1="6" x2="21" y2="6" />
+          <line x1="3" y1="12" x2="21" y2="12" />
+          <line x1="3" y1="18" x2="21" y2="18" />
+        </svg>
+      </button>
+
       <!-- Brand Logo -->
       <div class="brand-wrap" id="brand-logo-btn" role="button" tabindex="0">
         <img src="image/7th June logo.png" alt="7th June Computers Logo" class="brand-logo-img" />
@@ -115,8 +124,12 @@
 
           <!-- Search Input Field -->
           <div class="search-input-field-wrap">
+            <svg class="search-input-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+              <circle cx="11" cy="11" r="8" />
+              <line x1="21" y1="21" x2="16.65" y2="16.65" />
+            </svg>
             <input type="text" id="global-search-input"
-              placeholder="Search mechanical keyboards, mice, headsets, docks..." autocomplete="off" />
+              placeholder="Search keyboards, mice, audio, monitors..." autocomplete="off" />
           </div>
 
           <!-- Submit / Magnifier Search Button -->
@@ -288,6 +301,130 @@
   <main id="app-main-view" class="main-content-wrap">
     <!-- Rendered dynamically by Router (Catalog, PDP, Checkout, Account) -->
   </main>
+
+  <!-- Slide-Over Mobile Navigation Drawer (Departments, VIP, Currency, Services) -->
+  <div class="drawer drawer-left mobile-nav-drawer" id="mobile-nav-drawer" role="dialog" aria-modal="true" aria-label="Navigation Menu">
+    <div class="drawer-header mobile-drawer-header">
+      <div class="brand-wrap" id="drawer-brand-btn" role="button" tabindex="0">
+        <img src="image/7th June logo.png" alt="7th June Computers Logo" class="brand-logo-img" />
+        <div class="brand-text-group">
+          <span class="brand-name">7TH JUNE</span>
+          <span class="brand-sub">COMPUTERS</span>
+        </div>
+      </div>
+      <button class="drawer-close-btn" id="mobile-nav-drawer-close" aria-label="Close Navigation">&times;</button>
+    </div>
+
+    <div class="drawer-body mobile-drawer-body">
+      <!-- User Greeting & VIP Status Card -->
+      <div class="mobile-drawer-user-card" id="mobile-drawer-user-card">
+        <div class="mobile-user-avatar-wrap">
+          <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=120&q=80" alt="User Avatar" class="mobile-user-avatar" id="mobile-drawer-avatar" />
+        </div>
+        <div class="mobile-user-info">
+          <strong class="mobile-user-name" id="mobile-drawer-name">Julian Vance</strong>
+          <span class="mobile-user-tier" id="mobile-drawer-tier">Platinum Titan VIP</span>
+        </div>
+        <button type="button" class="btn btn-primary-sm mobile-user-act-btn" id="mobile-drawer-auth-btn">Account</button>
+      </div>
+
+      <!-- Currency Quick-Switch Bar in Drawer -->
+      <div class="mobile-drawer-currency-box">
+        <span class="drawer-section-label">Currency</span>
+        <div class="mobile-currency-toggles">
+          <button type="button" class="mobile-curr-chip is-active" data-currency="GHS" id="mobile-curr-ghs">
+            <span>🇬🇭 GHS (GH₵)</span>
+          </button>
+          <button type="button" class="mobile-curr-chip" data-currency="USD" id="mobile-curr-usd">
+            <span>🇺🇸 USD ($)</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Departments & Categories List -->
+      <div class="mobile-drawer-section">
+        <span class="drawer-section-label">Browse Departments</span>
+        <ul class="mobile-nav-cat-list" id="mobile-nav-cat-list">
+          <li class="mobile-cat-item is-selected" data-category="All Products">
+            <span class="cat-item-icon">⚡</span>
+            <span class="cat-item-name">All Hardware Products</span>
+            <span class="cat-item-arrow">›</span>
+          </li>
+          <li class="mobile-cat-item" data-category="Keyboards & Keycaps">
+            <span class="cat-item-icon">⌨️</span>
+            <span class="cat-item-name">Keyboards & Keycaps</span>
+            <span class="cat-item-arrow">›</span>
+          </li>
+          <li class="mobile-cat-item" data-category="Mice & Precision">
+            <span class="cat-item-icon">🖱️</span>
+            <span class="cat-item-name">Mice & Precision</span>
+            <span class="cat-item-arrow">›</span>
+          </li>
+          <li class="mobile-cat-item" data-category="Audio & Headsets">
+            <span class="cat-item-icon">🎧</span>
+            <span class="cat-item-name">Audio & Headsets</span>
+            <span class="cat-item-arrow">›</span>
+          </li>
+          <li class="mobile-cat-item" data-category="Monitors & Mounts">
+            <span class="cat-item-icon">🖥️</span>
+            <span class="cat-item-name">Monitors & Mounts</span>
+            <span class="cat-item-arrow">›</span>
+          </li>
+          <li class="mobile-cat-item" data-category="Hubs & Docks">
+            <span class="cat-item-icon">🔌</span>
+            <span class="cat-item-name">Hubs & Docks</span>
+            <span class="cat-item-arrow">›</span>
+          </li>
+          <li class="mobile-cat-item" data-category="Desk Setup & Mats">
+            <span class="cat-item-icon">🛋️</span>
+            <span class="cat-item-name">Desk Setup & Mats</span>
+            <span class="cat-item-arrow">›</span>
+          </li>
+          <li class="mobile-cat-item" data-category="Gaming PCs & Towers">
+            <span class="cat-item-icon">🕹️</span>
+            <span class="cat-item-name">Gaming PCs & Towers</span>
+            <span class="cat-item-arrow">›</span>
+          </li>
+          <li class="mobile-cat-item" data-category="Laptops & Workstations">
+            <span class="cat-item-icon">💼</span>
+            <span class="cat-item-name">Laptops & Workstations</span>
+            <span class="cat-item-arrow">›</span>
+          </li>
+        </ul>
+      </div>
+
+      <!-- Quick Store Pages -->
+      <div class="mobile-drawer-section">
+        <span class="drawer-section-label">Account & Services</span>
+        <ul class="mobile-nav-links">
+          <li>
+            <a href="#/account/orders" class="mobile-nav-link" id="mobile-link-orders">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="7" width="20" height="14" rx="2" ry="2" /><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16" /></svg>
+              <span>Order History & Tracking</span>
+            </a>
+          </li>
+          <li>
+            <a href="#/account/rewards" class="mobile-nav-link" id="mobile-link-rewards">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" /></svg>
+              <span>VIP Client Rewards Club</span>
+            </a>
+          </li>
+          <li>
+            <a href="#/account/addresses" class="mobile-nav-link" id="mobile-link-addresses">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" /><circle cx="12" cy="10" r="3" /></svg>
+              <span>Saved Delivery Addresses</span>
+            </a>
+          </li>
+          <li id="mobile-admin-link-row" style="display: none;">
+            <a href="#/admin/overview" class="mobile-nav-link text-primary" id="mobile-link-admin">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" /><rect x="14" y="3" width="7" height="7" /><rect x="14" y="14" width="7" height="7" /><rect x="3" y="14" width="7" height="7" /></svg>
+              <span>Store Administration Console</span>
+            </a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
 
   <!-- Slide-Over Shopping Cart Drawer -->
   <div class="drawer drawer-right" id="cart-drawer" role="dialog" aria-modal="true">
@@ -878,7 +1015,50 @@
         </div>
       </div>
     </div>
-  </footer>
+  <!-- Mobile Bottom App Bar (Persistent Docked Navigation) -->
+  <nav class="mobile-bottom-nav" id="mobile-bottom-nav" aria-label="Mobile Navigation">
+    <button type="button" class="mobile-bottom-tab is-active" id="mobile-tab-home" data-route="#/catalog">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
+        <polyline points="9 22 9 12 15 12 15 22" />
+      </svg>
+      <span>Store</span>
+    </button>
+    <button type="button" class="mobile-bottom-tab" id="mobile-tab-categories">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <rect x="3" y="3" width="7" height="7" />
+        <rect x="14" y="3" width="7" height="7" />
+        <rect x="14" y="14" width="7" height="7" />
+        <rect x="3" y="14" width="7" height="7" />
+      </svg>
+      <span>Categories</span>
+    </button>
+    <button type="button" class="mobile-bottom-tab" id="mobile-tab-search">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <circle cx="11" cy="11" r="8" />
+        <line x1="21" y1="21" x2="16.65" y2="16.65" />
+      </svg>
+      <span>Search</span>
+    </button>
+    <button type="button" class="mobile-bottom-tab" id="mobile-tab-cart">
+      <div class="mobile-tab-icon-wrap">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z" />
+          <line x1="3" y1="6" x2="21" y2="6" />
+          <path d="M16 10a4 4 0 0 1-8 0" />
+        </svg>
+        <span class="mobile-bottom-badge cart-count-badge" style="display: none;">0</span>
+      </div>
+      <span>Cart</span>
+    </button>
+    <button type="button" class="mobile-bottom-tab" id="mobile-tab-account">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
+        <circle cx="12" cy="7" r="4" />
+      </svg>
+      <span>Account</span>
+    </button>
+  </nav>
 
   <!-- Main JavaScript Application Module Entry -->
   <script type="module" src="js/app.js"></script>

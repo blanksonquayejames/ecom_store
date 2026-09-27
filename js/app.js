@@ -76,6 +76,7 @@ function initApp() {
   setupHeaderEvents();
   setupUserHubDropdown();
   setupGlobalSearch();
+  setupMobileNav();
 
   // Parse initial route from URL Hash
   const initialRoute = parseHashRoute();
@@ -186,6 +187,11 @@ function updateHeaderUserStatus(user) {
   const dropdownAdminItem = document.getElementById('dropdown-admin-item');
   const dropdownAdminDivider = document.getElementById('dropdown-admin-divider');
 
+  const drawerAvatar = document.getElementById('mobile-drawer-avatar');
+  const drawerName = document.getElementById('mobile-drawer-name');
+  const drawerTier = document.getElementById('mobile-drawer-tier');
+  const drawerAuthBtn = document.getElementById('mobile-drawer-auth-btn');
+
   const isAdmin = Boolean(user && user.isLoggedIn && (user.role === 'admin' || user.role === 'sub-admin'));
   if (dropdownAdminItem) dropdownAdminItem.style.display = isAdmin ? 'block' : 'none';
   if (dropdownAdminDivider) dropdownAdminDivider.style.display = isAdmin ? 'block' : 'none';
@@ -200,6 +206,11 @@ function updateHeaderUserStatus(user) {
     if (dropdownAvatar) dropdownAvatar.src = user.avatar;
     if (dropdownName) dropdownName.textContent = user.name;
     if (dropdownTier) dropdownTier.textContent = user.tier;
+
+    if (drawerAvatar) drawerAvatar.src = user.avatar;
+    if (drawerName) drawerName.textContent = user.name;
+    if (drawerTier) drawerTier.textContent = user.tier;
+    if (drawerAuthBtn) drawerAuthBtn.textContent = 'Account';
   } else {
     if (avatarWrap) {
       avatarWrap.innerHTML = `
@@ -212,6 +223,11 @@ function updateHeaderUserStatus(user) {
     if (dropdownAvatar) dropdownAvatar.src = 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&w=400&q=80';
     if (dropdownName) dropdownName.textContent = 'Guest Shopper';
     if (dropdownTier) dropdownTier.textContent = 'Sign In to Access VIP Club';
+
+    if (drawerAvatar) drawerAvatar.src = 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&w=400&q=80';
+    if (drawerName) drawerName.textContent = 'Guest Shopper';
+    if (drawerTier) drawerTier.textContent = 'Sign In to Access VIP Club';
+    if (drawerAuthBtn) drawerAuthBtn.textContent = 'Sign In';
   }
 }
 
@@ -464,6 +480,173 @@ function setupHeaderEvents() {
   // Bag / Cart Drawer Button
   document.getElementById('header-cart-btn')?.addEventListener('click', () => {
     ui.toggleDrawer('cart-drawer', true);
+  });
+}
+
+function setupMobileNav() {
+  const toggleBtn = document.getElementById('mobile-menu-toggle-btn');
+  const closeBtn = document.getElementById('mobile-nav-drawer-close');
+  const drawerBrandBtn = document.getElementById('drawer-brand-btn');
+  const drawerAuthBtn = document.getElementById('mobile-drawer-auth-btn');
+
+  // Toggle button (hamburger)
+  toggleBtn?.addEventListener('click', () => {
+    sounds.playClick();
+    ui.toggleDrawer('mobile-nav-drawer', true);
+  });
+
+  // Close button (X)
+  closeBtn?.addEventListener('click', () => {
+    sounds.playClick();
+    ui.toggleDrawer('mobile-nav-drawer', false);
+  });
+
+  // Drawer brand click -> catalog
+  drawerBrandBtn?.addEventListener('click', () => {
+    sounds.playClick();
+    ui.toggleDrawer('mobile-nav-drawer', false);
+    window.location.hash = '#/catalog';
+    store.setView('catalog');
+  });
+
+  // Drawer auth / account button
+  drawerAuthBtn?.addEventListener('click', () => {
+    sounds.playClick();
+    ui.toggleDrawer('mobile-nav-drawer', false);
+    if (!store.state.user || !store.state.user.isLoggedIn) {
+      openAuthModal('login');
+    } else {
+      window.location.hash = '#/account/overview';
+      store.setView('account', null, { tab: 'overview' });
+    }
+  });
+
+  // Drawer Currency Quick Switch
+  const updateMobileCurrencyUI = (currency) => {
+    document.querySelectorAll('.mobile-curr-chip').forEach(chip => {
+      const isMatch = chip.dataset.currency === currency;
+      chip.classList.toggle('is-active', isMatch);
+    });
+  };
+
+  updateMobileCurrencyUI(store.state.currency || 'GHS');
+
+  document.querySelectorAll('.mobile-curr-chip').forEach(chip => {
+    chip.addEventListener('click', () => {
+      sounds.playClick();
+      const newCurr = chip.dataset.currency;
+      if (newCurr && newCurr !== store.state.currency) {
+        store.setCurrency(newCurr);
+        updateMobileCurrencyUI(newCurr);
+        ui.showToast({
+          title: `Currency Changed to ${newCurr}`,
+          message: `All prices updated with live exchange rates.`,
+          type: 'info'
+        });
+        handleRoute(store.state.currentView.page, store.state.currentView.productId, store.state.currentView.tab, false);
+      }
+    });
+  });
+
+  store.subscribe('currency_changed', (curr) => {
+    updateMobileCurrencyUI(curr);
+  });
+
+  // Drawer Category Items
+  const catItems = document.querySelectorAll('.mobile-cat-item');
+  catItems.forEach(item => {
+    item.addEventListener('click', () => {
+      sounds.playClick();
+      const cat = item.dataset.category;
+      catItems.forEach(i => i.classList.remove('is-selected'));
+      item.classList.add('is-selected');
+
+      ui.toggleDrawer('mobile-nav-drawer', false);
+      store.setFilter('category', cat);
+      if (store.state.currentView.page !== 'catalog') {
+        window.location.hash = '#/catalog';
+        store.setView('catalog');
+      } else {
+        updateProductsList();
+      }
+    });
+  });
+
+  // Drawer Service / Account Links
+  document.querySelectorAll('.mobile-nav-link').forEach(link => {
+    link.addEventListener('click', () => {
+      ui.toggleDrawer('mobile-nav-drawer', false);
+    });
+  });
+
+  // Mobile Bottom App Navigation Bar Tabs
+  const bottomTabs = {
+    home: document.getElementById('mobile-tab-home'),
+    categories: document.getElementById('mobile-tab-categories'),
+    search: document.getElementById('mobile-tab-search'),
+    cart: document.getElementById('mobile-tab-cart'),
+    account: document.getElementById('mobile-tab-account'),
+  };
+
+  const setBottomTabActive = (activeTabKey) => {
+    Object.entries(bottomTabs).forEach(([key, btn]) => {
+      if (btn) btn.classList.toggle('is-active', key === activeTabKey);
+    });
+  };
+
+  bottomTabs.home?.addEventListener('click', () => {
+    sounds.playClick();
+    setBottomTabActive('home');
+    if (store.state.currentView.page !== 'catalog') {
+      window.location.hash = '#/catalog';
+      store.setView('catalog');
+    }
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  });
+
+  bottomTabs.categories?.addEventListener('click', () => {
+    sounds.playClick();
+    ui.toggleDrawer('mobile-nav-drawer', true);
+  });
+
+  bottomTabs.search?.addEventListener('click', () => {
+    sounds.playClick();
+    const searchInput = document.getElementById('global-search-input');
+    if (searchInput) {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+      setTimeout(() => {
+        searchInput.focus();
+      }, 250);
+    }
+  });
+
+  bottomTabs.cart?.addEventListener('click', () => {
+    sounds.playClick();
+    ui.toggleDrawer('cart-drawer', true);
+  });
+
+  bottomTabs.account?.addEventListener('click', () => {
+    sounds.playClick();
+    setBottomTabActive('account');
+    if (!store.state.user || !store.state.user.isLoggedIn) {
+      openAuthModal('login');
+    } else {
+      window.location.hash = '#/account/overview';
+      store.setView('account', null, { tab: 'overview' });
+    }
+  });
+
+  // Update Bottom Tab based on Route
+  store.subscribe('view_changed', ({ page }) => {
+    if (page === 'catalog') {
+      setBottomTabActive('home');
+    } else if (page === 'account') {
+      setBottomTabActive('account');
+    } else if (page === 'checkout') {
+      setBottomTabActive('cart');
+    } else {
+      setBottomTabActive('');
+    }
   });
 }
 
