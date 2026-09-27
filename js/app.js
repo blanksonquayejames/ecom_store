@@ -172,6 +172,9 @@ function updateHeaderLayoutForView(page) {
   const userHubWrap = document.getElementById('header-user-hub-wrap');
   const cartBtn = document.getElementById('header-cart-btn');
 
+  const siteHeader = document.getElementById('site-header');
+  siteHeader?.classList.remove('is-mobile-search-open');
+
   if (announcementBar) announcementBar.style.display = (page === 'account' || page === 'admin') ? 'none' : '';
   if (searchWrap) searchWrap.style.display = (page === 'account' || page === 'admin') ? 'none' : '';
   if (currencyWrap) currencyWrap.style.display = (page === 'admin') ? 'none' : '';
@@ -488,10 +491,57 @@ function setupMobileNav() {
   const closeBtn = document.getElementById('mobile-nav-drawer-close');
   const drawerBrandBtn = document.getElementById('drawer-brand-btn');
   const drawerAuthBtn = document.getElementById('mobile-drawer-auth-btn');
+  const siteHeader = document.getElementById('site-header');
+  const searchTriggerBtn = document.getElementById('mobile-search-trigger-btn');
+  const searchCancelBtn = document.getElementById('mobile-search-cancel-btn');
+  const searchInput = document.getElementById('global-search-input');
+  const searchDropdown = document.getElementById('search-autocomplete-dropdown');
+
+  // Mobile Expandable Search Bar Controllers
+  const openMobileSearch = () => {
+    siteHeader?.classList.add('is-mobile-search-open');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+    setTimeout(() => {
+      searchInput?.focus();
+    }, 150);
+  };
+
+  const closeMobileSearch = () => {
+    siteHeader?.classList.remove('is-mobile-search-open');
+    searchInput?.blur();
+    if (searchDropdown) searchDropdown.style.display = 'none';
+  };
+
+  searchTriggerBtn?.addEventListener('click', (e) => {
+    e.stopPropagation();
+    sounds.playClick();
+    if (siteHeader?.classList.contains('is-mobile-search-open')) {
+      closeMobileSearch();
+    } else {
+      openMobileSearch();
+    }
+  });
+
+  searchCancelBtn?.addEventListener('click', (e) => {
+    e.stopPropagation();
+    sounds.playClick();
+    closeMobileSearch();
+  });
+
+  // Close mobile search on outside tap
+  document.addEventListener('click', (e) => {
+    if (siteHeader?.classList.contains('is-mobile-search-open')) {
+      const searchWrap = document.getElementById('header-search-wrap');
+      if (!searchWrap?.contains(e.target) && !searchTriggerBtn?.contains(e.target)) {
+        closeMobileSearch();
+      }
+    }
+  });
 
   // Toggle button (hamburger)
   toggleBtn?.addEventListener('click', () => {
     sounds.playClick();
+    closeMobileSearch();
     ui.toggleDrawer('mobile-nav-drawer', true);
   });
 
@@ -519,6 +569,34 @@ function setupMobileNav() {
       window.location.hash = '#/account/overview';
       store.setView('account', null, { tab: 'overview' });
     }
+  });
+
+  // Drawer Theme Switcher
+  const themeBtn = document.getElementById('mobile-drawer-theme-btn');
+  const themeIcon = document.getElementById('mobile-drawer-theme-icon');
+  const themeText = document.getElementById('mobile-drawer-theme-text');
+
+  const updateDrawerThemeUI = (theme) => {
+    const isDark = theme === 'dark';
+    if (themeIcon) themeIcon.textContent = isDark ? '☀️' : '🌙';
+    if (themeText) themeText.textContent = isDark ? 'Light Theme' : 'Dark Theme';
+  };
+
+  updateDrawerThemeUI(store.state.theme || 'light');
+
+  themeBtn?.addEventListener('click', () => {
+    sounds.playClick();
+    const newTheme = store.toggleTheme();
+    updateDrawerThemeUI(newTheme);
+    ui.showToast({
+      title: `${newTheme === 'dark' ? 'Dark' : 'Light'} Mode Activated`,
+      message: 'Visual theme preferences saved.',
+      type: 'info'
+    });
+  });
+
+  store.subscribe('theme_changed', (theme) => {
+    updateDrawerThemeUI(theme);
   });
 
   // Drawer Currency Quick Switch
@@ -597,6 +675,7 @@ function setupMobileNav() {
   bottomTabs.home?.addEventListener('click', () => {
     sounds.playClick();
     setBottomTabActive('home');
+    closeMobileSearch();
     if (store.state.currentView.page !== 'catalog') {
       window.location.hash = '#/catalog';
       store.setView('catalog');
@@ -606,28 +685,25 @@ function setupMobileNav() {
 
   bottomTabs.categories?.addEventListener('click', () => {
     sounds.playClick();
+    closeMobileSearch();
     ui.toggleDrawer('mobile-nav-drawer', true);
   });
 
   bottomTabs.search?.addEventListener('click', () => {
     sounds.playClick();
-    const searchInput = document.getElementById('global-search-input');
-    if (searchInput) {
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-      setTimeout(() => {
-        searchInput.focus();
-      }, 250);
-    }
+    openMobileSearch();
   });
 
   bottomTabs.cart?.addEventListener('click', () => {
     sounds.playClick();
+    closeMobileSearch();
     ui.toggleDrawer('cart-drawer', true);
   });
 
   bottomTabs.account?.addEventListener('click', () => {
     sounds.playClick();
     setBottomTabActive('account');
+    closeMobileSearch();
     if (!store.state.user || !store.state.user.isLoggedIn) {
       openAuthModal('login');
     } else {

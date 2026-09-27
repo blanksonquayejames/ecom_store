@@ -45,9 +45,9 @@
 
       <!-- Mobile Menu Toggle Button (Hamburger) -->
       <button type="button" class="mobile-menu-toggle-btn" id="mobile-menu-toggle-btn" aria-label="Open Navigation Menu" title="Browse Departments">
-        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
           <line x1="3" y1="6" x2="21" y2="6" />
-          <line x1="3" y1="12" x2="21" y2="12" />
+          <line x1="3" y1="12" x2="16" y2="12" />
           <line x1="3" y1="18" x2="21" y2="18" />
         </svg>
       </button>
@@ -62,7 +62,7 @@
       </div>
 
       <!-- Global Live Search with Department Dropdown & Submit Button -->
-      <div class="header-search-wrap">
+      <div class="header-search-wrap" id="header-search-wrap">
         <div class="search-bar-unified" id="search-bar-unified">
 
           <!-- Category / Department Dropdown Trigger Button -->
@@ -142,6 +142,9 @@
           </button>
         </div>
 
+        <!-- Mobile Cancel Button (Only visible on mobile when search is expanded) -->
+        <button type="button" class="mobile-search-cancel-btn" id="mobile-search-cancel-btn" aria-label="Cancel Search">Cancel</button>
+
         <!-- Autocomplete Suggestions Dropdown -->
         <div class="search-dropdown-menu" id="search-autocomplete-dropdown" style="display: none;"></div>
       </div>
@@ -183,6 +186,14 @@
             <option value="USD">USD ($)</option>
           </select>
         </div>
+
+        <!-- Mobile Search Trigger Button (Only visible on mobile) -->
+        <button type="button" class="header-icon-btn mobile-search-trigger-btn" id="mobile-search-trigger-btn" aria-label="Open Search" title="Search Products">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+            <circle cx="11" cy="11" r="8" />
+            <line x1="21" y1="21" x2="16.65" y2="16.65" />
+          </svg>
+        </button>
 
         <!-- Account Hub & Interactive User Menu -->
         <div class="header-user-hub-wrap" id="header-user-hub-wrap">
@@ -422,6 +433,15 @@
             </a>
           </li>
         </ul>
+      </div>
+
+      <!-- Theme Switch in Drawer -->
+      <div class="mobile-drawer-section mobile-drawer-theme-box">
+        <span class="drawer-section-label">Appearance</span>
+        <button type="button" class="mobile-theme-toggle-btn" id="mobile-drawer-theme-btn" aria-label="Toggle Theme">
+          <span class="mobile-theme-icon" id="mobile-drawer-theme-icon">🌙</span>
+          <span class="mobile-theme-text" id="mobile-drawer-theme-text">Dark Theme</span>
+        </button>
       </div>
     </div>
   </div>
