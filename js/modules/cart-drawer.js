@@ -26,7 +26,10 @@ export function initCartDrawer() {
   });
 
   store.subscribe('cart_item_added', () => {
-    openMiniCartRail();
+    // Only auto-open on desktop — on mobile the user opens it via the cart icon
+    if (window.innerWidth >= 992) {
+      openMiniCartRail();
+    }
   });
 
   store.subscribe('promo_applied', () => {
@@ -38,14 +41,19 @@ export function initCartDrawer() {
     renderMiniCartRail();
   });
 
-  // Keep mini-cart rail docked on the right side across every page navigation
+  // Keep mini-cart rail docked on desktop across page navigation
   store.subscribe('view_changed', () => {
     if (store.state.cart && store.state.cart.length > 0) {
-      // Ensure rail stays open across page changes
       const railEl = document.getElementById('amazon-mini-cart-rail');
-      if (railEl && !railEl.classList.contains('is-open')) {
-        openMiniCartRail();
+      if (window.innerWidth >= 992) {
+        // Desktop: keep rail open across page changes
+        if (railEl && !railEl.classList.contains('is-open')) {
+          openMiniCartRail();
+        } else {
+          renderMiniCartRail();
+        }
       } else {
+        // Mobile: just refresh content, don't auto-open
         renderMiniCartRail();
       }
     }
@@ -402,8 +410,8 @@ export function initMiniCartRail() {
   window.closeMiniCartRail = closeMiniCartRail;
   window.renderMiniCartRail = renderMiniCartRail;
 
-  // If cart already has items on page load, dock immediately
-  if (store.state.cart && store.state.cart.length > 0) {
+  // On page load: auto-open on desktop only — mobile requires explicit tap on cart icon
+  if (store.state.cart && store.state.cart.length > 0 && window.innerWidth >= 992) {
     openMiniCartRail();
   } else {
     renderMiniCartRail();
