@@ -181,17 +181,7 @@ export function renderProductDetailPage(container, productId) {
                 </ul>
               </div>
 
-              <!-- Contextual Quick-Switch Footer -->
-              <div class="pdp-tab-footer-nav">
-                <button type="button" class="btn-tab-switch" data-switch="tab-reviews">
-                  <span>⭐ Client Reviews (${product.reviewsCount})</span>
-                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg>
-                </button>
-                <button type="button" class="btn-tab-switch" data-switch="tab-shipping">
-                  <span>🚚 Shipping & Warranty</span>
-                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg>
-                </button>
-              </div>
+
             </div>
 
             <!-- Tab 2: Reviews -->
@@ -258,17 +248,7 @@ export function renderProductDetailPage(container, productId) {
                 `).join('')}
               </div>
 
-              <!-- Contextual Quick-Switch Footer -->
-              <div class="pdp-tab-footer-nav">
-                <button type="button" class="btn-tab-switch" data-switch="tab-specs">
-                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="15 18 9 12 15 6"/></svg>
-                  <span>📐 Technical Specifications</span>
-                </button>
-                <button type="button" class="btn-tab-switch" data-switch="tab-shipping">
-                  <span>🚚 Shipping & Warranty</span>
-                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg>
-                </button>
-              </div>
+
             </div>
 
             <!-- Tab 3: Shipping & Returns -->
@@ -291,17 +271,7 @@ export function renderProductDetailPage(container, productId) {
                 </div>
               </div>
 
-              <!-- Contextual Quick-Switch Footer -->
-              <div class="pdp-tab-footer-nav">
-                <button type="button" class="btn-tab-switch" data-switch="tab-specs">
-                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="15 18 9 12 15 6"/></svg>
-                  <span>📐 Technical Specifications</span>
-                </button>
-                <button type="button" class="btn-tab-switch" data-switch="tab-reviews">
-                  <span>⭐ Client Reviews (${product.reviewsCount})</span>
-                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg>
-                </button>
-              </div>
+
             </div>
 
           </div>
@@ -716,13 +686,6 @@ function attachPdpEvents(container, product, state) {
     });
   });
 
-  // Quick switch buttons inside tab footers
-  container.querySelectorAll('.btn-tab-switch').forEach(btn => {
-    btn.addEventListener('click', () => {
-      sounds.playClick();
-      switchPdpTab(btn.dataset.switch);
-    });
-  });
 
   // Scroll to reviews link
   container.querySelector('#scroll-to-reviews')?.addEventListener('click', (e) => {
