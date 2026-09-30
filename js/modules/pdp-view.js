@@ -337,24 +337,35 @@ export function renderProductDetailPage(container, productId) {
     const itemDiscount = item.originalPrice ? Math.round(((item.originalPrice - item.price) / item.originalPrice) * 100) : 0;
 
     return `
-                  <div class="suggested-product-card" data-id="${item.id}">
-                    <div class="suggested-img-wrap" data-nav-id="${item.id}">
-                      <img src="${item.heroImage}" alt="${item.name}" class="suggested-img" loading="lazy" />
-                      ${itemDiscount > 0 ? `<span class="suggested-discount-pill">-${itemDiscount}%</span>` : ''}
-                      <button class="suggested-quick-view-btn" data-quickview="${item.id}" title="Quick View">
-                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+                  <div class="product-card suggested-product-card" data-id="${item.id}">
+                    <div class="card-img-container suggested-img-wrap" data-nav-id="${item.id}">
+                      <img src="${item.heroImage}" alt="${item.name}" class="product-img suggested-img" loading="lazy" />
+                      ${itemDiscount > 0 ? `<span class="card-discount-pill">-${itemDiscount}%</span>` : ''}
+                      <button class="card-quick-view-btn suggested-quick-view-btn" data-quickview="${item.id}" title="Quick View" aria-label="Quick View ${item.name}">
+                        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                          <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+                          <circle cx="12" cy="12" r="3"/>
+                        </svg>
                       </button>
                     </div>
-                    <div class="suggested-info">
-                      <h4 class="suggested-name" data-nav-id="${item.id}">${item.name}</h4>
-                      <div class="suggested-stars">★★★★★ <span>(${item.rating.toFixed(2)})</span></div>
-                      <div class="suggested-price-row">
-                        <div class="suggested-price">
-                          <span class="curr-price">${itemPrice.formatted}</span>
-                          ${itemOrigPrice ? `<span class="old-price">${itemOrigPrice.formatted}</span>` : ''}
+                    <div class="card-content suggested-info">
+                      <h3 class="card-title suggested-name" data-nav-id="${item.id}" title="${item.name}">${item.name}</h3>
+                      <div class="card-rating-row suggested-stars">
+                        <span class="card-stars">★★★★★</span>
+                        <span class="card-rating-val">(${item.rating.toFixed(2)})</span>
+                      </div>
+                      <div class="card-divider"></div>
+                      <div class="card-footer suggested-price-row">
+                        <div class="card-price-wrap suggested-price">
+                          <span class="card-price curr-price">${itemPrice.formatted}</span>
+                          ${itemOrigPrice ? `<span class="card-original-price old-price">${itemOrigPrice.formatted}</span>` : ''}
                         </div>
-                        <button class="btn btn-primary-sm suggested-add-btn" data-id="${item.id}">
-                          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
+                        <button class="btn-card-add suggested-add-btn" data-id="${item.id}" aria-label="Add ${item.name} to Cart">
+                          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/>
+                            <line x1="3" y1="6" x2="21" y2="6"/>
+                            <path d="M16 10a4 4 0 0 1-8 0"/>
+                          </svg>
                           <span>Add</span>
                         </button>
                       </div>
@@ -814,7 +825,7 @@ function attachPdpEvents(container, product, state) {
   // Suggested Items Navigate to Product PDP
   container.querySelectorAll('[data-nav-id]').forEach(el => {
     el.addEventListener('click', (e) => {
-      if (e.target.closest('.suggested-quick-view-btn') || e.target.closest('.suggested-add-btn')) return;
+      if (e.target.closest('.suggested-quick-view-btn') || e.target.closest('.card-quick-view-btn') || e.target.closest('.suggested-add-btn') || e.target.closest('.btn-card-add')) return;
       sounds.playClick();
       const targetId = el.dataset.navId;
       if (targetId) {

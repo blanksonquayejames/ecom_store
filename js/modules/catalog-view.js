@@ -356,49 +356,28 @@ export function updateProductsList() {
     return `
       <div class="product-card animate-card-fade" data-id="${p.id}">
         
-        <!-- Card Badges -->
-        <div class="card-badges">
-          ${p.isNew ? '<span class="badge badge-new">NEW EDITION</span>' : ''}
-          ${discountPercent > 0 ? `<span class="badge badge-sale">-${discountPercent}%</span>` : ''}
-          ${p.stock <= 5 ? '<span class="badge badge-low-stock">FEW LEFT</span>' : ''}
-        </div>
-
         <!-- Product Image & Quick View Trigger -->
         <div class="card-img-container" data-view-pdp="${p.id}">
           <img src="${p.heroImage}" alt="${p.name}" class="product-img" loading="lazy" id="prod-img-${p.id}" />
-          <div class="card-overlay">
-            <button class="btn btn-glass-sm btn-quick-view" data-quickview="${p.id}">
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
-              Quick View
-            </button>
-          </div>
+          ${discountPercent > 0 ? `<span class="card-discount-pill">-${discountPercent}%</span>` : (p.isNew ? `<span class="card-discount-pill is-new">NEW</span>` : '')}
+          <button class="card-quick-view-btn" data-quickview="${p.id}" title="Quick View" aria-label="Quick View ${p.name}">
+            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+              <circle cx="12" cy="12" r="3"/>
+            </svg>
+          </button>
         </div>
 
         <!-- Product Details -->
         <div class="card-content">
-          <div class="card-category-rating">
-            <span class="card-category">${p.category}</span>
-            <div class="card-stars">★ ${p.rating.toFixed(2)} <span class="rating-count">(${p.reviewsCount})</span></div>
+          <h3 class="card-title" data-view-pdp="${p.id}" title="${p.name}">${p.name}</h3>
+
+          <div class="card-rating-row">
+            <span class="card-stars">★★★★★</span>
+            <span class="card-rating-val">(${p.rating.toFixed(2)})</span>
           </div>
 
-          <h3 class="card-title" data-view-pdp="${p.id}">${p.name}</h3>
-          <p class="card-tagline">${p.tagline}</p>
-
-          <!-- Color Swatches (if any) -->
-          ${p.colors && p.colors.length > 1 ? `
-            <div class="card-color-swatches">
-              ${p.colors.map((c, idx) => `
-                <button 
-                  class="color-swatch-dot ${idx === 0 ? 'is-selected' : ''}" 
-                  style="background-color: ${c.hex};" 
-                  data-prod-id="${p.id}" 
-                  data-img="${c.img}" 
-                  data-color-name="${c.name}"
-                  title="${c.name}">
-                </button>
-              `).join('')}
-            </div>
-          ` : ''}
+          <div class="card-divider"></div>
 
           <!-- Price & Add to Cart -->
           <div class="card-footer">
@@ -406,9 +385,13 @@ export function updateProductsList() {
               <span class="card-price">${currentPriceObj.formatted}</span>
               ${originalPriceObj ? `<span class="card-original-price">${originalPriceObj.formatted}</span>` : ''}
             </div>
-            <button class="btn btn-primary-sm btn-add-cart" data-id="${p.id}">
-              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
-              Add
+            <button class="btn-card-add btn-add-cart" data-id="${p.id}" aria-label="Add ${p.name} to Cart">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/>
+                <line x1="3" y1="6" x2="21" y2="6"/>
+                <path d="M16 10a4 4 0 0 1-8 0"/>
+              </svg>
+              <span>Add</span>
             </button>
           </div>
 
@@ -684,7 +667,7 @@ function attachCardEvents(grid) {
   // PDP Navigation
   grid.querySelectorAll('[data-view-pdp]').forEach(el => {
     el.addEventListener('click', (e) => {
-      if (e.target.closest('.btn-quick-view') || e.target.closest('.color-swatch-dot')) return;
+      if (e.target.closest('.card-quick-view-btn') || e.target.closest('.btn-quick-view') || e.target.closest('.btn-card-add') || e.target.closest('.btn-add-cart') || e.target.closest('.color-swatch-dot')) return;
       const prodId = el.dataset.viewPdp;
       store.setView('pdp', prodId);
     });
