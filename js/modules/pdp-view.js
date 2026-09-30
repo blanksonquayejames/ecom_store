@@ -35,20 +35,23 @@ export function renderProductDetailPage(container, productId) {
     <div class="pdp-wrapper animate-fade-in">
       <div class="container">
         
-        <!-- Breadcrumbs Navigation -->
-        <nav class="pdp-breadcrumbs" aria-label="Breadcrumb">
-          <span class="breadcrumb-link" id="breadcrumb-home">Store</span>
-          <span class="breadcrumb-sep">/</span>
-          <span class="breadcrumb-link" id="breadcrumb-category">${product.category || 'Hardware'}</span>
-          <span class="breadcrumb-sep">/</span>
-          <span class="breadcrumb-current">${product.name}</span>
-        </nav>
-
         <!-- Main Product Grid: Gallery Left + Configuration Right -->
         <div class="pdp-main-grid">
           
           <!-- Left: Gallery & Touch Zoom -->
           <div class="pdp-gallery-col">
+            <!-- Thumbnail Strip (Sub-Images) on the Left -->
+            ${galleryList.length > 1 ? `
+              <div class="pdp-thumbnails-strip" id="pdp-thumbs-strip">
+                ${galleryList.map((img, idx) => `
+                  <button class="pdp-thumb-btn ${idx === 0 ? 'is-active' : ''}" data-img="${img}" data-idx="${idx}" aria-label="Product image ${idx + 1}">
+                    <img src="${img}" alt="Thumbnail ${idx + 1}" loading="lazy" />
+                  </button>
+                `).join('')}
+              </div>
+            ` : ''}
+
+            <!-- Main Product Image on the Right -->
             <div class="pdp-main-image-wrap" id="pdp-zoom-container">
               <img src="${currentImage}" alt="${product.name}" id="pdp-active-img" class="pdp-main-img" />
               <div class="pdp-zoom-lens" id="pdp-zoom-lens"></div>
@@ -63,21 +66,12 @@ export function renderProductDetailPage(container, productId) {
                 1 / ${galleryList.length}
               </div>
             </div>
-
-            <!-- Thumbnail Strip -->
-            ${galleryList.length > 1 ? `
-              <div class="pdp-thumbnails-strip" id="pdp-thumbs-strip">
-                ${galleryList.map((img, idx) => `
-                  <button class="pdp-thumb-btn ${idx === 0 ? 'is-active' : ''}" data-img="${img}" data-idx="${idx}" aria-label="Product image ${idx + 1}">
-                    <img src="${img}" alt="Thumbnail ${idx + 1}" loading="lazy" />
-                  </button>
-                `).join('')}
-              </div>
-            ` : ''}
           </div>
 
           <!-- Right: Details, Variants & Purchase -->
           <div class="pdp-details-col">
+            <h1 class="pdp-title">${product.name}</h1>
+
             <div class="pdp-meta-header">
               <div class="pdp-rating-row">
                 <span class="stars">★★★★★</span>
@@ -86,7 +80,6 @@ export function renderProductDetailPage(container, productId) {
               </div>
             </div>
 
-            <h1 class="pdp-title">${product.name}</h1>
             <p class="pdp-tagline">${product.tagline}</p>
 
             <!-- Pricing Box -->
@@ -444,8 +437,7 @@ function attachPdpEvents(container, product, state) {
       if (i === currentGalleryIdx) {
         b.classList.add('is-active');
         if (thumbsStrip) {
-          const scrollPos = b.offsetLeft - (thumbsStrip.clientWidth / 2) + (b.clientWidth / 2);
-          thumbsStrip.scrollTo({ left: scrollPos, behavior: 'smooth' });
+          b.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'nearest' });
         }
       } else {
         b.classList.remove('is-active');
