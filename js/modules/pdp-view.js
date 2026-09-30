@@ -113,8 +113,6 @@ export function renderProductDetailPage(container, productId) {
               </div>
             </div>
 
-            <div class="pdp-divider"></div>
-
             <!-- Quantity & Call-to-Action Buttons -->
             <div class="pdp-actions-row">
               <div class="pdp-qty-wrap">
