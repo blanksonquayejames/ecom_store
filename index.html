@@ -20,6 +20,157 @@
 
   <!-- Main Stylesheet -->
   <link rel="stylesheet" href="css/styles.css">
+
+  <!-- Amazon-Style Right Docked Mini-Cart Rail — Inline styles survive editor overwrites -->
+  <style id="mini-cart-rail-styles">
+    /* Body offset so page content doesn't hide behind rail */
+    @media (min-width: 992px) {
+      body.has-cart-rail { padding-right: 135px; transition: padding-right 0.25s ease; }
+      body.has-cart-rail .site-header { right: 135px; }
+      body.has-cart-rail #pdp-mobile-sticky-bar { right: 135px; }
+    }
+    /* Rail panel */
+    .amazon-mini-cart-rail {
+      position: fixed; top: 0; right: 0; bottom: 0; width: 135px;
+      background: #FFFFFF; z-index: 1050;
+      border-left: 1px solid #D5D9D9;
+      box-shadow: -3px 0 16px rgba(0,0,0,0.08);
+      display: flex; flex-direction: column;
+      transform: translateX(110%);
+      transition: transform 0.25s cubic-bezier(0.16,1,0.3,1);
+      user-select: none;
+    }
+    .amazon-mini-cart-rail.is-open { transform: translateX(0); }
+    /* No backdrop — user can navigate freely */
+    .mini-cart-backdrop { display: none !important; pointer-events: none !important; }
+    /* Header */
+    .mini-cart-rail-header {
+      padding: 12px 8px 8px 8px; text-align: center;
+      position: relative; background: #FFFFFF;
+      border-bottom: 1px solid #EAEDED;
+    }
+    .mini-cart-rail-close {
+      position: absolute; top: 6px; right: 6px;
+      background: transparent; border: none;
+      font-size: 16px; color: #565959;
+      cursor: pointer; padding: 2px 5px;
+      border-radius: 4px; line-height: 1;
+    }
+    .mini-cart-rail-close:hover { background: #EAEDED; color: #0F1111; }
+    .mini-cart-subtotal-caption {
+      font-size: 12px; font-weight: 600; color: #0F1111;
+      margin: 0 0 3px 0; font-family: -apple-system, sans-serif;
+    }
+    .mini-cart-subtotal-price {
+      color: #B12704; font-size: 13.5px; font-weight: 700;
+      margin: 0 0 7px 0; word-break: break-word;
+      font-family: -apple-system, sans-serif;
+    }
+    /* Go to Cart button — Amazon white pill */
+    .mini-cart-goto-btn {
+      display: block; width: calc(100% - 12px); margin: 0 auto;
+      padding: 5px 8px; font-size: 11.5px; font-weight: 600;
+      color: #0F1111; background: #FFFFFF;
+      border: 1px solid #D5D9D9; border-radius: 9999px;
+      box-shadow: 0 2px 5px rgba(213,217,217,0.5);
+      cursor: pointer; text-align: center;
+    }
+    .mini-cart-goto-btn:hover { background: #F7FAFA; border-color: #A6A9A9; }
+    /* Items scroll area */
+    .mini-cart-items-scroll {
+      flex: 1; overflow-y: auto; overflow-x: hidden;
+      padding: 4px 4px 16px 4px;
+      scrollbar-width: thin; scrollbar-color: #CBD5E1 transparent;
+    }
+    .mini-cart-items-scroll::-webkit-scrollbar { width: 4px; }
+    .mini-cart-items-scroll::-webkit-scrollbar-thumb { background: #CBD5E1; border-radius: 4px; }
+    /* Item card */
+    .mini-cart-item-card {
+      display: flex; flex-direction: column; align-items: center;
+      padding: 12px 4px 12px 4px;
+      border-bottom: 1px solid #EAEDED; text-align: center;
+    }
+    .mini-cart-item-card:last-child { border-bottom: none; }
+    .mini-cart-item-img-wrap {
+      width: 84px; height: 84px; margin-bottom: 6px;
+      cursor: pointer; display: flex; align-items: center;
+      justify-content: center; background: #FAFAFA;
+      border-radius: 6px; overflow: hidden;
+    }
+    .mini-cart-item-img {
+      max-width: 100%; max-height: 100%; object-fit: contain;
+      transition: transform 0.2s ease;
+    }
+    .mini-cart-item-img-wrap:hover .mini-cart-item-img { transform: scale(1.06); }
+    .mini-cart-item-price {
+      font-size: 12px; font-weight: 700; color: #0F1111;
+      margin-bottom: 8px; word-break: break-word;
+      font-family: -apple-system, sans-serif;
+    }
+    /* Amazon Signature Yellow Pill [ − qty + ] */
+    .mini-cart-yellow-pill {
+      display: inline-flex; align-items: center;
+      justify-content: space-between;
+      width: 94px; height: 30px;
+      background: #FFFFFF;
+      border: 2.5px solid #FFD814;
+      border-radius: 9999px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+      padding: 0 3px;
+    }
+    .mini-pill-btn {
+      width: 24px; height: 24px; border: none;
+      background: transparent; cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 17px; font-weight: 700; color: #0F1111;
+      border-radius: 50%; line-height: 1;
+      transition: background 0.15s ease;
+    }
+    .mini-pill-btn:hover { background: #FEF3C7; color: #D97706; }
+    .mini-pill-btn:active { transform: scale(0.9); }
+    .mini-pill-qty {
+      font-size: 14px; font-weight: 700; color: #0F1111;
+      min-width: 18px; text-align: center;
+      font-family: -apple-system, sans-serif; user-select: none;
+    }
+    /* Empty state */
+    .mini-cart-empty { padding: 28px 10px; text-align: center; color: #64748B; }
+    .mini-cart-empty-icon { font-size: 28px; display: block; margin-bottom: 6px; }
+    .mini-cart-empty p { font-size: 11px; font-weight: 500; }
+    /* Edge tab (collapsed state) */
+    .mini-cart-edge-tab {
+      position: fixed; right: 0; top: 40%; z-index: 1040;
+      background: #FFFFFF; border: 1.5px solid #D5D9D9;
+      border-right: none; border-radius: 10px 0 0 10px;
+      padding: 10px 7px; display: none;
+      flex-direction: column; align-items: center; gap: 4px;
+      cursor: pointer; box-shadow: -2px 2px 10px rgba(0,0,0,0.1);
+      transition: all 0.18s ease;
+    }
+    .mini-cart-edge-tab:hover { background: #FEF3C7; border-color: #F59E0B; }
+    .mini-cart-edge-tab.is-visible { display: flex; }
+    .mini-cart-edge-tab-icon { font-size: 18px; line-height: 1; }
+    .mini-cart-edge-tab-count {
+      background: #B12704; color: #FFFFFF;
+      font-size: 11px; font-weight: 700;
+      border-radius: 9999px; padding: 1px 5px; line-height: 1;
+    }
+    /* Dark mode */
+    [data-theme="dark"] .amazon-mini-cart-rail { background: #111827; border-left-color: #374151; }
+    [data-theme="dark"] .mini-cart-rail-header { background: #111827; border-bottom-color: #1F2937; }
+    [data-theme="dark"] .mini-cart-rail-close { color: #94A3B8; }
+    [data-theme="dark"] .mini-cart-subtotal-caption { color: #94A3B8; }
+    [data-theme="dark"] .mini-cart-subtotal-price { color: #F87171; }
+    [data-theme="dark"] .mini-cart-goto-btn { background: #1E293B; color: #F8FAFC; border-color: #475569; }
+    [data-theme="dark"] .mini-cart-item-card { border-bottom-color: #1F2937; }
+    [data-theme="dark"] .mini-cart-item-img-wrap { background: #1E293B; }
+    [data-theme="dark"] .mini-cart-item-price { color: #F8FAFC; }
+    [data-theme="dark"] .mini-cart-yellow-pill { background: #1E293B; border-color: #F59E0B; }
+    [data-theme="dark"] .mini-pill-btn { color: #F8FAFC; }
+    [data-theme="dark"] .mini-pill-qty { color: #F8FAFC; }
+    [data-theme="dark"] .mini-cart-edge-tab { background: #1E293B; border-color: #374151; }
+    [data-theme="dark"] .mini-cart-edge-tab:hover { background: #334155; border-color: #F59E0B; }
+  </style>
 </head>
 
 <body>
@@ -44,8 +195,10 @@
     <div class="container header-inner">
 
       <!-- Mobile Menu Toggle Button (Hamburger) -->
-      <button type="button" class="mobile-menu-toggle-btn" id="mobile-menu-toggle-btn" aria-label="Open Navigation Menu" title="Browse Departments">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+      <button type="button" class="mobile-menu-toggle-btn" id="mobile-menu-toggle-btn" aria-label="Open Navigation Menu"
+        title="Browse Departments">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"
+          stroke-linecap="round" stroke-linejoin="round">
           <line x1="3" y1="6" x2="21" y2="6" />
           <line x1="3" y1="12" x2="16" y2="12" />
           <line x1="3" y1="18" x2="21" y2="18" />
@@ -124,12 +277,13 @@
 
           <!-- Search Input Field -->
           <div class="search-input-field-wrap">
-            <svg class="search-input-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+            <svg class="search-input-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+              stroke-width="2.2">
               <circle cx="11" cy="11" r="8" />
               <line x1="21" y1="21" x2="16.65" y2="16.65" />
             </svg>
-            <input type="text" id="global-search-input"
-              placeholder="Search keyboards, mice, audio, monitors..." autocomplete="off" />
+            <input type="text" id="global-search-input" placeholder="Search keyboards, mice, audio, monitors..."
+              autocomplete="off" />
           </div>
 
           <!-- Submit / Magnifier Search Button -->
@@ -143,7 +297,8 @@
         </div>
 
         <!-- Mobile Cancel Button (Only visible on mobile when search is expanded) -->
-        <button type="button" class="mobile-search-cancel-btn" id="mobile-search-cancel-btn" aria-label="Cancel Search">Cancel</button>
+        <button type="button" class="mobile-search-cancel-btn" id="mobile-search-cancel-btn"
+          aria-label="Cancel Search">Cancel</button>
 
         <!-- Autocomplete Suggestions Dropdown -->
         <div class="search-dropdown-menu" id="search-autocomplete-dropdown" style="display: none;"></div>
@@ -188,7 +343,8 @@
         </div>
 
         <!-- Mobile Search Trigger Button (Only visible on mobile) -->
-        <button type="button" class="header-icon-btn mobile-search-trigger-btn" id="mobile-search-trigger-btn" aria-label="Open Search" title="Search Products">
+        <button type="button" class="header-icon-btn mobile-search-trigger-btn" id="mobile-search-trigger-btn"
+          aria-label="Open Search" title="Search Products">
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
             <circle cx="11" cy="11" r="8" />
             <line x1="21" y1="21" x2="16.65" y2="16.65" />
@@ -314,7 +470,8 @@
   </main>
 
   <!-- Slide-Over Mobile Navigation Drawer (Departments, VIP, Currency, Services) -->
-  <div class="drawer drawer-left mobile-nav-drawer" id="mobile-nav-drawer" role="dialog" aria-modal="true" aria-label="Navigation Menu">
+  <div class="drawer drawer-left mobile-nav-drawer" id="mobile-nav-drawer" role="dialog" aria-modal="true"
+    aria-label="Navigation Menu">
     <div class="drawer-header mobile-drawer-header">
       <div class="brand-wrap" id="drawer-brand-btn" role="button" tabindex="0">
         <img src="image/7th June logo.png" alt="7th June Computers Logo" class="brand-logo-img" />
@@ -330,13 +487,15 @@
       <!-- User Greeting & VIP Status Card -->
       <div class="mobile-drawer-user-card" id="mobile-drawer-user-card">
         <div class="mobile-user-avatar-wrap">
-          <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=120&q=80" alt="User Avatar" class="mobile-user-avatar" id="mobile-drawer-avatar" />
+          <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=120&q=80"
+            alt="User Avatar" class="mobile-user-avatar" id="mobile-drawer-avatar" />
         </div>
         <div class="mobile-user-info">
           <strong class="mobile-user-name" id="mobile-drawer-name">Julian Vance</strong>
           <span class="mobile-user-tier" id="mobile-drawer-tier">Platinum Titan VIP</span>
         </div>
-        <button type="button" class="btn btn-primary-sm mobile-user-act-btn" id="mobile-drawer-auth-btn">Account</button>
+        <button type="button" class="btn btn-primary-sm mobile-user-act-btn"
+          id="mobile-drawer-auth-btn">Account</button>
       </div>
 
       <!-- Currency Quick-Switch Bar in Drawer -->
@@ -410,25 +569,39 @@
         <ul class="mobile-nav-links">
           <li>
             <a href="#/account/orders" class="mobile-nav-link" id="mobile-link-orders">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="7" width="20" height="14" rx="2" ry="2" /><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16" /></svg>
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <rect x="2" y="7" width="20" height="14" rx="2" ry="2" />
+                <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16" />
+              </svg>
               <span>Order History & Tracking</span>
             </a>
           </li>
           <li>
             <a href="#/account/rewards" class="mobile-nav-link" id="mobile-link-rewards">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" /></svg>
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <polygon
+                  points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" />
+              </svg>
               <span>VIP Client Rewards Club</span>
             </a>
           </li>
           <li>
             <a href="#/account/addresses" class="mobile-nav-link" id="mobile-link-addresses">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" /><circle cx="12" cy="10" r="3" /></svg>
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" />
+                <circle cx="12" cy="10" r="3" />
+              </svg>
               <span>Saved Delivery Addresses</span>
             </a>
           </li>
           <li id="mobile-admin-link-row" style="display: none;">
             <a href="#/admin/overview" class="mobile-nav-link text-primary" id="mobile-link-admin">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" /><rect x="14" y="3" width="7" height="7" /><rect x="14" y="14" width="7" height="7" /><rect x="3" y="14" width="7" height="7" /></svg>
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <rect x="3" y="3" width="7" height="7" />
+                <rect x="14" y="3" width="7" height="7" />
+                <rect x="14" y="14" width="7" height="7" />
+                <rect x="3" y="14" width="7" height="7" />
+              </svg>
               <span>Store Administration Console</span>
             </a>
           </li>
@@ -445,6 +618,28 @@
       </div>
     </div>
   </div>
+
+  <!-- Amazon-Style Docked Right Mini-Cart Rail —— Visible at right side on every page -->
+  <aside class="amazon-mini-cart-rail" id="amazon-mini-cart-rail" role="complementary" aria-label="Quick Shopping Cart">
+    <div class="mini-cart-rail-header">
+      <button class="mini-cart-rail-close" id="mini-cart-rail-close" aria-label="Close" title="Close">×</button>
+      <div class="mini-cart-subtotal-caption">Subtotal</div>
+      <div class="mini-cart-subtotal-price" id="mini-cart-subtotal-price">GHS 0.00</div>
+      <button class="mini-cart-goto-btn" id="mini-cart-goto-btn">Go to Cart</button>
+    </div>
+    <div class="mini-cart-items-scroll" id="mini-cart-items-scroll">
+      <!-- Items rendered dynamically with yellow pill [ − qty + ] -->
+    </div>
+  </aside>
+
+  <!-- Edge Tab: shown when rail is collapsed but cart has items -->
+  <button class="mini-cart-edge-tab" id="mini-cart-edge-tab" aria-label="Open cart" title="Open Cart">
+    <span class="mini-cart-edge-tab-icon">🛒</span>
+    <span class="mini-cart-edge-tab-count" id="mini-cart-edge-tab-count">0</span>
+  </button>
+
+  <!-- No backdrop — user can click anything freely while rail is open -->
+  <div class="mini-cart-backdrop" id="mini-cart-backdrop"></div>
 
   <!-- Slide-Over Shopping Cart Drawer -->
   <div class="drawer drawer-right" id="cart-drawer" role="dialog" aria-modal="true">
@@ -764,44 +959,68 @@
               <div class="overview-dropdown-group">
                 <!-- Dropdown 1: Hardware Highlights -->
                 <div class="overview-dropdown-wrap" id="hw-highlights-dropdown-wrap">
-                  <button type="button" class="btn btn-glass-sm overview-dropdown-btn" id="hw-highlights-btn" aria-haspopup="listbox" aria-expanded="false">
+                  <button type="button" class="btn btn-glass-sm overview-dropdown-btn" id="hw-highlights-btn"
+                    aria-haspopup="listbox" aria-expanded="false">
                     <span>⚡ Hardware Architecture</span>
-                    <svg class="overview-caret" width="8" height="5" viewBox="0 0 10 6" fill="currentColor"><path d="M0 0.5L5 5.5L10 0.5H0Z"/></svg>
+                    <svg class="overview-caret" width="8" height="5" viewBox="0 0 10 6" fill="currentColor">
+                      <path d="M0 0.5L5 5.5L10 0.5H0Z" />
+                    </svg>
                   </button>
                   <ul class="overview-dropdown-menu" id="hw-highlights-menu" role="listbox">
-                    <li data-insert="• Sensor: PAW3395 Ultra-Gaming Optical Sensor (26,000 DPI, 650 IPS)">⚡ PAW3395 26K DPI Sensor</li>
-                    <li data-insert="• Polling Rate: 8,000Hz (0.125ms True Hyper-Polling Latency)">⚡ 8,000Hz Hyper-Polling Rate</li>
-                    <li data-insert="• Switches: Magnetic Hall-Effect Rapid Trigger Analog Switches">⚡ Magnetic Hall-Effect Switches</li>
-                    <li data-insert="• Battery Life: Up to 150 Hours Ultra-Endurance Wireless Operation">⚡ 150h Long-Life Battery</li>
-                    <li data-insert="• Acoustics: Factory Lubed Stabilizers with 5-Layer Acoustic Sound Dampening">⚡ 5-Layer Acoustic Dampening</li>
+                    <li data-insert="• Sensor: PAW3395 Ultra-Gaming Optical Sensor (26,000 DPI, 650 IPS)">⚡ PAW3395 26K
+                      DPI Sensor</li>
+                    <li data-insert="• Polling Rate: 8,000Hz (0.125ms True Hyper-Polling Latency)">⚡ 8,000Hz
+                      Hyper-Polling Rate</li>
+                    <li data-insert="• Switches: Magnetic Hall-Effect Rapid Trigger Analog Switches">⚡ Magnetic
+                      Hall-Effect Switches</li>
+                    <li data-insert="• Battery Life: Up to 150 Hours Ultra-Endurance Wireless Operation">⚡ 150h
+                      Long-Life Battery</li>
+                    <li data-insert="• Acoustics: Factory Lubed Stabilizers with 5-Layer Acoustic Sound Dampening">⚡
+                      5-Layer Acoustic Dampening</li>
                   </ul>
                 </div>
 
                 <!-- Dropdown 2: Build & Connectivity -->
                 <div class="overview-dropdown-wrap" id="build-highlights-dropdown-wrap">
-                  <button type="button" class="btn btn-glass-sm overview-dropdown-btn" id="build-highlights-btn" aria-haspopup="listbox" aria-expanded="false">
+                  <button type="button" class="btn btn-glass-sm overview-dropdown-btn" id="build-highlights-btn"
+                    aria-haspopup="listbox" aria-expanded="false">
                     <span>🛠️ Build & Connectivity</span>
-                    <svg class="overview-caret" width="8" height="5" viewBox="0 0 10 6" fill="currentColor"><path d="M0 0.5L5 5.5L10 0.5H0Z"/></svg>
+                    <svg class="overview-caret" width="8" height="5" viewBox="0 0 10 6" fill="currentColor">
+                      <path d="M0 0.5L5 5.5L10 0.5H0Z" />
+                    </svg>
                   </button>
                   <ul class="overview-dropdown-menu" id="build-highlights-menu" role="listbox">
-                    <li data-insert="• Construction: Aerospace-Grade CNC 6063 Aluminum Chassis">🛠️ CNC 6063 Aluminum Chassis</li>
-                    <li data-insert="• Keycaps: Premium Double-Shot PBT Cherry Profile Keycaps">🛠️ Double-Shot PBT Keycaps</li>
-                    <li data-insert="• Connectivity: Tri-Mode (Ultra-Low Latency 2.4GHz Wireless, Bluetooth 5.3, USB-C)">🛠️ Tri-Mode 2.4G / BT / USB-C</li>
-                    <li data-insert="• Hot-Swap: 5-Pin Hot-Swappable PCB (Supports Cherry, Gateron, Kailh)">🛠️ 5-Pin Hot-Swappable PCB</li>
-                    <li data-insert="• Weight: Ultralight 49g Featherweight Ergonomic Shell">🛠️ 49g Featherweight Shell</li>
+                    <li data-insert="• Construction: Aerospace-Grade CNC 6063 Aluminum Chassis">🛠️ CNC 6063 Aluminum
+                      Chassis</li>
+                    <li data-insert="• Keycaps: Premium Double-Shot PBT Cherry Profile Keycaps">🛠️ Double-Shot PBT
+                      Keycaps</li>
+                    <li
+                      data-insert="• Connectivity: Tri-Mode (Ultra-Low Latency 2.4GHz Wireless, Bluetooth 5.3, USB-C)">
+                      🛠️ Tri-Mode 2.4G / BT / USB-C</li>
+                    <li data-insert="• Hot-Swap: 5-Pin Hot-Swappable PCB (Supports Cherry, Gateron, Kailh)">🛠️ 5-Pin
+                      Hot-Swappable PCB</li>
+                    <li data-insert="• Weight: Ultralight 49g Featherweight Ergonomic Shell">🛠️ 49g Featherweight Shell
+                    </li>
                   </ul>
                 </div>
 
                 <!-- Dropdown 3: Warranty & Service -->
                 <div class="overview-dropdown-wrap" id="warranty-highlights-dropdown-wrap">
-                  <button type="button" class="btn btn-glass-sm overview-dropdown-btn" id="warranty-highlights-btn" aria-haspopup="listbox" aria-expanded="false">
+                  <button type="button" class="btn btn-glass-sm overview-dropdown-btn" id="warranty-highlights-btn"
+                    aria-haspopup="listbox" aria-expanded="false">
                     <span>🛡️ Warranty & Service</span>
-                    <svg class="overview-caret" width="8" height="5" viewBox="0 0 10 6" fill="currentColor"><path d="M0 0.5L5 5.5L10 0.5H0Z"/></svg>
+                    <svg class="overview-caret" width="8" height="5" viewBox="0 0 10 6" fill="currentColor">
+                      <path d="M0 0.5L5 5.5L10 0.5H0Z" />
+                    </svg>
                   </button>
                   <ul class="overview-dropdown-menu" id="warranty-highlights-menu" role="listbox">
-                    <li data-insert="• Warranty: 6-Month 7th June Comprehensive Hardware Replacement Guarantee">🛡️ 6-Month Replacement Warranty</li>
-                    <li data-insert="• Delivery: Complimentary White-Glove Express Courier with Real-Time Tracking">🛡️ White-Glove Express Delivery</li>
-                    <li data-insert="• Certification: 100% Genuine Certified Hardware with Serialized Anti-Counterfeit Seal">🛡️ 100% Certified Genuine Seal</li>
+                    <li data-insert="• Warranty: 6-Month 7th June Comprehensive Hardware Replacement Guarantee">🛡️
+                      6-Month Replacement Warranty</li>
+                    <li data-insert="• Delivery: Complimentary White-Glove Express Courier with Real-Time Tracking">🛡️
+                      White-Glove Express Delivery</li>
+                    <li
+                      data-insert="• Certification: 100% Genuine Certified Hardware with Serialized Anti-Counterfeit Seal">
+                      🛡️ 100% Certified Genuine Seal</li>
                   </ul>
                 </div>
               </div>
@@ -1035,53 +1254,53 @@
         </div>
       </div>
     </div>
-  <!-- Mobile Bottom App Bar (Persistent Docked Navigation) -->
-  <nav class="mobile-bottom-nav" id="mobile-bottom-nav" aria-label="Mobile Navigation">
-    <button type="button" class="mobile-bottom-tab is-active" id="mobile-tab-home" data-route="#/catalog">
-      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-        <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
-        <polyline points="9 22 9 12 15 12 15 22" />
-      </svg>
-      <span>Store</span>
-    </button>
-    <button type="button" class="mobile-bottom-tab" id="mobile-tab-categories">
-      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-        <rect x="3" y="3" width="7" height="7" />
-        <rect x="14" y="3" width="7" height="7" />
-        <rect x="14" y="14" width="7" height="7" />
-        <rect x="3" y="14" width="7" height="7" />
-      </svg>
-      <span>Categories</span>
-    </button>
-    <button type="button" class="mobile-bottom-tab" id="mobile-tab-search">
-      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-        <circle cx="11" cy="11" r="8" />
-        <line x1="21" y1="21" x2="16.65" y2="16.65" />
-      </svg>
-      <span>Search</span>
-    </button>
-    <button type="button" class="mobile-bottom-tab" id="mobile-tab-cart">
-      <div class="mobile-tab-icon-wrap">
+    <!-- Mobile Bottom App Bar (Persistent Docked Navigation) -->
+    <nav class="mobile-bottom-nav" id="mobile-bottom-nav" aria-label="Mobile Navigation">
+      <button type="button" class="mobile-bottom-tab is-active" id="mobile-tab-home" data-route="#/catalog">
         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-          <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z" />
-          <line x1="3" y1="6" x2="21" y2="6" />
-          <path d="M16 10a4 4 0 0 1-8 0" />
+          <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
+          <polyline points="9 22 9 12 15 12 15 22" />
         </svg>
-        <span class="mobile-bottom-badge cart-count-badge" style="display: none;">0</span>
-      </div>
-      <span>Cart</span>
-    </button>
-    <button type="button" class="mobile-bottom-tab" id="mobile-tab-account">
-      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-        <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
-        <circle cx="12" cy="7" r="4" />
-      </svg>
-      <span>Account</span>
-    </button>
-  </nav>
+        <span>Store</span>
+      </button>
+      <button type="button" class="mobile-bottom-tab" id="mobile-tab-categories">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <rect x="3" y="3" width="7" height="7" />
+          <rect x="14" y="3" width="7" height="7" />
+          <rect x="14" y="14" width="7" height="7" />
+          <rect x="3" y="14" width="7" height="7" />
+        </svg>
+        <span>Categories</span>
+      </button>
+      <button type="button" class="mobile-bottom-tab" id="mobile-tab-search">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="11" cy="11" r="8" />
+          <line x1="21" y1="21" x2="16.65" y2="16.65" />
+        </svg>
+        <span>Search</span>
+      </button>
+      <button type="button" class="mobile-bottom-tab" id="mobile-tab-cart">
+        <div class="mobile-tab-icon-wrap">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z" />
+            <line x1="3" y1="6" x2="21" y2="6" />
+            <path d="M16 10a4 4 0 0 1-8 0" />
+          </svg>
+          <span class="mobile-bottom-badge cart-count-badge" style="display: none;">0</span>
+        </div>
+        <span>Cart</span>
+      </button>
+      <button type="button" class="mobile-bottom-tab" id="mobile-tab-account">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
+          <circle cx="12" cy="7" r="4" />
+        </svg>
+        <span>Account</span>
+      </button>
+    </nav>
 
-  <!-- Main JavaScript Application Module Entry -->
-  <script type="module" src="js/app.js"></script>
+    <!-- Main JavaScript Application Module Entry -->
+    <script type="module" src="js/app.js"></script>
 </body>
 
 </html>

@@ -1,6 +1,7 @@
 /**
- * AURA LUXE - Shopping Bag Drawer & Cart Controller
- * Slide-over drawer, free shipping threshold progress, promo codes, and quantity manager.
+ * 7TH JUNE COMPUTERS - Shopping Cart Drawer & Amazon-Style Mini-Cart Rail
+ * - Slide-over full cart drawer with promo codes, quantity manager, shipping tracker
+ * - Amazon-style permanently docked right-side mini-cart rail with yellow pill [ − qty + ]
  */
 
 import { store } from './state.js';
@@ -14,11 +15,18 @@ export function initCartDrawer() {
   if (!drawer) return;
 
   renderCartDrawerContent();
+  initMiniCartRail();
 
   // Subscribe to state updates
   store.subscribe('cart_updated', () => {
     renderCartDrawerContent();
+    renderMiniCartRail();
     updateCartBadges();
+    updateEdgeTab();
+  });
+
+  store.subscribe('cart_item_added', () => {
+    openMiniCartRail();
   });
 
   store.subscribe('promo_applied', () => {
@@ -27,6 +35,20 @@ export function initCartDrawer() {
 
   store.subscribe('currency_changed', () => {
     renderCartDrawerContent();
+    renderMiniCartRail();
+  });
+
+  // Keep mini-cart rail docked on the right side across every page navigation
+  store.subscribe('view_changed', () => {
+    if (store.state.cart && store.state.cart.length > 0) {
+      // Ensure rail stays open across page changes
+      const railEl = document.getElementById('amazon-mini-cart-rail');
+      if (railEl && !railEl.classList.contains('is-open')) {
+        openMiniCartRail();
+      } else {
+        renderMiniCartRail();
+      }
+    }
   });
 
   // Close drawer buttons
@@ -97,8 +119,8 @@ export function renderCartDrawerContent() {
   const progressBarHtml = `
     <div class="shipping-progress-box">
       <div class="progress-message">
-        ${isFree 
-          ? '<span>🎉 <strong>Complimentary Global Express Courier Unlocked!</strong></span>' 
+        ${isFree
+          ? '<span>🎉 <strong>Complimentary Global Express Courier Unlocked!</strong></span>'
           : `<span>Add <strong>${convertPrice(summary.amountNeededForFreeShipping, currency).formatted}</strong> more for <strong>Free Global Express Shipping</strong></span>`
         }
       </div>
@@ -184,7 +206,7 @@ export function renderCartDrawerContent() {
         <span>${summary.shipping === 0 ? '<strong class="text-green">COMPLIMENTARY</strong>' : convertPrice(summary.shipping, currency).formatted}</span>
       </div>
       <div class="summary-line">
-        <span>Estimated Duty & Tax (8%)</span>
+        <span>Estimated Duty &amp; Tax (8%)</span>
         <span>${convertPrice(summary.tax, currency).formatted}</span>
       </div>
       <div class="summary-line line-total">
@@ -312,5 +334,217 @@ function attachCartDrawerEvents(body, footer) {
   // Continue Shopping
   footer.querySelector('#drawer-continue-btn')?.addEventListener('click', () => {
     ui.toggleDrawer('cart-drawer', false);
+  });
+}
+
+// ============================================================================
+// AMAZON-STYLE RIGHT DOCKED MINI-CART RAIL
+// Permanently visible at the right side of every page when cart has items
+// ============================================================================
+
+export function initMiniCartRail() {
+  // Ensure the rail element exists in DOM
+  let railEl = document.getElementById('amazon-mini-cart-rail');
+  if (!railEl) {
+    railEl = document.createElement('aside');
+    railEl.id = 'amazon-mini-cart-rail';
+    railEl.className = 'amazon-mini-cart-rail';
+    railEl.setAttribute('aria-label', 'Quick Shopping Cart');
+    railEl.innerHTML = `
+      <div class="mini-cart-rail-header">
+        <button class="mini-cart-rail-close" id="mini-cart-rail-close" aria-label="Close cart panel" title="Close">&times;</button>
+        <div class="mini-cart-subtotal-caption">Subtotal</div>
+        <div class="mini-cart-subtotal-price" id="mini-cart-subtotal-price">GHS 0.00</div>
+        <button class="mini-cart-goto-btn" id="mini-cart-goto-btn">Go to Cart</button>
+      </div>
+      <div class="mini-cart-rail-divider"></div>
+      <div class="mini-cart-items-scroll" id="mini-cart-items-scroll"></div>
+    `;
+    document.body.appendChild(railEl);
+  }
+
+  // Ensure edge tab exists
+  let edgeTab = document.getElementById('mini-cart-edge-tab');
+  if (!edgeTab) {
+    edgeTab = document.createElement('button');
+    edgeTab.id = 'mini-cart-edge-tab';
+    edgeTab.className = 'mini-cart-edge-tab';
+    edgeTab.setAttribute('aria-label', 'Open mini cart');
+    edgeTab.title = 'Open Cart';
+    edgeTab.innerHTML = `
+      <span class="mini-cart-edge-tab-icon">🛒</span>
+      <span class="mini-cart-edge-tab-count" id="mini-cart-edge-tab-count">0</span>
+    `;
+    document.body.appendChild(edgeTab);
+  }
+
+  // Bind close button
+  document.getElementById('mini-cart-rail-close')?.addEventListener('click', () => {
+    sounds.playClick();
+    closeMiniCartRail();
+  });
+
+  // Bind "Go to Cart" button — opens the full cart drawer
+  document.getElementById('mini-cart-goto-btn')?.addEventListener('click', () => {
+    sounds.playClick();
+    closeMiniCartRail();
+    ui.toggleDrawer('cart-drawer', true);
+  });
+
+  // Bind edge tab to re-open rail
+  document.getElementById('mini-cart-edge-tab')?.addEventListener('click', () => {
+    sounds.playClick();
+    openMiniCartRail();
+  });
+
+  // Expose globally for external callers (pdp-view.js, catalog-view.js etc.)
+  window.openMiniCartRail = openMiniCartRail;
+  window.closeMiniCartRail = closeMiniCartRail;
+  window.renderMiniCartRail = renderMiniCartRail;
+
+  // If cart already has items on page load, dock immediately
+  if (store.state.cart && store.state.cart.length > 0) {
+    openMiniCartRail();
+  } else {
+    renderMiniCartRail();
+  }
+}
+
+export function openMiniCartRail() {
+  const railEl = document.getElementById('amazon-mini-cart-rail');
+  const edgeTab = document.getElementById('mini-cart-edge-tab');
+  if (!railEl) return;
+
+  renderMiniCartRail();
+  railEl.classList.add('is-open');
+  document.body.classList.add('has-cart-rail');
+
+  // Hide edge tab when rail is open
+  if (edgeTab) {
+    edgeTab.classList.remove('is-visible');
+  }
+}
+
+export function closeMiniCartRail() {
+  const railEl = document.getElementById('amazon-mini-cart-rail');
+  const edgeTab = document.getElementById('mini-cart-edge-tab');
+
+  if (railEl) railEl.classList.remove('is-open');
+  document.body.classList.remove('has-cart-rail');
+
+  // Show edge tab with count when rail is closed and cart has items
+  const count = store.getCartCount();
+  if (edgeTab) {
+    if (count > 0) {
+      edgeTab.classList.add('is-visible');
+      const countEl = document.getElementById('mini-cart-edge-tab-count');
+      if (countEl) countEl.textContent = count;
+    } else {
+      edgeTab.classList.remove('is-visible');
+    }
+  }
+}
+
+function updateEdgeTab() {
+  const railEl = document.getElementById('amazon-mini-cart-rail');
+  const edgeTab = document.getElementById('mini-cart-edge-tab');
+  const count = store.getCartCount();
+
+  // If cart becomes empty, close rail and hide edge tab
+  if (count === 0) {
+    if (railEl) railEl.classList.remove('is-open');
+    document.body.classList.remove('has-cart-rail');
+    if (edgeTab) edgeTab.classList.remove('is-visible');
+    return;
+  }
+
+  // Update edge tab count if visible
+  if (edgeTab && edgeTab.classList.contains('is-visible')) {
+    const countEl = document.getElementById('mini-cart-edge-tab-count');
+    if (countEl) countEl.textContent = count;
+  }
+}
+
+export function renderMiniCartRail() {
+  const subtotalEl = document.getElementById('mini-cart-subtotal-price');
+  const listEl = document.getElementById('mini-cart-items-scroll');
+  if (!subtotalEl || !listEl) return;
+
+  const { cart, currency } = store.state;
+  const subtotal = store.getCartSubtotal();
+  subtotalEl.textContent = convertPrice(subtotal, currency).formatted;
+
+  if (!cart || cart.length === 0) {
+    listEl.innerHTML = `
+      <div class="mini-cart-empty">
+        <span class="mini-cart-empty-icon">🛒</span>
+        <p>Your cart is empty</p>
+      </div>
+    `;
+    return;
+  }
+
+  // Render items — most recently added first
+  const itemsHtml = [...cart].reverse().map(item => {
+    const priceFormatted = convertPrice(item.price, currency).formatted;
+    return `
+      <div class="mini-cart-item-card" data-cart-id="${item.id}">
+        <div class="mini-cart-item-img-wrap" data-nav-product="${item.productId}" title="View ${item.name}">
+          <img src="${item.heroImage}" alt="${item.name}" class="mini-cart-item-img" loading="lazy" />
+        </div>
+        <div class="mini-cart-item-price">${priceFormatted}</div>
+        <div class="mini-cart-yellow-pill">
+          <button class="mini-pill-btn mini-pill-minus" data-id="${item.id}" aria-label="Decrease quantity">−</button>
+          <span class="mini-pill-qty">${item.quantity}</span>
+          <button class="mini-pill-btn mini-pill-plus" data-id="${item.id}" aria-label="Increase quantity">+</button>
+        </div>
+      </div>
+    `;
+  }).join('');
+
+  listEl.innerHTML = itemsHtml;
+
+  // Bind + buttons
+  listEl.querySelectorAll('.mini-pill-plus').forEach(btn => {
+    btn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      sounds.playClick();
+      const itemId = btn.dataset.id;
+      const targetItem = store.state.cart.find(i => i.id === itemId);
+      if (targetItem) {
+        store.updateCartQuantity(targetItem.id, targetItem.quantity + 1);
+      }
+    });
+  });
+
+  // Bind − buttons
+  listEl.querySelectorAll('.mini-pill-minus').forEach(btn => {
+    btn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      sounds.playClick();
+      const itemId = btn.dataset.id;
+      const targetItem = store.state.cart.find(i => i.id === itemId);
+      if (targetItem) {
+        if (targetItem.quantity > 1) {
+          store.updateCartQuantity(targetItem.id, targetItem.quantity - 1);
+        } else {
+          // Remove item when quantity reaches 0
+          store.removeFromCart(targetItem.id);
+        }
+      }
+    });
+  });
+
+  // Clicking product thumbnail navigates to PDP
+  listEl.querySelectorAll('[data-nav-product]').forEach(el => {
+    el.addEventListener('click', () => {
+      sounds.playClick();
+      const prodId = el.dataset.navProduct;
+      if (prodId) {
+        closeMiniCartRail();
+        store.setView('pdp', prodId);
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      }
+    });
   });
 }

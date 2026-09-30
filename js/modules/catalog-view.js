@@ -121,12 +121,11 @@ export function renderCatalogView(container) {
               <label class="sort-label">Sort by:</label>
               <div class="custom-sort-dropdown" id="custom-sort-dropdown">
                 <button type="button" class="custom-sort-btn" id="catalog-sort-btn" aria-haspopup="listbox" aria-expanded="false" title="Sort Products (Hover or Click)">
-                  <span class="custom-sort-label" id="catalog-sort-label">${
-                    filters.sortBy === 'price-asc' ? 'Price: Low to High' :
-                    filters.sortBy === 'price-desc' ? 'Price: High to Low' :
-                    filters.sortBy === 'rating' ? 'Customer Rating' :
-                    filters.sortBy === 'newest' ? 'New Arrivals' : 'Featured & Trending'
-                  }</span>
+                  <span class="custom-sort-label" id="catalog-sort-label">${filters.sortBy === 'price-asc' ? 'Price: Low to High' :
+      filters.sortBy === 'price-desc' ? 'Price: High to Low' :
+        filters.sortBy === 'rating' ? 'Customer Rating' :
+          filters.sortBy === 'newest' ? 'New Arrivals' : 'Featured & Trending'
+    }</span>
                   <svg class="custom-sort-caret" width="10" height="6" viewBox="0 0 10 6" fill="currentColor">
                     <path d="M0 0.5L5 5.5L10 0.5H0Z" />
                   </svg>

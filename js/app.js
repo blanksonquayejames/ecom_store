@@ -484,9 +484,14 @@ function setupHeaderEvents() {
   // Setup Custom Currency Dropdown
   setupCurrencyDropdown();
 
-  // Bag / Cart Drawer Button
+  // Bag / Cart Button — Opens the Amazon-style right-docked mini-cart rail
   document.getElementById('header-cart-btn')?.addEventListener('click', () => {
-    ui.toggleDrawer('cart-drawer', true);
+    const rail = document.getElementById('amazon-mini-cart-rail');
+    if (rail && rail.classList.contains('is-open')) {
+      if (window.closeMiniCartRail) window.closeMiniCartRail();
+    } else {
+      if (window.openMiniCartRail) window.openMiniCartRail();
+    }
   });
 }
 

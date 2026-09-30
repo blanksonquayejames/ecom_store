@@ -2286,6 +2286,7 @@ img {
 .btn-text-short {
   display: none;
 }
+
 .btn-text-full {
   display: inline;
 }
@@ -2294,6 +2295,7 @@ img {
   .btn-card-add .btn-text-full {
     display: none;
   }
+
   .btn-card-add .btn-text-short {
     display: inline;
   }
@@ -2301,9 +2303,17 @@ img {
 
 /* Icon pop animation */
 @keyframes cartIconPop {
-  0% { transform: scale(0.75); }
-  60% { transform: scale(1.2); }
-  100% { transform: scale(1); }
+  0% {
+    transform: scale(0.75);
+  }
+
+  60% {
+    transform: scale(1.2);
+  }
+
+  100% {
+    transform: scale(1);
+  }
 }
 
 .is-in-cart .cart-icon-green,
@@ -3210,7 +3220,8 @@ img {
   border-color: #2563EB !important;
   box-shadow: 0 4px 12px rgba(37, 99, 235, 0.25) !important;
 }
-  user-select: none;
+
+user-select: none;
 }
 
 .pdp-tab-btn:hover {

@@ -237,6 +237,7 @@ class Store {
 
     this.saveCart();
     this.notify('cart_updated', this.state.cart);
+    this.notify('cart_item_added', this.state.cart);
     return true;
   }
 
