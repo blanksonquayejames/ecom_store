@@ -14,6 +14,7 @@ import { renderCheckoutView } from './modules/checkout-view.js';
 import { renderAccountView } from './modules/account-view.js';
 import { initAuthModal, openAuthModal } from './modules/auth-modal.js';
 import { renderAdminView } from './modules/admin-view.js';
+import { syncAllCartButtons } from './modules/cart-icon.js';
 
 document.addEventListener('DOMContentLoaded', () => {
   initApp();
@@ -161,6 +162,9 @@ function handleRoute(page, productId = null, tab = null, updateHash = true) {
     default:
       renderCatalogView(mainViewContainer);
   }
+
+  // Ensure all dynamic cart icons reflect store.state.cart
+  syncAllCartButtons();
 }
 
 function updateHeaderLayoutForView(page) {

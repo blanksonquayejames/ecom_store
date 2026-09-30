@@ -240,6 +240,11 @@ class Store {
     return true;
   }
 
+  isInCart(productId) {
+    if (!this.state.cart || !this.state.cart.length) return false;
+    return this.state.cart.some(item => item.productId === productId);
+  }
+
   updateCartQuantity(cartItemId, quantity) {
     const item = this.state.cart.find(i => i.id === cartItemId);
     if (item) {

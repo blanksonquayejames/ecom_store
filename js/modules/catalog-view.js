@@ -8,6 +8,7 @@ import { convertPrice } from './currency.js';
 import { CATEGORIES } from '../data/products.js';
 import { ui } from './ui.js';
 import { sounds } from './audio.js';
+import { getCartBlackSvg, getCartGreenSvg, updateCartButtonElement, getProductCartQuantity, getCartButtonStatement } from './cart-icon.js';
 
 export function renderCatalogView(container) {
   const { filters, currency } = store.state;
@@ -352,6 +353,8 @@ export function updateProductsList() {
     const currentPriceObj = convertPrice(p.price, currency);
     const originalPriceObj = p.originalPrice ? convertPrice(p.originalPrice, currency) : null;
     const discountPercent = p.originalPrice ? Math.round(((p.originalPrice - p.price) / p.originalPrice) * 100) : 0;
+    const inCart = store.isInCart(p.id);
+    const pQty = getProductCartQuantity(p.id);
 
     return `
       <div class="product-card animate-card-fade" data-id="${p.id}">
@@ -379,19 +382,14 @@ export function updateProductsList() {
 
           <div class="card-divider"></div>
 
-          <!-- Price & Add to Cart -->
           <div class="card-footer">
             <div class="card-price-wrap">
               <span class="card-price">${currentPriceObj.formatted}</span>
               ${originalPriceObj ? `<span class="card-original-price">${originalPriceObj.formatted}</span>` : ''}
             </div>
-            <button class="btn-card-add btn-add-cart" data-id="${p.id}" aria-label="Add ${p.name} to Cart">
-              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/>
-                <line x1="3" y1="6" x2="21" y2="6"/>
-                <path d="M16 10a4 4 0 0 1-8 0"/>
-              </svg>
-              <span>Add</span>
+            <button class="btn-card-add btn-add-cart ${inCart ? 'is-in-cart' : ''}" data-id="${p.id}" aria-label="${inCart ? `${p.name} is in cart (${pQty})` : `Add ${p.name} to Cart`}" title="${inCart ? `${pQty} in cart` : 'Add to Cart'}">
+              <span class="btn-card-add-icon">${inCart ? getCartGreenSvg(`cat-${p.id}`, 20) : getCartBlackSvg(`cat-${p.id}`, 20)}</span>
+              <span class="btn-card-add-text">${getCartButtonStatement(inCart, pQty, 'short')}</span>
             </button>
           </div>
 
@@ -685,20 +683,19 @@ function attachCardEvents(grid) {
         const selectedDot = card.querySelector('.color-swatch-dot.is-selected');
         const selectedColor = selectedDot ? selectedDot.dataset.colorName : null;
 
+        const alreadyInCart = store.isInCart(prod.id);
+        const currentQty = getProductCartQuantity(prod.id);
+
         store.addToCart(prod, selectedColor, null, 1);
 
-        // Visual feedback on button
-        const origHtml = btn.innerHTML;
-        btn.innerHTML = `✓ Added`;
-        btn.classList.add('btn-added-state');
-        setTimeout(() => {
-          btn.innerHTML = origHtml;
-          btn.classList.remove('btn-added-state');
-        }, 1200);
+        // Instantly switch to Green Icon state with updated statement
+        updateCartButtonElement(btn, true, 'short');
 
         ui.showToast({
-          title: 'Added to Cart',
-          message: `${prod.name} (${selectedColor || 'Default'}) added.`,
+          title: alreadyInCart ? 'Cart Updated' : 'Added to Cart',
+          message: alreadyInCart
+            ? `Added another ${prod.name}. You now have ${currentQty + 1} in your cart.`
+            : `${prod.name} (${selectedColor || 'Default'}) added to your shopping cart.`,
           type: 'success',
           actionText: 'View Cart',
           onAction: () => ui.toggleDrawer('cart-drawer', true)

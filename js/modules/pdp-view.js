@@ -8,6 +8,7 @@ import { convertPrice } from './currency.js';
 import { ui } from './ui.js';
 import { sounds } from './audio.js';
 import { openAuthModal } from './auth-modal.js';
+import { getCartBlackSvg, getCartGreenSvg, updateCartButtonElement, getProductCartQuantity, getCartButtonStatement } from './cart-icon.js';
 
 export function renderProductDetailPage(container, productId) {
   const product = store.state.products.find(p => p.id === productId) || store.state.products[0];
@@ -21,6 +22,8 @@ export function renderProductDetailPage(container, productId) {
   const currentPriceObj = convertPrice(product.price, currency);
   const originalPriceObj = product.originalPrice ? convertPrice(product.originalPrice, currency) : null;
   const discountPercent = product.originalPrice ? Math.round(((product.originalPrice - product.price) / product.originalPrice) * 100) : 0;
+  const inCart = store.isInCart(product.id);
+  const pQty = getProductCartQuantity(product.id);
 
   // Compute Suggested Accessories (Synergy pairings + complementary products)
   const pairedIds = product.frequentlyBoughtTogether || [];
@@ -115,15 +118,15 @@ export function renderProductDetailPage(container, productId) {
 
             <!-- Quantity & Call-to-Action Buttons -->
             <div class="pdp-actions-row">
-              <div class="pdp-qty-wrap">
+              <div class="pdp-qty-wrap" id="pdp-qty-wrap" style="${inCart ? 'display: flex;' : 'display: none;'}">
                 <button class="qty-btn" id="pdp-qty-minus" aria-label="Decrease quantity">−</button>
-                <span class="qty-val" id="pdp-qty-val">1</span>
+                <span class="qty-val" id="pdp-qty-val">${pQty || 1}</span>
                 <button class="qty-btn" id="pdp-qty-plus" aria-label="Increase quantity">+</button>
               </div>
 
-              <button class="btn btn-primary btn-lg pdp-main-add-btn" id="pdp-add-cart-btn">
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
-                <span>Add to Cart</span>
+              <button class="btn btn-primary btn-lg pdp-main-add-btn ${inCart ? 'is-in-cart' : ''}" id="pdp-add-cart-btn" data-id="${product.id}" title="${inCart ? `${pQty} in cart` : `Add ${product.name} to Cart`}" aria-label="${inCart ? `${product.name} is in cart (${pQty})` : `Add ${product.name} to Cart`}">
+                <span class="pdp-cart-btn-icon">${inCart ? getCartGreenSvg('pdp-main', 22) : getCartBlackSvg('pdp-main', 22)}</span>
+                <span class="pdp-cart-btn-text">${getCartButtonStatement(inCart, pQty, 'long')}</span>
               </button>
 
               <button class="btn btn-secondary btn-lg pdp-main-buy-btn" id="pdp-buy-now-btn">
@@ -296,6 +299,8 @@ export function renderProductDetailPage(container, productId) {
     const itemPrice = convertPrice(item.price, currency);
     const itemOrigPrice = item.originalPrice ? convertPrice(item.originalPrice, currency) : null;
     const itemDiscount = item.originalPrice ? Math.round(((item.originalPrice - item.price) / item.originalPrice) * 100) : 0;
+    const isItemInCart = store.isInCart(item.id);
+    const sugQty = getProductCartQuantity(item.id);
 
     return `
                   <div class="product-card suggested-product-card" data-id="${item.id}">
@@ -321,13 +326,9 @@ export function renderProductDetailPage(container, productId) {
                           <span class="card-price curr-price">${itemPrice.formatted}</span>
                           ${itemOrigPrice ? `<span class="card-original-price old-price">${itemOrigPrice.formatted}</span>` : ''}
                         </div>
-                        <button class="btn-card-add suggested-add-btn" data-id="${item.id}" aria-label="Add ${item.name} to Cart">
-                          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-                            <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/>
-                            <line x1="3" y1="6" x2="21" y2="6"/>
-                            <path d="M16 10a4 4 0 0 1-8 0"/>
-                          </svg>
-                          <span>Add</span>
+                        <button class="btn-card-add suggested-add-btn ${isItemInCart ? 'is-in-cart' : ''}" data-id="${item.id}" aria-label="${isItemInCart ? `${item.name} is in cart (${sugQty})` : `Add ${item.name} to Cart`}" title="${isItemInCart ? `${sugQty} in cart` : `Add ${item.name} to Cart`}">
+                          <span class="btn-card-add-icon">${isItemInCart ? getCartGreenSvg(`sug-${item.id}`, 20) : getCartBlackSvg(`sug-${item.id}`, 20)}</span>
+                          <span class="btn-card-add-text">${getCartButtonStatement(isItemInCart, sugQty, 'short')}</span>
                         </button>
                       </div>
                     </div>
@@ -350,8 +351,8 @@ export function renderProductDetailPage(container, productId) {
           </div>
         </div>
         <div class="sticky-bar-actions">
-          <button class="btn btn-secondary sticky-bar-cart-btn" id="sticky-bar-add-btn" aria-label="Add to cart" title="Add to cart">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
+          <button class="btn btn-secondary sticky-bar-cart-btn ${inCart ? 'is-in-cart' : ''}" id="sticky-bar-add-btn" aria-label="Add to cart" title="Add to cart" data-id="${product.id}">
+            ${inCart ? getCartGreenSvg('sticky-btn', 22) : getCartBlackSvg('sticky-btn', 22)}
           </button>
           <button class="btn btn-primary sticky-bar-buy-btn" id="sticky-bar-buy-btn">
             <span>Buy Now</span>
@@ -485,25 +486,73 @@ function attachPdpEvents(container, product, state) {
     });
   });
 
-  // Quantity adjustments
+  // Quantity adjustments for in-cart product (- and +)
   const qtyVal = container.querySelector('#pdp-qty-val');
-  container.querySelector('#pdp-qty-minus')?.addEventListener('click', () => {
-    sounds.playClick();
-    let q = state.getQuantity();
-    if (q > 1) {
-      q--;
-      state.setQuantity(q);
-      if (qtyVal) qtyVal.textContent = q;
-    }
-  });
+  const qtyWrap = container.querySelector('#pdp-qty-wrap');
 
+  // Plus Button (+)
   container.querySelector('#pdp-qty-plus')?.addEventListener('click', () => {
     sounds.playClick();
-    let q = state.getQuantity();
-    if (q < 10) {
-      q++;
-      state.setQuantity(q);
-      if (qtyVal) qtyVal.textContent = q;
+    const cartItems = store.state.cart.filter(item => item.productId === product.id);
+    const targetItem = cartItems[cartItems.length - 1];
+
+    if (targetItem) {
+      store.updateCartQuantity(targetItem.id, targetItem.quantity + 1);
+    } else {
+      store.addToCart(product, state.getSelectedColor(), state.getSelectedOption(), 1);
+    }
+
+    const totalQty = getProductCartQuantity(product.id);
+    if (qtyVal) qtyVal.textContent = totalQty;
+    if (addCartBtn) updateCartButtonElement(addCartBtn, true, 'long');
+    if (stickyAddBtn) updateCartButtonElement(stickyAddBtn, true, 'icon-only');
+
+    ui.showToast({
+      title: 'Cart Updated',
+      message: `You now have ${totalQty} in your cart.`,
+      type: 'success',
+      actionText: 'View Cart',
+      onAction: () => ui.toggleDrawer('cart-drawer', true)
+    });
+  });
+
+  // Minus Button (-)
+  container.querySelector('#pdp-qty-minus')?.addEventListener('click', () => {
+    sounds.playClick();
+    const cartItems = store.state.cart.filter(item => item.productId === product.id);
+    const targetItem = cartItems[cartItems.length - 1];
+
+    if (targetItem) {
+      if (targetItem.quantity > 1) {
+        store.updateCartQuantity(targetItem.id, targetItem.quantity - 1);
+
+        const totalQty = getProductCartQuantity(product.id);
+        if (qtyVal) qtyVal.textContent = totalQty;
+        if (addCartBtn) updateCartButtonElement(addCartBtn, true, 'long');
+        if (stickyAddBtn) updateCartButtonElement(stickyAddBtn, true, 'icon-only');
+
+        ui.showToast({
+          title: 'Cart Updated',
+          message: `You now have ${totalQty} in your cart.`,
+          type: 'info',
+          actionText: 'View Cart',
+          onAction: () => ui.toggleDrawer('cart-drawer', true)
+        });
+      } else {
+        // Quantity was 1 -> remove product from cart completely
+        store.removeFromCart(targetItem.id);
+
+        // Hide - and + controls because product is not in cart!
+        if (qtyWrap) qtyWrap.style.display = 'none';
+        if (addCartBtn) updateCartButtonElement(addCartBtn, false, 'long');
+        if (stickyAddBtn) updateCartButtonElement(stickyAddBtn, false, 'icon-only');
+
+        ui.showToast({
+          title: 'Removed from Cart',
+          message: `${product.name} removed from your cart.`,
+          type: 'info'
+        });
+      }
     }
   });
 
@@ -512,23 +561,29 @@ function attachPdpEvents(container, product, state) {
   if (addCartBtn) {
     addCartBtn.addEventListener('click', () => {
       sounds.playClick();
-      store.addToCart(product, state.getSelectedColor(), state.getSelectedOption(), state.getQuantity());
+      const inCart = store.isInCart(product.id);
 
-      const origText = addCartBtn.innerHTML;
-      addCartBtn.innerHTML = `✓ Added to Cart`;
-      addCartBtn.classList.add('btn-added-state');
-      setTimeout(() => {
-        addCartBtn.innerHTML = origText;
-        addCartBtn.classList.remove('btn-added-state');
-      }, 1200);
+      if (inCart) {
+        // When already in cart, clicking opens the cart drawer for seamless review/checkout
+        ui.toggleDrawer('cart-drawer', true);
+      } else {
+        // Product not yet in cart: Add 1 to cart
+        store.addToCart(product, state.getSelectedColor(), state.getSelectedOption(), 1);
 
-      ui.showToast({
-        title: 'Added to Cart',
-        message: `${state.getQuantity()}x ${product.name} (${state.getSelectedColor()})`,
-        type: 'success',
-        actionText: 'View Cart',
-        onAction: () => ui.toggleDrawer('cart-drawer', true)
-      });
+        // Instantly reveal the - and + quantity controls with quantity 1
+        if (qtyWrap) qtyWrap.style.display = 'flex';
+        if (qtyVal) qtyVal.textContent = '1';
+        updateCartButtonElement(addCartBtn, true, 'long');
+        if (stickyAddBtn) updateCartButtonElement(stickyAddBtn, true, 'icon-only');
+
+        ui.showToast({
+          title: 'Added to Cart',
+          message: `${product.name} (${state.getSelectedColor()}) added to your shopping cart.`,
+          type: 'success',
+          actionText: 'View Cart',
+          onAction: () => ui.toggleDrawer('cart-drawer', true)
+        });
+      }
     });
   }
 
@@ -582,24 +637,26 @@ function attachPdpEvents(container, product, state) {
   if (stickyAddBtn) {
     stickyAddBtn.addEventListener('click', () => {
       sounds.playClick();
-      store.addToCart(product, state.getSelectedColor(), state.getSelectedOption(), state.getQuantity());
-      stickyAddBtn.innerHTML = `✓ Added`;
-      stickyAddBtn.classList.add('btn-added-state');
-      setTimeout(() => {
-        stickyAddBtn.innerHTML = `
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
-          <span>Add to Cart</span>
-        `;
-        stickyAddBtn.classList.remove('btn-added-state');
-      }, 1200);
+      const inCart = store.isInCart(product.id);
 
-      ui.showToast({
-        title: 'Added to Cart',
-        message: `${state.getQuantity()}x ${product.name} (${state.getSelectedColor()})`,
-        type: 'success',
-        actionText: 'View Cart',
-        onAction: () => ui.toggleDrawer('cart-drawer', true)
-      });
+      if (inCart) {
+        ui.toggleDrawer('cart-drawer', true);
+      } else {
+        store.addToCart(product, state.getSelectedColor(), state.getSelectedOption(), 1);
+
+        if (qtyWrap) qtyWrap.style.display = 'flex';
+        if (qtyVal) qtyVal.textContent = '1';
+        updateCartButtonElement(stickyAddBtn, true, 'icon-only');
+        if (addCartBtn) updateCartButtonElement(addCartBtn, true, 'long');
+
+        ui.showToast({
+          title: 'Added to Cart',
+          message: `${product.name} added to your shopping cart.`,
+          type: 'success',
+          actionText: 'View Cart',
+          onAction: () => ui.toggleDrawer('cart-drawer', true)
+        });
+      }
     });
   }
 
@@ -763,10 +820,16 @@ function attachPdpEvents(container, product, state) {
       const targetId = btn.dataset.id;
       const targetProd = store.state.products.find(p => p.id === targetId);
       if (targetProd) {
+        const alreadyInCart = store.isInCart(targetProd.id);
+        const currentQty = getProductCartQuantity(targetProd.id);
+
         store.addToCart(targetProd);
+        updateCartButtonElement(btn, true, 'short');
         ui.showToast({
-          title: 'Added to Cart',
-          message: `${targetProd.name} added.`,
+          title: alreadyInCart ? 'Cart Updated' : 'Added to Cart',
+          message: alreadyInCart
+            ? `Added another ${targetProd.name}. You now have ${currentQty + 1} in your cart.`
+            : `${targetProd.name} added to your shopping cart.`,
           type: 'success',
           actionText: 'View Cart',
           onAction: () => ui.toggleDrawer('cart-drawer', true)
@@ -818,6 +881,8 @@ export function renderQuickViewModal(productId) {
 
   const { currency } = store.state;
   const currentPriceObj = convertPrice(product.price, currency);
+  const qvInCart = store.isInCart(product.id);
+  const qvQty = getProductCartQuantity(product.id);
 
   modalContent.innerHTML = `
     <div class="quick-view-grid">
@@ -830,8 +895,9 @@ export function renderQuickViewModal(productId) {
         <p class="quick-view-desc">${product.description}</p>
         
         <div class="quick-view-actions">
-          <button class="btn btn-primary flex-1" id="quick-view-add-btn">
-            Add to Cart
+          <button class="btn btn-primary flex-1 ${qvInCart ? 'is-in-cart' : ''}" id="quick-view-add-btn" data-id="${product.id}" title="${qvInCart ? `${qvQty} in cart` : `Add ${product.name} to Cart`}" aria-label="${qvInCart ? `${product.name} is in cart (${qvQty})` : `Add ${product.name} to Cart`}">
+            <span class="pdp-cart-btn-icon">${qvInCart ? getCartGreenSvg(`qv-${product.id}`, 20) : getCartBlackSvg(`qv-${product.id}`, 20)}</span>
+            <span class="pdp-cart-btn-text">${getCartButtonStatement(qvInCart, qvQty, 'long')}</span>
           </button>
           <button class="btn btn-secondary" id="quick-view-full-btn">
             View Full Specs
@@ -841,13 +907,19 @@ export function renderQuickViewModal(productId) {
     </div>
   `;
 
-  modalContent.querySelector('#quick-view-add-btn')?.addEventListener('click', () => {
+  modalContent.querySelector('#quick-view-add-btn')?.addEventListener('click', (e) => {
     sounds.playClick();
+    const alreadyInCart = store.isInCart(product.id);
+    const currentQty = getProductCartQuantity(product.id);
+
     store.addToCart(product);
+    updateCartButtonElement(e.currentTarget, true, 'long');
     ui.closeModal('quick-view-modal');
     ui.showToast({
-      title: 'Added to Cart',
-      message: `${product.name} added to your cart.`,
+      title: alreadyInCart ? 'Cart Updated' : 'Added to Cart',
+      message: alreadyInCart
+        ? `Added another ${product.name}. You now have ${currentQty + 1} in your cart.`
+        : `${product.name} added to your shopping cart.`,
       type: 'success',
       actionText: 'View Cart',
       onAction: () => ui.toggleDrawer('cart-drawer', true)
