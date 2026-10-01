@@ -287,29 +287,41 @@ function setupUserHubDropdown() {
     }
   };
 
-  // Immediate reveal when pointer moves over the dropdown
-  hubWrap.addEventListener('pointerenter', () => {
-    openDropdown();
-  });
+  // Desktop hover traversal
+  if (window.matchMedia('(hover: hover) and (pointer: fine)').matches) {
+    hubWrap.addEventListener('pointerenter', () => {
+      if (store.state.user && store.state.user.isLoggedIn) {
+        openDropdown();
+      }
+    });
 
-  hubWrap.addEventListener('pointerleave', () => {
-    closeDropdown(false);
-  });
+    hubWrap.addEventListener('pointerleave', () => {
+      closeDropdown(false);
+    });
+  }
 
-  // Toggle on click (for mobile touch / direct click)
+  // Click handler for Account button
   accountBtn.addEventListener('click', (e) => {
     e.stopPropagation();
     sounds.playClick();
 
+    const isMobile = window.innerWidth <= 991;
+
+    // If not logged in -> ALWAYS open the Auth Modal directly
     if (!store.state.user || !store.state.user.isLoggedIn) {
-      if (dropdown.classList.contains('is-open')) {
-        closeDropdown(true);
-      } else {
-        openDropdown();
-      }
+      closeDropdown(true);
+      openAuthModal('login');
       return;
     }
 
+    // If logged in on mobile -> navigate directly to Account Hub
+    if (isMobile) {
+      closeDropdown(true);
+      store.setView('account', null, { tab: 'overview' });
+      return;
+    }
+
+    // If logged in on desktop -> toggle the dropdown menu
     const isOpen = dropdown.classList.contains('is-open') || dropdown.style.display === 'block';
     if (isOpen) {
       closeDropdown(true);
