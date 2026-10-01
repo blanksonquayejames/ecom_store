@@ -125,7 +125,6 @@ class UIManager {
     modal.classList.remove('is-open');
     if (backdrop) backdrop.classList.remove('is-active');
     document.body.classList.remove('no-scroll');
-    document.body.classList.remove('auth-modal-open');
   }
 
   /**

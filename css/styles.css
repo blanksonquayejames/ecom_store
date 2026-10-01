@@ -5607,7 +5607,7 @@ user-select: none;
 .modal {
   position: fixed;
   inset: 0;
-  z-index: 2500;
+  z-index: 130;
   display: none;
   align-items: center;
   justify-content: center;
@@ -5745,7 +5745,7 @@ user-select: none;
   background: rgba(15, 23, 42, 0.45);
   backdrop-filter: blur(4px);
   -webkit-backdrop-filter: blur(4px);
-  z-index: 2400;
+  z-index: 110;
   opacity: 0;
   pointer-events: none;
   transition: opacity var(--transition-fast);
@@ -6215,13 +6215,6 @@ user-select: none;
     background: rgba(15, 23, 42, 0.94) !important;
     border-bottom-color: rgba(255, 255, 255, 0.08) !important;
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4) !important;
-  }
-
-  /* Hide Header Navigation on Mobile when Auth Modal is Open */
-  body.auth-modal-open .site-header,
-  body.has-auth-modal-open .site-header,
-  body:has(#auth-modal.is-open) .site-header {
-    display: none !important;
   }
 
   /* Single Sleek Top Row (Zero wrapping, zero clutter) */

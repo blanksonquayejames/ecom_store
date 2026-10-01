@@ -43,13 +43,11 @@ export function openAuthModal(mode = 'login', options = {}) {
     }
   }
 
-  document.body.classList.add('auth-modal-open');
   setAuthMode(mode);
   ui.openModal('auth-modal');
 }
 
 export function closeAuthModal() {
-  document.body.classList.remove('auth-modal-open');
   const noticeEl = document.getElementById('auth-modal-notice');
   if (noticeEl) {
     noticeEl.style.display = 'none';
@@ -79,7 +77,7 @@ function setAuthMode(mode) {
     registerTab?.classList.remove('is-active');
     if (loginForm) loginForm.style.display = 'block';
     if (registerForm) registerForm.style.display = 'none';
-    if (title) title.textContent = '7th June Computers';
+    if (title) title.textContent = 'Welcome Back to 7th June';
   } else {
     registerTab?.classList.add('is-active');
     loginTab?.classList.remove('is-active');
