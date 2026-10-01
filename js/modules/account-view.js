@@ -76,16 +76,6 @@ function renderGuestGate(container) {
               Create New VIP Account (+500 Pts)
             </button>
           </div>
-
-          <div class="auth-demo-divider mt-4">
-            <span>OR 1-CLICK INSTANT ACCESS</span>
-          </div>
-          
-          <div class="guest-demo-pill-wrap mt-2">
-            <button class="btn btn-ghost btn-sm" id="guest-demo-julian-btn">
-              👑 Sign In as Julian Vance (VIP Member)
-            </button>
-          </div>
         </div>
 
       </div>
@@ -1105,50 +1095,6 @@ function attachGuestAccountEvents(container) {
   container.querySelector('#guest-open-reg-btn')?.addEventListener('click', () => {
     sounds.playClick();
     openAuthModal('register');
-  });
-
-  container.querySelector('#guest-demo-julian-btn')?.addEventListener('click', () => {
-    sounds.playSuccess();
-    const user = {
-      isLoggedIn: true,
-      name: 'Julian Vance',
-      email: 'julian.vance@7thjune.com',
-      phone: '+233 24 555 7788',
-      tier: 'Platinum Titan VIP',
-      points: 3450,
-      avatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=400&q=80',
-      addresses: [
-        {
-          id: 'addr-1',
-          type: 'Primary Office (Ghana)',
-          fullName: 'Julian Vance',
-          address: '7th June Tech Tower, Suite 400',
-          city: 'Accra',
-          region: 'Airport Residential Area',
-          country: 'Ghana',
-          phone: '+233 24 555 7788',
-          isDefault: true
-        },
-        {
-          id: 'addr-2',
-          type: 'Secondary Dispatch (USA)',
-          fullName: 'Julian Vance',
-          address: '742 Evergreen Terrace, Suite 800',
-          city: 'San Francisco',
-          region: 'CA 94107',
-          country: 'United States',
-          phone: '+1 (415) 890-4321',
-          isDefault: false
-        }
-      ]
-    };
-    store.setUser(user);
-    ui.showToast({
-      title: 'Welcome back, Julian!',
-      message: 'Signed in as Julian Vance. Order history & addresses ready.',
-      type: 'success'
-    });
-    renderAccountView(container, 'overview');
   });
 }
 

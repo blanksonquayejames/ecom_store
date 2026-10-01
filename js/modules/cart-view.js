@@ -141,6 +141,7 @@ export function renderCartView(container) {
                         <div class="cart-product-info">
                           <h3 class="cart-product-title" data-prod-id="${item.productId || item.id}">${item.name}</h3>
                           <span class="cart-product-subtext">${subtext}</span>
+                          <span class="cart-unit-price-mobile">${unitPriceFormatted} each</span>
                         </div>
                       </div>
 
@@ -166,16 +167,6 @@ export function renderCartView(container) {
                   `;
                 }).join('')}
               </div>
-            </div>
-
-            <!-- Bottom Actions -->
-            <div class="cart-bottom-actions">
-              <button type="button" class="btn btn-outline-secondary cart-continue-btn" id="cart-continue-shopping-btn">
-                ← Continue Shopping
-              </button>
-              <button type="button" class="btn btn-outline-danger cart-clear-btn" id="cart-clear-all-btn">
-                Clear Cart
-              </button>
             </div>
           </div>
 
@@ -207,24 +198,6 @@ export function renderCartView(container) {
                 </div>
               </div>
 
-              <!-- Promo Code Box -->
-              <div class="summary-promo-section">
-                ${appliedPromo ? `
-                  <div class="applied-promo-chip">
-                    <div class="promo-chip-info">
-                      <span class="promo-chip-code">${appliedPromo.code}</span>
-                      <span class="promo-chip-desc">(${appliedPromo.description})</span>
-                    </div>
-                    <button type="button" class="remove-promo-btn" id="cart-remove-promo-btn" title="Remove promo">&times;</button>
-                  </div>
-                ` : `
-                  <div class="promo-input-group">
-                    <input type="text" class="form-control promo-input" id="cart-promo-input" placeholder="Promo code (e.g. SAVE10)" />
-                    <button type="button" class="btn btn-secondary promo-apply-btn" id="cart-apply-promo-btn">Apply</button>
-                  </div>
-                `}
-              </div>
-
               <div class="summary-divider"></div>
 
               <!-- Final Total Row -->
@@ -233,9 +206,14 @@ export function renderCartView(container) {
                 <span class="total-val">${convertPrice(summary.total, currency).formatted}</span>
               </div>
 
-              <!-- Green Checkout CTA -->
-              <button type="button" class="btn cart-checkout-green-btn w-100" id="cart-proceed-checkout-btn">
+              <!-- Primary Checkout CTA -->
+              <button type="button" class="btn cart-checkout-btn cart-checkout-green-btn w-100" id="cart-proceed-checkout-btn">
                 Proceed to Checkout
+              </button>
+
+              <!-- Continue Shopping CTA -->
+              <button type="button" class="btn cart-continue-btn w-100" id="cart-continue-shopping-btn">
+                ← Continue Shopping
               </button>
             </div>
           </div>
@@ -250,24 +228,9 @@ export function renderCartView(container) {
 
 function attachCartViewEvents(container) {
   // Continue shopping button
-
-  // Continue shopping button
   container.querySelector('#cart-continue-shopping-btn')?.addEventListener('click', () => {
     sounds.playClick();
     store.setView('catalog');
-  });
-
-  // Clear all items button
-  container.querySelector('#cart-clear-all-btn')?.addEventListener('click', () => {
-    sounds.playClick();
-    if (confirm('Are you sure you want to clear all items from your cart?')) {
-      store.clearCart();
-      ui.showToast({
-        title: 'Cart Cleared',
-        message: 'All items removed from your shopping cart.',
-        type: 'info'
-      });
-    }
   });
 
   // Quantity Minus
@@ -330,49 +293,7 @@ function attachCartViewEvents(container) {
     });
   });
 
-  // Apply Promo
-  const promoInput = container.querySelector('#cart-promo-input');
-  const applyBtn = container.querySelector('#cart-apply-promo-btn');
-  if (applyBtn && promoInput) {
-    const handleApply = () => {
-      const code = promoInput.value.trim();
-      if (!code) return;
-      const res = store.applyPromo(code);
-      if (res.success) {
-        sounds.playSuccess();
-        ui.showToast({
-          title: 'Coupon Applied!',
-          message: res.message,
-          type: 'success'
-        });
-      } else {
-        ui.showToast({
-          title: 'Invalid Coupon',
-          message: res.message,
-          type: 'error'
-        });
-      }
-    };
 
-    applyBtn.addEventListener('click', handleApply);
-    promoInput.addEventListener('keydown', (e) => {
-      if (e.key === 'Enter') {
-        e.preventDefault();
-        handleApply();
-      }
-    });
-  }
-
-  // Remove Promo
-  container.querySelector('#cart-remove-promo-btn')?.addEventListener('click', () => {
-    sounds.playClick();
-    store.clearPromo();
-    ui.showToast({
-      title: 'Coupon Removed',
-      message: 'Discount code removed from cart.',
-      type: 'info'
-    });
-  });
 
   // Proceed to Checkout
   container.querySelector('#cart-proceed-checkout-btn')?.addEventListener('click', () => {

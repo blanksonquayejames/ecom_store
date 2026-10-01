@@ -801,14 +801,6 @@ function renderCheckoutAuthGate(container, cart, currency) {
             </button>
           </div>
 
-          <!-- VIP Quick Demo Sign In -->
-          <div class="auth-demo-divider mt-4">
-            <span>OR 1-CLICK INSTANT ACCESS</span>
-          </div>
-          <div class="auth-demo-buttons">
-            <button type="button" class="btn btn-outline btn-sm w-100" id="chk-gate-demo-julian">
-              👑 Instant Sign In as Julian Vance (VIP Member)
-            </button>
           </div>
         </div>
 
@@ -837,49 +829,5 @@ function renderCheckoutAuthGate(container, cart, currency) {
       notice: '<strong>Registration:</strong> Create your 7th June account to complete your purchase.'
     });
   });
-
-  container.querySelector('#chk-gate-demo-julian')?.addEventListener('click', () => {
-    sounds.playSuccess();
-    const user = {
-      isLoggedIn: true,
-      role: 'customer',
-      name: 'Julian Vance',
-      email: 'julian.vance@7thjune.com',
-      phone: '+233 24 555 7788',
-      tier: 'Platinum Titan VIP',
-      points: 3450,
-      avatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=400&q=80',
-      addresses: [
-        {
-          id: 'addr-1',
-          type: 'Primary Office (Ghana)',
-          fullName: 'Julian Vance',
-          address: '7th June Tech Tower, Suite 400',
-          city: 'Accra',
-          region: 'Airport Residential Area',
-          country: 'Ghana',
-          phone: '+233 24 555 7788',
-          isDefault: true
-        },
-        {
-          id: 'addr-2',
-          type: 'Secondary Dispatch (USA)',
-          fullName: 'Julian Vance',
-          address: '742 Evergreen Terrace, Suite 800',
-          city: 'San Francisco',
-          region: 'CA 94107',
-          country: 'United States',
-          phone: '+1 (415) 890-4321',
-          isDefault: false
-        }
-      ]
-    };
-    store.setUser(user);
-    ui.showToast({
-      title: 'Welcome back, Julian!',
-      message: 'Signed in as Julian Vance. Saved delivery addresses loaded.',
-      type: 'success'
-    });
-    renderCheckoutView(container);
-  });
 }
+
