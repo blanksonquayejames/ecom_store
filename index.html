@@ -881,11 +881,11 @@
   <div class="modal" id="auth-modal" role="dialog" aria-modal="true">
     <div class="modal-dialog modal-md">
       <button class="modal-close-btn"
-        onclick="document.getElementById('auth-modal').classList.remove('is-open'); document.getElementById('global-backdrop').classList.remove('is-active'); document.body.classList.remove('no-scroll');">&times;</button>
+        onclick="document.getElementById('auth-modal').classList.remove('is-open'); document.getElementById('global-backdrop').classList.remove('is-active'); document.body.classList.remove('no-scroll'); document.body.classList.remove('auth-modal-open');">&times;</button>
       <div class="auth-modal-wrap">
         <div class="auth-modal-header text-center">
           <img src="image/7th June logo.png" alt="7th June Logo" class="auth-logo-img" />
-          <h2 id="auth-modal-title">Welcome to 7th June Computers</h2>
+          <h2 id="auth-modal-title">7th June Computers</h2>
           <p class="auth-modal-sub">Sign in to track orders, save shipping addresses, and unlock VIP points.</p>
           <div class="auth-modal-notice" id="auth-modal-notice" style="display: none;"></div>
         </div>
