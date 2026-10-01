@@ -66,21 +66,15 @@ function triggerAuthSuccess(user) {
 }
 
 function setAuthMode(mode) {
-  const loginTab = document.getElementById('auth-tab-login');
-  const registerTab = document.getElementById('auth-tab-register');
   const loginForm = document.getElementById('auth-form-login');
   const registerForm = document.getElementById('auth-form-register');
   const title = document.getElementById('auth-modal-title');
 
   if (mode === 'login') {
-    loginTab?.classList.add('is-active');
-    registerTab?.classList.remove('is-active');
     if (loginForm) loginForm.style.display = 'block';
     if (registerForm) registerForm.style.display = 'none';
-    if (title) title.textContent = 'Welcome Back to 7th June';
+    if (title) title.textContent = 'Welcome to 7th June Computers';
   } else {
-    registerTab?.classList.add('is-active');
-    loginTab?.classList.remove('is-active');
     if (registerForm) registerForm.style.display = 'block';
     if (loginForm) loginForm.style.display = 'none';
     if (title) title.textContent = '7th June Computers';
@@ -91,15 +85,17 @@ function setupAuthEvents() {
   const modal = document.getElementById('auth-modal');
   if (!modal) return;
 
-  // Tabs
-  document.getElementById('auth-tab-login')?.addEventListener('click', () => {
-    sounds.playClick();
-    setAuthMode('login');
-  });
-
-  document.getElementById('auth-tab-register')?.addEventListener('click', () => {
+  // Mode Switch Links
+  document.getElementById('auth-switch-to-register')?.addEventListener('click', (e) => {
+    e.preventDefault();
     sounds.playClick();
     setAuthMode('register');
+  });
+
+  document.getElementById('auth-switch-to-login')?.addEventListener('click', (e) => {
+    e.preventDefault();
+    sounds.playClick();
+    setAuthMode('login');
   });
 
   // Login Submit
@@ -192,7 +188,7 @@ function setupAuthEvents() {
     store.setUser(user);
     triggerAuthSuccess(user);
     ui.showToast({
-      title: `Welcome to 7th June, ${firstName}!`,
+      title: `Welcome to 7th June Computers, ${firstName}!`,
       message: `Your VIP account has been created with 500 bonus reward points.`,
       type: 'success'
     });

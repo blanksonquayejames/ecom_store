@@ -5607,11 +5607,16 @@ user-select: none;
 .modal {
   position: fixed;
   inset: 0;
-  z-index: 130;
+  z-index: 2000 !important;
   display: none;
   align-items: center;
   justify-content: center;
   padding: var(--space-lg);
+}
+
+/* Hide site navbar when modal is open */
+body.no-scroll .site-header {
+  display: none !important;
 }
 
 .modal.is-open {
@@ -5742,10 +5747,10 @@ user-select: none;
 .global-backdrop {
   position: fixed;
   inset: 0;
-  background: rgba(15, 23, 42, 0.45);
-  backdrop-filter: blur(4px);
-  -webkit-backdrop-filter: blur(4px);
-  z-index: 110;
+  background: rgba(15, 23, 42, 0.55);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  z-index: 1950 !important;
   opacity: 0;
   pointer-events: none;
   transition: opacity var(--transition-fast);
@@ -8895,26 +8900,29 @@ user-select: none;
   margin-bottom: var(--space-lg);
 }
 
-.auth-tabs-row {
+.auth-switch-wrap {
   display: flex;
-  border-bottom: 2px solid var(--border-subtle);
-  margin-bottom: var(--space-lg);
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  font-size: 0.875rem;
+  margin-top: 1.25rem;
 }
 
-.auth-tab-btn {
-  flex: 1;
-  padding: 0.75rem;
-  font-size: 0.9375rem;
-  font-weight: 700;
-  color: var(--text-muted);
-  border-bottom: 2px solid transparent;
-  margin-bottom: -2px;
-  transition: var(--transition-fast);
-}
-
-.auth-tab-btn.is-active {
+.auth-switch-link-btn {
+  background: transparent;
+  border: none;
   color: #DC2626;
-  border-bottom-color: #DC2626;
+  font-weight: 700;
+  cursor: pointer;
+  padding: 0;
+  font-size: 0.875rem;
+  text-decoration: underline;
+  transition: color 0.15s ease;
+}
+
+.auth-switch-link-btn:hover {
+  color: #B91C1C;
 }
 
 .auth-extra-row {

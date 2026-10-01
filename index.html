@@ -890,11 +890,6 @@
           <div class="auth-modal-notice" id="auth-modal-notice" style="display: none;"></div>
         </div>
 
-        <div class="auth-tabs-row">
-          <button class="auth-tab-btn is-active" id="auth-tab-login">Sign In</button>
-          <button class="auth-tab-btn" id="auth-tab-register">Create Account</button>
-        </div>
-
         <!-- Sign In Form -->
         <form class="auth-form-body" id="auth-form-login">
           <div class="form-group">
@@ -918,6 +913,10 @@
           <button type="submit" class="btn btn-primary w-100 mt-3 btn-lg">
             Sign In to Account
           </button>
+          <div class="auth-switch-wrap text-center mt-3">
+            <span class="text-muted text-sm">Don't have an account?</span>
+            <button type="button" class="auth-switch-link-btn" id="auth-switch-to-register">Create Account</button>
+          </div>
         </form>
 
         <!-- Register Form -->
@@ -937,6 +936,10 @@
           <button type="submit" class="btn btn-primary w-100 mt-3 btn-lg">
             Create Account
           </button>
+          <div class="auth-switch-wrap text-center mt-3">
+            <span class="text-muted text-sm">Already have an account?</span>
+            <button type="button" class="auth-switch-link-btn" id="auth-switch-to-login">Sign In</button>
+          </div>
         </form>
       </div>
     </div>
