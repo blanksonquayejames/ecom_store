@@ -62,16 +62,16 @@ export function getCartGreenSvg(uniqueId = '', size = 20) {
       </defs>
       <!-- Cart Body with Cutout Gap for Badge -->
       <g mask="url(#${maskId})">
-        <path d="M 18 20 L 25 58 C 25.5 61 27.5 63 30.5 63 L 83 63 C 86 63 88 61 88.5 58 L 95 20 Z" fill="#00C853" />
-        <path d="M 4 8 L 15 8 C 17 8 18.5 9.3 19 11.2 L 25 45" stroke="#00C853" stroke-width="5.5" stroke-linecap="round" stroke-linejoin="round" />
+        <path d="M 18 20 L 25 58 C 25.5 61 27.5 63 30.5 63 L 83 63 C 86 63 88 61 88.5 58 L 95 20 Z" fill="#DC2626" />
+        <path d="M 4 8 L 15 8 C 17 8 18.5 9.3 19 11.2 L 25 45" stroke="#DC2626" stroke-width="5.5" stroke-linecap="round" stroke-linejoin="round" />
       </g>
       <!-- Lower Chassis Runner -->
-      <path d="M 23 59 C 18.5 59 16.5 63 16.5 67 C 16.5 71.5 19.5 73.5 24 73.5 L 89 73.5" stroke="#00C853" stroke-width="5.5" stroke-linecap="round" fill="none" />
-      <!-- Solid Wheels as in green icon -->
-      <circle cx="31" cy="85" r="9" fill="#00C853" />
-      <circle cx="81" cy="85" r="9" fill="#00C853" />
+      <path d="M 23 59 C 18.5 59 16.5 63 16.5 67 C 16.5 71.5 19.5 73.5 24 73.5 L 89 73.5" stroke="#DC2626" stroke-width="5.5" stroke-linecap="round" fill="none" />
+      <!-- Solid Wheels as in icon -->
+      <circle cx="31" cy="85" r="9" fill="#DC2626" />
+      <circle cx="81" cy="85" r="9" fill="#DC2626" />
       <!-- Badge Circle -->
-      <circle cx="58" cy="27" r="17.5" fill="#00C853" />
+      <circle cx="58" cy="27" r="17.5" fill="#DC2626" />
       <!-- Checkmark (✓) -->
       <path d="M 47.5 27.5 L 54.5 34.5 L 68.5 19.5" stroke="#FFFFFF" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round" fill="none" />
     </svg>

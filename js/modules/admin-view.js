@@ -453,7 +453,7 @@ function renderOverviewTab() {
         <div class="admin-stat-card">
           <div class="stat-card-top">
             <span class="stat-label">GROSS SALES REVENUE</span>
-            <span class="stat-icon-wrap bg-blue-light">💰</span>
+            <span class="stat-icon-wrap bg-red-light">💰</span>
           </div>
           <div class="stat-value">${convertPrice(totalRevenue, currency).formatted}</div>
           <div class="stat-trend trend-positive">
@@ -475,10 +475,10 @@ function renderOverviewTab() {
         <div class="admin-stat-card">
           <div class="stat-card-top">
             <span class="stat-label">HARDWARE INVENTORY</span>
-            <span class="stat-icon-wrap bg-green-light">📦</span>
+            <span class="stat-icon-wrap bg-red-light">📦</span>
           </div>
           <div class="stat-value">${products.length} Products</div>
-          <div class="stat-trend ${lowStockProducts.length > 0 ? 'text-amber' : 'text-green'}">
+          <div class="stat-trend ${lowStockProducts.length > 0 ? 'text-orange' : 'text-red'}">
             <span>${lowStockProducts.length} low stock</span> • ${outOfStockProducts.length} out of stock
           </div>
         </div>
@@ -486,10 +486,10 @@ function renderOverviewTab() {
         <div class="admin-stat-card">
           <div class="stat-card-top">
             <span class="stat-label">PAYMENT CHANNEL</span>
-            <span class="stat-icon-wrap bg-yellow-light">📲</span>
+            <span class="stat-icon-wrap bg-orange-light">📲</span>
           </div>
           <div class="stat-value">100% MoMo</div>
-          <div class="stat-trend text-blue">
+          <div class="stat-trend text-red">
             MTN MoMo • Telecel Cash • AT Money
           </div>
         </div>
@@ -851,7 +851,7 @@ function renderSubAdminsTab() {
                 ${subAdmins.map(sub => {
     const permBadges = (sub.permissions || []).map(p => {
       const label = p === 'orders' ? 'Order Status' : (p.charAt(0).toUpperCase() + p.slice(1));
-      return `<span class="badge-pill bg-blue-subtle text-blue">${label}</span>`;
+      return `<span class="badge-pill bg-red-subtle text-red">${label}</span>`;
     }).join(' ');
 
     const initials = sub.name.split(' ').map(n => n[0]).join('').substring(0, 2).toUpperCase() || 'SA';
@@ -863,7 +863,7 @@ function renderSubAdminsTab() {
                           <span class="admin-avatar-sm">${initials}</span>
                           <div>
                             <strong>${sub.name}</strong>
-                            <div class="text-xs text-green">● Active Sub-Admin</div>
+                            <div class="text-xs text-red">● Active Sub-Admin</div>
                           </div>
                         </div>
                       </td>

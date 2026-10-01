@@ -11,6 +11,7 @@ import { renderCatalogView, updateProductsList } from './modules/catalog-view.js
 import { renderProductDetailPage, renderQuickViewModal } from './modules/pdp-view.js';
 import { initCartDrawer, updateCartBadges } from './modules/cart-drawer.js';
 import { renderCheckoutView } from './modules/checkout-view.js';
+import { renderCartView } from './modules/cart-view.js';
 import { renderAccountView } from './modules/account-view.js';
 import { initAuthModal, openAuthModal } from './modules/auth-modal.js';
 import { renderAdminView } from './modules/admin-view.js';
@@ -34,6 +35,9 @@ function parseHashRoute() {
     case 'product':
     case 'pdp':
       return { page: 'pdp', productId: sub, tab: null };
+    case 'cart':
+    case 'shopping-cart':
+      return { page: 'cart', productId: null, tab: null };
     case 'checkout':
       return { page: 'checkout', productId: null, tab: null };
     case 'account':
@@ -49,6 +53,8 @@ function syncHash(page, productId = null, tab = null) {
   let targetHash = '#/catalog';
   if (page === 'pdp' && productId) {
     targetHash = `#/product/${productId}`;
+  } else if (page === 'cart') {
+    targetHash = '#/cart';
   } else if (page === 'checkout') {
     targetHash = '#/checkout';
   } else if (page === 'account') {
@@ -149,6 +155,9 @@ function handleRoute(page, productId = null, tab = null, updateHash = true) {
       break;
     case 'pdp':
       renderProductDetailPage(mainViewContainer, productId);
+      break;
+    case 'cart':
+      renderCartView(mainViewContainer);
       break;
     case 'checkout':
       renderCheckoutView(mainViewContainer);
@@ -484,14 +493,10 @@ function setupHeaderEvents() {
   // Setup Custom Currency Dropdown
   setupCurrencyDropdown();
 
-  // Bag / Cart Button — Opens the Amazon-style right-docked mini-cart rail
+  // Bag / Cart Button — Navigates to Shopping Cart page
   document.getElementById('header-cart-btn')?.addEventListener('click', () => {
-    const rail = document.getElementById('amazon-mini-cart-rail');
-    if (rail && rail.classList.contains('is-open')) {
-      if (window.closeMiniCartRail) window.closeMiniCartRail();
-    } else {
-      if (window.openMiniCartRail) window.openMiniCartRail();
-    }
+    sounds.playClick();
+    store.setView('cart');
   });
 }
 

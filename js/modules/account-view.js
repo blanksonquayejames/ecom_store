@@ -236,7 +236,7 @@ function renderOverviewTab(user, orders, currency, defaultAddress) {
         </div>
         <div class="account-metric-card">
           <span class="metric-label">ACTIVE DELIVERIES</span>
-          <div class="metric-number text-blue">${inTransitOrders.length}</div>
+          <div class="metric-number text-red">${inTransitOrders.length}</div>
           <span class="metric-sub">In transit via Courier</span>
         </div>
         <div class="account-metric-card">
@@ -246,7 +246,7 @@ function renderOverviewTab(user, orders, currency, defaultAddress) {
         </div>
         <div class="account-metric-card">
           <span class="metric-label">VIP REWARD CREDIT</span>
-          <div class="metric-number text-green">${convertPrice(Math.floor(user.points / 10), currency).formatted}</div>
+          <div class="metric-number text-red">${convertPrice(Math.floor(user.points / 10), currency).formatted}</div>
           <span class="metric-sub">Ready to redeem</span>
         </div>
       </div>
@@ -1197,7 +1197,7 @@ export function showOrderReceiptModal(order) {
           <span class="meta-label">Carrier & Logistics:</span>
           <strong>${order.carrier || 'FedEx Express Courier'}</strong>
           <span>Waybill: <code>${order.trackingNumber}</code></span>
-          <span>Status: <strong class="text-blue">${order.status}</strong></span>
+          <span>Status: <strong class="text-red">${order.status}</strong></span>
         </div>
         <div class="receipt-meta-box">
           <span class="meta-label">Mobile Money Gateway:</span>
@@ -1265,7 +1265,7 @@ export function showOrderReceiptModal(order) {
           ` : ''}
           <div class="receipt-total-row">
             <span>Insured Courier Shipping</span>
-            <span>${order.shipping === 0 ? '<strong class="text-green">COMPLIMENTARY</strong>' : convertPrice(order.shipping, currency).formatted}</span>
+            <span>${order.shipping === 0 ? '<strong class="text-red">COMPLIMENTARY</strong>' : convertPrice(order.shipping, currency).formatted}</span>
           </div>
           <div class="receipt-total-row">
             <span>Tax &amp; VAT</span>

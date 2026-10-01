@@ -136,7 +136,7 @@ export function renderCompareModal() {
             </tr>
             <tr>
               <td class="spec-label">Stock Status</td>
-              ${items.map(item => `<td><span class="text-green">✓ ${item.stock} in Zurich Vault</span></td>`).join('')}
+              ${items.map(item => `<td><span class="text-red">✓ ${item.stock} in Zurich Vault</span></td>`).join('')}
             </tr>
             ${allSpecKeys.map(key => `
               <tr>

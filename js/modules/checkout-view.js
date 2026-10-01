@@ -126,7 +126,7 @@ export function renderCheckoutView(container) {
             ` : ''}
             <div class="chk-cost-row">
               <span>White Glove Logistics</span>
-              <span>${summary.shipping === 0 ? '<strong class="text-green">COMPLIMENTARY</strong>' : convertPrice(summary.shipping, currency).formatted}</span>
+              <span>${summary.shipping === 0 ? '<strong class="text-red">COMPLIMENTARY</strong>' : convertPrice(summary.shipping, currency).formatted}</span>
             </div>
             <div class="chk-cost-row">
               <span>Estimated Tax & Duty</span>
@@ -385,7 +385,7 @@ export function renderCheckoutView(container) {
                 </div>
                 <div class="chk-cost-row">
                   <span>White Glove Logistics</span>
-                  <span>${summary.shipping === 0 ? '<strong class="text-green">COMPLIMENTARY</strong>' : convertPrice(summary.shipping, currency).formatted}</span>
+                  <span>${summary.shipping === 0 ? '<strong class="text-red">COMPLIMENTARY</strong>' : convertPrice(summary.shipping, currency).formatted}</span>
                 </div>
                 <div class="chk-cost-row">
                   <span>Estimated Tax & Duty</span>
@@ -669,7 +669,7 @@ export function renderOrderConfirmation(container, order) {
                 ` : ''}
                 <div class="summary-line">
                   <span>Insured Shipping</span>
-                  <span>${order.shipping === 0 ? '<strong class="text-green">COMPLIMENTARY</strong>' : convertPrice(order.shipping, currency).formatted}</span>
+                  <span>${order.shipping === 0 ? '<strong class="text-red">COMPLIMENTARY</strong>' : convertPrice(order.shipping, currency).formatted}</span>
                 </div>
                 <div class="summary-line">
                   <span>Tax & Import Duty</span>

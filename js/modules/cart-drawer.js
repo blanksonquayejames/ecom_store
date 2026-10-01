@@ -211,7 +211,7 @@ export function renderCartDrawerContent() {
       ` : ''}
       <div class="summary-line">
         <span>White Glove Courier</span>
-        <span>${summary.shipping === 0 ? '<strong class="text-green">COMPLIMENTARY</strong>' : convertPrice(summary.shipping, currency).formatted}</span>
+        <span>${summary.shipping === 0 ? '<strong class="text-red">COMPLIMENTARY</strong>' : convertPrice(summary.shipping, currency).formatted}</span>
       </div>
       <div class="summary-line">
         <span>Estimated Duty &amp; Tax (8%)</span>
@@ -392,11 +392,11 @@ export function initMiniCartRail() {
     closeMiniCartRail();
   });
 
-  // Bind "Go to Cart" button — opens the full cart drawer
+  // Bind "Go to Cart" button — opens the full Cart Page view
   document.getElementById('mini-cart-goto-btn')?.addEventListener('click', () => {
     sounds.playClick();
     closeMiniCartRail();
-    ui.toggleDrawer('cart-drawer', true);
+    store.setView('cart');
   });
 
   // Bind edge tab to re-open rail
