@@ -3544,7 +3544,7 @@ user-select: none;
 
 .suggested-products-grid {
   display: grid;
-  grid-template-columns: repeat(2, 1fr);
+  grid-template-columns: repeat(3, 1fr);
   gap: var(--space-lg);
 }
 
@@ -3556,7 +3556,13 @@ user-select: none;
   height: 220px;
 }
 
-@media (max-width: 1024px) {
+@media (max-width: 1100px) {
+  .suggested-products-grid {
+    gap: var(--space-md);
+  }
+}
+
+@media (max-width: 860px) {
   .suggested-products-grid {
     grid-template-columns: repeat(2, 1fr);
   }

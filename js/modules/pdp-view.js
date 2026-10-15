@@ -30,7 +30,7 @@ export function renderProductDetailPage(container, productId) {
   const explicitPaired = pairedIds.map(id => store.state.products.find(p => p.id === id)).filter(Boolean);
   const sameCategory = store.state.products.filter(p => p.id !== product.id && p.category === product.category && !pairedIds.includes(p.id));
   const otherBestSellers = store.state.products.filter(p => p.id !== product.id && !pairedIds.includes(p.id) && (p.isBestSeller || p.featured));
-  const suggestedProducts = Array.from(new Set([...explicitPaired, ...sameCategory, ...otherBestSellers])).slice(0, 4);
+  const suggestedProducts = Array.from(new Set([...explicitPaired, ...sameCategory, ...otherBestSellers])).slice(0, 3);
 
   const galleryList = product.gallery && product.gallery.length > 0 ? product.gallery : [product.heroImage];
 
