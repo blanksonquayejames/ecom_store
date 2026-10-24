@@ -4,16 +4,23 @@
  */
 
 export const CURRENCIES = {
-  GHS: { symbol: 'GH₵', code: 'GHS', rate: 15.65, name: 'Ghanaian Cedi', format: (val) => `GH₵${val.toLocaleString('en-GH', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}` },
-  USD: { symbol: '$', code: 'USD', rate: 1.0, name: 'US Dollar', format: (val) => `$${val.toLocaleString('en-US', { minimumFractionDigits: 0, maximumFractionDigits: 0 })}` }
+  GHS: {
+    symbol: 'GH₵',
+    code: 'GHS',
+    rate: 15.65,
+    name: 'Ghanaian Cedi',
+    format: (val) => `GH₵${val.toLocaleString('en-GH', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`
+  }
 };
 
-export function convertPrice(usdAmount, targetCurrencyCode = 'USD') {
-  const currency = CURRENCIES[targetCurrencyCode] || CURRENCIES.USD;
-  const converted = usdAmount * currency.rate;
+export function convertPrice(usdAmount, targetCurrencyCode = 'GHS') {
+  const currency = CURRENCIES.GHS;
+  const num = typeof usdAmount === 'number' ? usdAmount : Number(usdAmount) || 0;
+  const converted = num * currency.rate;
   return {
     raw: converted,
     formatted: currency.format(converted),
     currency
   };
 }
+

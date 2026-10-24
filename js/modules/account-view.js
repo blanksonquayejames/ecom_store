@@ -632,7 +632,7 @@ function renderRewardsTab(user, currency) {
             <span class="tier-req">0 - 1,499 pts</span>
           </div>
           <ul class="tier-perks-list">
-            <li>✓ Standard reward points (1 pt / $1)</li>
+            <li>✓ Standard reward points (1 pt / GH₵15)</li>
             <li>✓ Annual member gift</li>
             <li>✓ Email priority dispatch</li>
           </ul>
@@ -672,7 +672,7 @@ function renderRewardsTab(user, currency) {
 
         <div class="redemption-options-row">
           <div class="redeem-option-card">
-            <h4>$5 Off Voucher</h4>
+            <h4>GH₵75 Off Voucher</h4>
             <span class="pts-cost">500 PTS</span>
             <button class="btn btn-secondary btn-sm mt-2 redeem-voucher-btn" data-pts="500" data-discount="5" data-code="VIP5">
               Redeem Code
@@ -680,7 +680,7 @@ function renderRewardsTab(user, currency) {
           </div>
 
           <div class="redeem-option-card">
-            <h4>$10 Off Voucher</h4>
+            <h4>GH₵150 Off Voucher</h4>
             <span class="pts-cost">1,000 PTS</span>
             <button class="btn btn-secondary btn-sm mt-2 redeem-voucher-btn" data-pts="1000" data-discount="10" data-code="VIP10">
               Redeem Code
@@ -688,7 +688,7 @@ function renderRewardsTab(user, currency) {
           </div>
 
           <div class="redeem-option-card">
-            <h4>$25 Off Voucher</h4>
+            <h4>GH₵375 Off Voucher</h4>
             <span class="pts-cost">2,500 PTS</span>
             <button class="btn btn-secondary btn-sm mt-2 redeem-voucher-btn" data-pts="2500" data-discount="25" data-code="VIP25">
               Redeem Code
@@ -982,13 +982,13 @@ function attachAccountPaneSpecificEvents(container, tab) {
           discountPercent: 0,
           discountAmount: discount,
           minOrder: discount * 2,
-          description: `VIP Loyalty Voucher ($${discount} Off)`
+          description: `VIP Loyalty Voucher (GH₵${Math.round(discount * 15.65)} Off)`
         });
         store.applyPromo(code);
 
         ui.showToast({
           title: `Voucher ${code} Unlocked!`,
-          message: `$${discount} discount applied directly to your cart.`,
+          message: `GH₵${Math.round(discount * 15.65)} discount applied directly to your cart.`,
           type: 'success',
           actionText: 'View Cart',
           onAction: () => ui.toggleDrawer('cart-drawer', true)
@@ -1089,12 +1089,12 @@ function attachGuestAccountEvents(container) {
 
   container.querySelector('#guest-open-login-btn')?.addEventListener('click', () => {
     sounds.playClick();
-    openAuthModal('login');
+    store.setView('auth', null, { tab: 'login', mode: 'login' });
   });
 
   container.querySelector('#guest-open-reg-btn')?.addEventListener('click', () => {
     sounds.playClick();
-    openAuthModal('register');
+    store.setView('auth', null, { tab: 'register', mode: 'register' });
   });
 }
 

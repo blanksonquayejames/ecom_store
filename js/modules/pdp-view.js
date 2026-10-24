@@ -669,15 +669,7 @@ function attachPdpEvents(container, product, state) {
 
       const isLoggedIn = !!(store.state.user && store.state.user.isLoggedIn);
       if (!isLoggedIn) {
-        ui.showToast({
-          title: 'Sign In Required',
-          message: 'Please sign in or create an account to proceed to checkout.',
-          type: 'info'
-        });
-        openAuthModal('login', {
-          redirectTo: 'checkout',
-          notice: '<strong>Sign In Required:</strong> Please sign in or create an account to complete your purchase.'
-        });
+        store.setView('auth', null, { redirectTo: 'checkout', tab: 'login', mode: 'login' });
         return;
       }
       store.setView('checkout');
@@ -693,15 +685,7 @@ function attachPdpEvents(container, product, state) {
 
       const isLoggedIn = !!(store.state.user && store.state.user.isLoggedIn);
       if (!isLoggedIn) {
-        ui.showToast({
-          title: 'Sign In Required',
-          message: 'Please sign in or create an account to proceed to checkout.',
-          type: 'info'
-        });
-        openAuthModal('login', {
-          redirectTo: 'checkout',
-          notice: '<strong>Sign In Required:</strong> Please sign in or create an account to complete your purchase.'
-        });
+        store.setView('auth', null, { redirectTo: 'checkout', tab: 'login', mode: 'login' });
         return;
       }
       store.setView('checkout');

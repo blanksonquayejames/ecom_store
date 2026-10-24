@@ -13442,3 +13442,62 @@ body[data-view="account"] .header-inner {
 .brand-sub {
   color: #DC2626 !important;
 }
+
+/* ==========================================================================
+   Admin View Isolation: Hide storefront navigation, currency & announcements
+   ========================================================================== */
+body[data-view="admin"] #site-header,
+body[data-view="admin"] #top-announcement-bar,
+body[data-view="admin"] .announcement-bar,
+body[data-view="admin"] .mobile-bottom-nav,
+body[data-view="admin"] .mobile-header-search-bar {
+  display: none !important;
+  visibility: hidden !important;
+  height: 0 !important;
+  overflow: hidden !important;
+}
+
+/* ==========================================================================
+   Subtotal Menu (Amazon-Style Mini-Cart Rail & Edge Tab) Visibility Rules
+   MUST NOT SHOW on:
+   1. Cart page (data-view="cart")
+   2. Delivery/checkout process (data-view="checkout")
+   3. Admin section (data-view="admin")
+   4. Client Auth view (data-view="auth")
+   ========================================================================== */
+body[data-view="cart"] #amazon-mini-cart-rail,
+body[data-view="cart"] .amazon-mini-cart-rail,
+body[data-view="cart"] #mini-cart-edge-tab,
+body[data-view="cart"] .mini-cart-edge-tab,
+body[data-view="checkout"] #amazon-mini-cart-rail,
+body[data-view="checkout"] .amazon-mini-cart-rail,
+body[data-view="checkout"] #mini-cart-edge-tab,
+body[data-view="checkout"] .mini-cart-edge-tab,
+body[data-view="admin"] #amazon-mini-cart-rail,
+body[data-view="admin"] .amazon-mini-cart-rail,
+body[data-view="admin"] #mini-cart-edge-tab,
+body[data-view="admin"] .mini-cart-edge-tab,
+body[data-view="auth"] #amazon-mini-cart-rail,
+body[data-view="auth"] .amazon-mini-cart-rail,
+body[data-view="auth"] #mini-cart-edge-tab,
+body[data-view="auth"] .mini-cart-edge-tab {
+  display: none !important;
+  visibility: hidden !important;
+  transform: translateX(120%) !important;
+  pointer-events: none !important;
+}
+
+body[data-view="cart"].has-cart-rail,
+body[data-view="checkout"].has-cart-rail,
+body[data-view="admin"].has-cart-rail,
+body[data-view="auth"].has-cart-rail {
+  padding-right: 0 !important;
+  margin-right: 0 !important;
+}
+
+body[data-view="cart"].has-cart-rail .site-header,
+body[data-view="checkout"].has-cart-rail .site-header,
+body[data-view="admin"].has-cart-rail .site-header,
+body[data-view="auth"].has-cart-rail .site-header {
+  right: 0 !important;
+}

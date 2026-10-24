@@ -31,7 +31,7 @@ export function renderCheckoutView(container) {
 
   const isLoggedIn = Boolean(user && user.isLoggedIn);
   if (!isLoggedIn) {
-    renderCheckoutAuthGate(container, cart, currency);
+    store.setView('auth', null, { redirectTo: 'checkout', tab: 'login', mode: 'login' });
     return;
   }
 
@@ -750,84 +750,4 @@ export function renderOrderConfirmation(container, order) {
   });
 }
 
-/**
-  * Checkout Authentication Gate for Unauthenticated Shoppers
-  */
-function renderCheckoutAuthGate(container, cart, currency) {
-  const summary = store.getCartSummary();
-  const totalItems = cart.reduce((acc, item) => acc + item.quantity, 0);
-
-  container.innerHTML = `
-    <div class="checkout-auth-gate-wrapper animate-fade-in">
-      <div class="container" style="max-width: 660px; margin: 2.5rem auto; padding: 0 1.25rem;">
-        
-        <div class="mb-3">
-          <button class="btn btn-ghost btn-sm" id="chk-gate-back-btn">
-            &larr; Return to Storefront Collection
-          </button>
-        </div>
-
-        <div class="checkout-auth-card">
-          <div class="auth-gate-icon-badge">
-            <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
-          </div>
-          
-          <span class="auth-gate-kicker">7TH JUNE COMPUTERS • CLIENT IDENTITY & DISPATCH</span>
-          <h2 class="auth-gate-title">Sign In or Register to Checkout</h2>
-          <p class="auth-gate-sub">
-            To protect high-value hardware purchases, provide end-to-end white glove delivery tracking, and apply exclusive VIP rewards, please sign in or create an account to proceed.
-          </p>
-
-          <!-- Order Summary Card -->
-          <div class="chk-auth-cart-snippet">
-            <div class="snippet-info">
-              <span class="snippet-count"><strong>${totalItems}</strong> item${totalItems > 1 ? 's' : ''} reserved in your bag</span>
-              <span class="snippet-note">Tamper-proof insured packaging included</span>
-            </div>
-            <div class="snippet-total">
-              ${convertPrice(summary.total, currency).formatted}
-            </div>
-          </div>
-
-          <!-- Primary Actions -->
-          <div class="auth-gate-actions">
-            <button class="btn btn-primary btn-lg w-100" id="chk-gate-signin-btn">
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><polyline points="10 17 15 12 10 7"/><line x1="15" y1="12" x2="3" y2="12"/></svg>
-              Sign In to Your Account
-            </button>
-            <button class="btn btn-secondary btn-lg w-100" id="chk-gate-register-btn">
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="8.5" cy="7" r="4"/><line x1="20" y1="8" x2="20" y2="14"/><line x1="23" y1="11" x2="17" y2="11"/></svg>
-              Create VIP Account (+500 Pts)
-            </button>
-          </div>
-
-          </div>
-        </div>
-
-      </div>
-    </div>
-  `;
-
-  // Attach Events
-  container.querySelector('#chk-gate-back-btn')?.addEventListener('click', () => {
-    sounds.playClick();
-    store.setView('catalog');
-  });
-
-  container.querySelector('#chk-gate-signin-btn')?.addEventListener('click', () => {
-    sounds.playClick();
-    openAuthModal('login', {
-      redirectTo: 'checkout',
-      notice: '<strong>Sign In Required:</strong> Please sign in to complete your purchase.'
-    });
-  });
-
-  container.querySelector('#chk-gate-register-btn')?.addEventListener('click', () => {
-    sounds.playClick();
-    openAuthModal('register', {
-      redirectTo: 'checkout',
-      notice: '<strong>Registration:</strong> Create your 7th June account to complete your purchase.'
-    });
-  });
-}
 

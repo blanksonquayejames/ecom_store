@@ -186,15 +186,15 @@ export function renderCartView(container) {
                 </div>
                 <div class="summary-row">
                   <span class="summary-row-label">Shipping</span>
-                  <span class="summary-row-val">${summary.shipping === 0 ? '$00.00' : convertPrice(summary.shipping, currency).formatted}</span>
+                  <span class="summary-row-val">${summary.shipping === 0 ? 'GH₵0.00' : convertPrice(summary.shipping, currency).formatted}</span>
                 </div>
                 <div class="summary-row">
                   <span class="summary-row-label">Taxes</span>
-                  <span class="summary-row-val">${summary.tax === 0 ? '$00.00' : convertPrice(summary.tax, currency).formatted}</span>
+                  <span class="summary-row-val">${summary.tax === 0 ? 'GH₵0.00' : convertPrice(summary.tax, currency).formatted}</span>
                 </div>
                 <div class="summary-row">
                   <span class="summary-row-label">Coupon Discount</span>
-                  <span class="summary-row-val ${summary.discount > 0 ? 'text-discount' : ''}">${summary.discount > 0 ? '-' + convertPrice(summary.discount, currency).formatted : '-$00.00'}</span>
+                  <span class="summary-row-val ${summary.discount > 0 ? 'text-discount' : ''}">${summary.discount > 0 ? '-' + convertPrice(summary.discount, currency).formatted : '-GH₵0.00'}</span>
                 </div>
               </div>
 
@@ -295,9 +295,14 @@ function attachCartViewEvents(container) {
 
 
 
-  // Proceed to Checkout
+  // Proceed to Checkout / Buy Now
   container.querySelector('#cart-proceed-checkout-btn')?.addEventListener('click', () => {
     sounds.playClick();
+    const isLoggedIn = Boolean(store.state.user && store.state.user.isLoggedIn);
+    if (!isLoggedIn) {
+      store.setView('auth', null, { redirectTo: 'checkout', tab: 'login', mode: 'login' });
+      return;
+    }
     store.setView('checkout');
   });
 }

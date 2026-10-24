@@ -15,6 +15,7 @@ import { renderCartView } from './modules/cart-view.js';
 import { renderAccountView } from './modules/account-view.js';
 import { initAuthModal, openAuthModal } from './modules/auth-modal.js';
 import { renderAdminView } from './modules/admin-view.js';
+import { renderAuthView } from './modules/auth-view.js';
 import { syncAllCartButtons } from './modules/cart-icon.js';
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -44,6 +45,12 @@ function parseHashRoute() {
       return { page: 'account', productId: null, tab: sub || 'overview' };
     case 'admin':
       return { page: 'admin', productId: null, tab: sub || 'overview' };
+    case 'auth':
+    case 'login':
+      return { page: 'auth', productId: null, tab: sub || 'login' };
+    case 'register':
+    case 'signup':
+      return { page: 'auth', productId: null, tab: 'register' };
     default:
       return { page: 'catalog', productId: null, tab: null };
   }
@@ -61,6 +68,8 @@ function syncHash(page, productId = null, tab = null) {
     targetHash = tab ? `#/account/${tab}` : '#/account/overview';
   } else if (page === 'admin') {
     targetHash = tab ? `#/admin/${tab}` : '#/admin/overview';
+  } else if (page === 'auth' || page === 'login') {
+    targetHash = tab === 'register' ? '#/register' : '#/login';
   }
   if (window.location.hash !== targetHash) {
     history.replaceState(null, '', targetHash);
@@ -68,6 +77,15 @@ function syncHash(page, productId = null, tab = null) {
 }
 
 function initApp() {
+  // Parse initial route from URL Hash immediately so all components know active page
+  const initialRoute = parseHashRoute();
+  document.body.setAttribute('data-view', initialRoute.page);
+  store.state.currentView = {
+    page: initialRoute.page,
+    productId: initialRoute.productId,
+    tab: initialRoute.tab
+  };
+
   // Apply saved theme
   document.documentElement.setAttribute('data-theme', store.state.theme);
 
@@ -85,17 +103,9 @@ function initApp() {
   setupGlobalSearch();
   setupMobileNav();
 
-  // Parse initial route from URL Hash
-  const initialRoute = parseHashRoute();
-  store.state.currentView = {
-    page: initialRoute.page,
-    productId: initialRoute.productId,
-    tab: initialRoute.tab
-  };
-
   // Subscribe to View changes from store
   store.subscribe('view_changed', ({ page, productId, tab, options = {} }) => {
-    handleRoute(page, productId, tab, !options.skipHash);
+    handleRoute(page, productId, tab, !options.skipHash, options);
   });
 
   // Listen to browser Back / Forward Navigation (hashchange)
@@ -138,7 +148,7 @@ function initApp() {
   handleRoute(store.state.currentView.page, store.state.currentView.productId, store.state.currentView.tab, false);
 }
 
-function handleRoute(page, productId = null, tab = null, updateHash = true) {
+function handleRoute(page, productId = null, tab = null, updateHash = true, options = {}) {
   const mainViewContainer = document.getElementById('app-main-view');
   if (!mainViewContainer) return;
 
@@ -168,6 +178,11 @@ function handleRoute(page, productId = null, tab = null, updateHash = true) {
     case 'admin':
       renderAdminView(mainViewContainer, tab || 'overview');
       break;
+    case 'auth':
+    case 'login':
+    case 'register':
+      renderAuthView(mainViewContainer, { ...options, tab: tab || options.tab || (page === 'register' ? 'register' : 'login') });
+      break;
     default:
       renderCatalogView(mainViewContainer);
   }
@@ -181,19 +196,35 @@ function updateHeaderLayoutForView(page) {
 
   const announcementBar = document.getElementById('top-announcement-bar') || document.querySelector('.announcement-bar');
   const searchWrap = document.querySelector('.header-search-wrap');
-  const currencyWrap = document.querySelector('.currency-selector-wrap');
+  const currencyWrap = document.getElementById('currency-dropdown-wrap') || document.querySelector('.currency-selector-wrap');
   const userHubWrap = document.getElementById('header-user-hub-wrap');
   const cartBtn = document.getElementById('header-cart-btn');
-
   const siteHeader = document.getElementById('site-header');
+  const mobileBottomNav = document.querySelector('.mobile-bottom-nav');
+
   siteHeader?.classList.remove('is-mobile-search-open');
 
-  if (announcementBar) announcementBar.style.display = (page === 'account' || page === 'admin') ? 'none' : '';
-  if (searchWrap) searchWrap.style.display = (page === 'account' || page === 'admin') ? 'none' : '';
-  if (currencyWrap) currencyWrap.style.display = (page === 'admin') ? 'none' : '';
-  if (userHubWrap) userHubWrap.style.display = (page === 'admin') ? 'none' : '';
-  if (cartBtn) cartBtn.style.display = (page === 'admin') ? 'none' : '';
+  if (page === 'admin') {
+    // Hide storefront nav bar (with 7th June Computers, search, currency, bag) & announcement bar in admin
+    if (siteHeader) siteHeader.style.display = 'none';
+    if (announcementBar) announcementBar.style.display = 'none';
+    if (mobileBottomNav) mobileBottomNav.style.display = 'none';
+  } else {
+    if (siteHeader) siteHeader.style.display = '';
+    if (mobileBottomNav) mobileBottomNav.style.display = '';
+    if (announcementBar) announcementBar.style.display = (page === 'account' || page === 'auth' || page === 'login') ? 'none' : '';
+    if (searchWrap) searchWrap.style.display = (page === 'account' || page === 'auth' || page === 'login') ? 'none' : '';
+    if (currencyWrap) currencyWrap.style.display = '';
+    if (userHubWrap) userHubWrap.style.display = '';
+    if (cartBtn) cartBtn.style.display = '';
+  }
+
+  // Ensure mini-cart subtotal menu is closed and hidden on cart page, delivery/checkout process, and admin section
+  if (page === 'cart' || page === 'checkout' || page === 'admin' || page === 'auth' || page === 'login') {
+    if (window.closeMiniCartRail) window.closeMiniCartRail(true);
+  }
 }
+
 
 function updateHeaderUserStatus(user) {
   const avatarWrap = document.getElementById('header-account-avatar-wrap');
@@ -390,108 +421,15 @@ function setupUserHubDropdown() {
 }
 
 function setupCurrencyDropdown() {
-  const currWrap = document.getElementById('currency-dropdown-wrap');
-  const currBtn = document.getElementById('currency-trigger-btn');
-  const currMenu = document.getElementById('currency-menu');
-  const legacySelect = document.getElementById('currency-selector');
   const flagEl = document.getElementById('currency-display-flag');
   const codeEl = document.getElementById('currency-display-code');
   const symEl = document.getElementById('currency-display-symbol');
+  const legacySelect = document.getElementById('currency-selector');
 
-  if (!currWrap || !currBtn || !currMenu) return;
-
-  const updateCurrencyUI = (currency) => {
-    if (flagEl) flagEl.textContent = currency === 'USD' ? '🇺🇸' : '🇬🇭';
-    if (codeEl) codeEl.textContent = currency;
-    if (symEl) symEl.textContent = currency === 'USD' ? '($)' : '(GH₵)';
-    if (legacySelect) legacySelect.value = currency;
-
-    currMenu.querySelectorAll('.currency-item').forEach(item => {
-      const isMatch = item.dataset.currency === currency;
-      item.classList.toggle('is-selected', isMatch);
-    });
-  };
-
-  updateCurrencyUI(store.state.currency || 'GHS');
-
-  let currTimer = null;
-
-  const openCurrMenu = () => {
-    if (currTimer) {
-      clearTimeout(currTimer);
-      currTimer = null;
-    }
-    currBtn.setAttribute('aria-expanded', 'true');
-    currMenu.style.display = 'block';
-    currMenu.classList.add('is-open');
-    currWrap.classList.add('is-open');
-  };
-
-  const closeCurrMenu = (immediate = false) => {
-    if (immediate) {
-      if (currTimer) clearTimeout(currTimer);
-      currTimer = null;
-      currBtn.setAttribute('aria-expanded', 'false');
-      currMenu.style.display = 'none';
-      currMenu.classList.remove('is-open');
-      currWrap.classList.remove('is-open');
-    } else {
-      if (currTimer) clearTimeout(currTimer);
-      currTimer = setTimeout(() => {
-        currBtn.setAttribute('aria-expanded', 'false');
-        currMenu.style.display = 'none';
-        currMenu.classList.remove('is-open');
-        currWrap.classList.remove('is-open');
-      }, 150);
-    }
-  };
-
-  // Immediate reveal when pointer moves over the dropdown
-  currWrap.addEventListener('pointerenter', () => {
-    openCurrMenu();
-  });
-
-  currWrap.addEventListener('pointerleave', () => {
-    closeCurrMenu(false);
-  });
-
-  // Toggle on click
-  currBtn.addEventListener('click', (e) => {
-    e.stopPropagation();
-    sounds.playClick();
-    if (currMenu.classList.contains('is-open') || currMenu.style.display === 'block') {
-      closeCurrMenu(true);
-    } else {
-      openCurrMenu();
-    }
-  });
-
-  // Select currency option
-  currMenu.querySelectorAll('.currency-item').forEach(item => {
-    item.addEventListener('click', (e) => {
-      e.stopPropagation();
-      sounds.playClick();
-      const newCurr = item.dataset.currency;
-      if (newCurr) {
-        store.setCurrency(newCurr);
-        updateCurrencyUI(newCurr);
-        closeCurrMenu(true);
-        ui.showToast({
-          title: `Currency Changed to ${newCurr}`,
-          message: `Prices automatically converted with live exchange rates.`,
-          type: 'info'
-        });
-        handleRoute(store.state.currentView.page, store.state.currentView.productId, store.state.currentView.tab, false);
-      }
-    });
-  });
-
-  // Close on outside click
-  document.addEventListener('click', (e) => {
-    if (!currWrap.contains(e.target)) {
-      closeCurrMenu(true);
-    }
-  });
+  if (flagEl) flagEl.textContent = '🇬🇭';
+  if (codeEl) codeEl.textContent = 'GHS';
+  if (symEl) symEl.textContent = '(GH₵)';
+  if (legacySelect) legacySelect.value = 'GHS';
 }
 
 function setupHeaderEvents() {

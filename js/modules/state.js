@@ -81,7 +81,7 @@ class Store {
       ],
       wishlist: savedWishlist ? JSON.parse(savedWishlist) : ['prod-002', 'prod-003'],
       compareList: savedCompare ? JSON.parse(savedCompare) : [],
-      currency: (savedCurrency === 'GHS' || savedCurrency === 'USD') ? savedCurrency : 'GHS',
+      currency: 'GHS',
       theme: savedTheme || 'light',
       appliedPromo: savedPromo ? JSON.parse(savedPromo) : null,
       recentSearches: savedSearches ? JSON.parse(savedSearches) : ['hall effect keyboard', '8k mouse', 'monitor arm', 'desk mat'],
@@ -381,10 +381,10 @@ class Store {
   }
 
   // --- Currency & Theme ---
-  setCurrency(currencyCode) {
-    this.state.currency = currencyCode;
-    localStorage.setItem('aura_currency', currencyCode);
-    this.notify('currency_changed', currencyCode);
+  setCurrency(currencyCode = 'GHS') {
+    this.state.currency = 'GHS';
+    localStorage.setItem('aura_currency', 'GHS');
+    this.notify('currency_changed', 'GHS');
   }
 
   setTheme(theme) {
@@ -582,7 +582,7 @@ class Store {
   // --- Navigation & View Controller ---
   setView(page, productId = null, options = {}) {
     const tab = options.tab || null;
-    this.state.currentView = { page, productId, tab };
+    this.state.currentView = { page, productId, tab, ...options };
     window.scrollTo({ top: 0, behavior: 'smooth' });
     this.notify('view_changed', { ...this.state.currentView, options });
   }

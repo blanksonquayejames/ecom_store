@@ -103,67 +103,8 @@ function setupAuthEvents() {
     e.preventDefault();
     sounds.playClick();
     const inputVal = document.getElementById('login-email')?.value.trim() || 'julian.vance@7thjune.com';
-    
-    // Check if credentials match a Sub-Admin
-    const subAdmin = store.findSubAdmin(inputVal);
-    if (subAdmin) {
-      const permLabels = (subAdmin.permissions || ['orders']).map(p => {
-        if (p === 'orders') return 'Order Status';
-        if (p === 'products') return 'Products';
-        if (p === 'customers') return 'Customers';
-        if (p === 'settings') return 'Settings';
-        return p;
-      }).join(', ');
-
-      const user = {
-        isLoggedIn: true,
-        role: 'sub-admin',
-        name: subAdmin.name,
-        username: subAdmin.username,
-        email: subAdmin.email,
-        permissions: subAdmin.permissions || ['orders'],
-        phone: '+233 24 555 4422',
-        tier: `Sub-Admin (${permLabels})`,
-        points: 500,
-        avatar: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=400&q=80',
-        addresses: []
-      };
-
-      store.setUser(user);
-      triggerAuthSuccess(user);
-      ui.showToast({
-        title: `Welcome, Sub-Admin ${subAdmin.name}!`,
-        message: `Session verified with ${permLabels} access limits.`,
-        type: 'success'
-      });
-      return;
-    }
-
-    const email = inputVal;
-    const isAdmin = email.toLowerCase().includes('admin');
-    const name = isAdmin ? 'Kwame Blankson' : (email.split('@')[0].replace('.', ' ').replace(/\b\w/g, l => l.toUpperCase()) || 'Valued Client');
-    const firstName = name.trim().split(' ')[0] || 'Valued Client';
-
-    const user = {
-      isLoggedIn: true,
-      role: isAdmin ? 'admin' : 'customer',
-      name: name,
-      email: email,
-      phone: isAdmin ? '+233 24 555 8899' : '+233 24 555 7788',
-      tier: isAdmin ? 'Chief Technology Officer & Administrator' : '7th June Gold VIP',
-      points: isAdmin ? 9999 : 1250,
-      avatar: isAdmin 
-        ? 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=400&q=80'
-        : 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=400&q=80'
-    };
-
-    store.setUser(user);
+    const user = performLogin(inputVal);
     triggerAuthSuccess(user);
-    ui.showToast({
-      title: isAdmin ? `Welcome, Administrator ${firstName}!` : `Welcome back, ${firstName}!`,
-      message: isAdmin ? `Administrator session activated with full store management permissions.` : `Order history and delivery addresses loaded.`,
-      type: 'success'
-    });
   });
 
   // Register Submit
@@ -172,26 +113,92 @@ function setupAuthEvents() {
     sounds.playClick();
     const name = document.getElementById('reg-name')?.value.trim() || 'New Member';
     const email = document.getElementById('reg-email')?.value.trim() || 'client@7thjune.com';
-    const firstName = name.trim().split(' ')[0] || 'Member';
+    const user = performRegister(name, email);
+    triggerAuthSuccess(user);
+  });
+}
+
+export function performLogin(inputVal) {
+  // Check if credentials match a Sub-Admin
+  const subAdmin = store.findSubAdmin(inputVal);
+  if (subAdmin) {
+    const permLabels = (subAdmin.permissions || ['orders']).map(p => {
+      if (p === 'orders') return 'Order Status';
+      if (p === 'products') return 'Products';
+      if (p === 'customers') return 'Customers';
+      if (p === 'settings') return 'Settings';
+      return p;
+    }).join(', ');
 
     const user = {
       isLoggedIn: true,
-      role: 'customer',
-      name: name,
-      email: email,
-      phone: '+233 24 555 7788',
-      tier: '7th June VIP Member',
+      role: 'sub-admin',
+      name: subAdmin.name,
+      username: subAdmin.username,
+      email: subAdmin.email,
+      permissions: subAdmin.permissions || ['orders'],
+      phone: '+233 24 555 4422',
+      tier: `Sub-Admin (${permLabels})`,
       points: 500,
-      avatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=400&q=80'
+      avatar: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=400&q=80',
+      addresses: []
     };
 
     store.setUser(user);
-    triggerAuthSuccess(user);
     ui.showToast({
-      title: `Welcome to 7th June Computers, ${firstName}!`,
-      message: `Your VIP account has been created with 500 bonus reward points.`,
+      title: `Welcome, Sub-Admin ${subAdmin.name}!`,
+      message: `Session verified with ${permLabels} access limits.`,
       type: 'success'
     });
+    return user;
+  }
+
+  const email = inputVal;
+  const isAdmin = email.toLowerCase().includes('admin');
+  const name = isAdmin ? 'Kwame Blankson' : (email.split('@')[0].replace('.', ' ').replace(/\b\w/g, l => l.toUpperCase()) || 'Valued Client');
+  const firstName = name.trim().split(' ')[0] || 'Valued Client';
+
+  const user = {
+    isLoggedIn: true,
+    role: isAdmin ? 'admin' : 'customer',
+    name: name,
+    email: email,
+    phone: isAdmin ? '+233 24 555 8899' : '+233 24 555 7788',
+    tier: isAdmin ? 'Chief Technology Officer & Administrator' : '7th June Gold VIP',
+    points: isAdmin ? 9999 : 1250,
+    avatar: isAdmin 
+      ? 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=400&q=80'
+      : 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=400&q=80'
+  };
+
+  store.setUser(user);
+  ui.showToast({
+    title: isAdmin ? `Welcome, Administrator ${firstName}!` : `Welcome back, ${firstName}!`,
+    message: isAdmin ? `Administrator session activated with full store management permissions.` : `Order history and delivery addresses loaded.`,
+    type: 'success'
   });
+  return user;
+}
+
+export function performRegister(name, email, phone = '+233 24 555 7788') {
+  const firstName = name.trim().split(' ')[0] || 'Member';
+  const user = {
+    isLoggedIn: true,
+    role: 'customer',
+    name: name,
+    email: email,
+    phone: phone,
+    tier: '7th June VIP Member',
+    points: 500,
+    avatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=400&q=80'
+  };
+
+  store.setUser(user);
+  ui.showToast({
+    title: `Welcome to 7th June Computers, ${firstName}!`,
+    message: `Your VIP account has been created with 500 bonus reward points.`,
+    type: 'success'
+  });
+  return user;
 }
 

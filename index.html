@@ -375,6 +375,36 @@
       background: #334155;
       border-color: #DC2626;
     }
+
+    /* Hide storefront header & announcement bar in admin view */
+    body[data-view="admin"] #site-header,
+    body[data-view="admin"] #top-announcement-bar,
+    body[data-view="admin"] .announcement-bar,
+    body[data-view="admin"] .mobile-bottom-nav {
+      display: none !important;
+    }
+
+    /* Hide subtotal menu & mini-cart rail when at cart page, delivery/checkout process, and admin section */
+    body[data-view="cart"] #amazon-mini-cart-rail,
+    body[data-view="cart"] #mini-cart-edge-tab,
+    body[data-view="checkout"] #amazon-mini-cart-rail,
+    body[data-view="checkout"] #mini-cart-edge-tab,
+    body[data-view="admin"] #amazon-mini-cart-rail,
+    body[data-view="admin"] #mini-cart-edge-tab,
+    body[data-view="auth"] #amazon-mini-cart-rail,
+    body[data-view="auth"] #mini-cart-edge-tab {
+      display: none !important;
+      visibility: hidden !important;
+      pointer-events: none !important;
+    }
+
+    body[data-view="cart"].has-cart-rail,
+    body[data-view="checkout"].has-cart-rail,
+    body[data-view="admin"].has-cart-rail,
+    body[data-view="auth"].has-cart-rail {
+      padding-right: 0 !important;
+      margin-right: 0 !important;
+    }
   </style>
 </head>
 
@@ -388,7 +418,7 @@
         <span>SPECIAL OFFER: Complimentary express delivery & 7 days free returns on all hardware accessories.</span>
       </div>
       <div class="announcement-perks">
-        <span>Free Express Delivery On Orders Over $100</span>
+        <span>Free Express Delivery On Orders Over GH₵1,500</span>
         <span class="dot-sep">•</span>
         <span>6-Month Hardware Warranty</span>
       </div>
@@ -512,38 +542,15 @@
       <!-- Header Action Controls (Currency, Sound, Theme, Wishlist, Account, Bag) -->
       <div class="header-actions">
 
-        <!-- Multi-Currency Selector (Cedis & USD) Custom Hover Dropdown -->
-        <div class="currency-dropdown-wrap" id="currency-dropdown-wrap">
-          <button type="button" class="currency-trigger-btn" id="currency-trigger-btn" aria-haspopup="listbox"
-            aria-expanded="false" title="Switch Currency (Hover to browse)">
+        <!-- Store Currency Badge (Ghana Cedis Only) -->
+        <div class="currency-dropdown-wrap" id="currency-dropdown-wrap" title="Store Currency: Ghana Cedis (GH₵)">
+          <div class="currency-trigger-btn currency-static-pill" id="currency-trigger-btn" role="status" aria-label="Currency: Ghana Cedis">
             <span class="currency-flag-icon" id="currency-display-flag">🇬🇭</span>
             <span class="currency-display-code" id="currency-display-code">GHS</span>
             <span class="currency-display-symbol" id="currency-display-symbol">(GH₵)</span>
-            <svg class="currency-caret" width="10" height="6" viewBox="0 0 10 6" fill="currentColor">
-              <path d="M0 0.5L5 5.5L10 0.5H0Z" />
-            </svg>
-          </button>
-          <ul class="currency-menu" id="currency-menu" role="listbox">
-            <li class="currency-item is-selected" data-currency="GHS" role="option">
-              <span class="curr-flag">🇬🇭</span>
-              <div class="curr-details">
-                <span class="curr-code">GHS</span>
-                <span class="curr-name">Ghanaian Cedi (GH₵)</span>
-              </div>
-              <span class="curr-check">✓</span>
-            </li>
-            <li class="currency-item" data-currency="USD" role="option">
-              <span class="curr-flag">🇺🇸</span>
-              <div class="curr-details">
-                <span class="curr-code">USD</span>
-                <span class="curr-name">US Dollar ($)</span>
-              </div>
-              <span class="curr-check">✓</span>
-            </li>
-          </ul>
+          </div>
           <select id="currency-selector" class="sr-only" style="display: none;" aria-hidden="true" tabindex="-1">
-            <option value="GHS">GHS (GH₵)</option>
-            <option value="USD">USD ($)</option>
+            <option value="GHS" selected>GHS (GH₵)</option>
           </select>
         </div>
 
@@ -706,16 +713,13 @@
           id="mobile-drawer-auth-btn">Account</button>
       </div>
 
-      <!-- Currency Quick-Switch Bar in Drawer -->
+      <!-- Store Currency in Drawer (Ghana Cedis Only) -->
       <div class="mobile-drawer-currency-box">
         <span class="drawer-section-label">Currency</span>
         <div class="mobile-currency-toggles">
-          <button type="button" class="mobile-curr-chip is-active" data-currency="GHS" id="mobile-curr-ghs">
-            <span>🇬🇭 GHS (GH₵)</span>
-          </button>
-          <button type="button" class="mobile-curr-chip" data-currency="USD" id="mobile-curr-usd">
-            <span>🇺🇸 USD ($)</span>
-          </button>
+          <div class="mobile-curr-chip is-active" data-currency="GHS" id="mobile-curr-ghs" style="width: 100%; justify-content: center; cursor: default;">
+            <span>🇬🇭 Ghanaian Cedi (GH₵)</span>
+          </div>
         </div>
       </div>
 

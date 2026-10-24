@@ -168,7 +168,7 @@ function generateAIResponse(query) {
   if (q.includes('gift') || q.includes('under') || q.includes('budget') || q.includes('100') || q.includes('150')) {
     const recs = prods.filter(p => p.price <= 150).slice(0, 2);
     return {
-      text: "Here are top-tier high-performance computer accessories under $150, delivering unbeatable value and build quality for any battle station or office desk:",
+      text: "Here are top-tier high-performance computer accessories under GH₵2,500, delivering unbeatable value and build quality for any battle station or office desk:",
       recommendations: recs
     };
   }

@@ -31,7 +31,7 @@ export const PRODUCTS = [
       { name: 'Frost White', hex: '#f4f4f5', img: 'https://images.unsplash.com/photo-1595225476474-87563907a212?auto=format&fit=crop&w=1000&q=85' },
       { name: 'Space Gray Anodized', hex: '#3f3f46', img: 'https://images.unsplash.com/photo-1618384887929-16ec33fab9ef?auto=format&fit=crop&w=1000&q=85' }
     ],
-    storageOptions: ['75% Compact Layout', 'TKL 80% Layout', 'Full 100% Layout (+ $30)'],
+    storageOptions: ['75% Compact Layout', 'TKL 80% Layout', 'Full 100% Layout (+ GH₵450)'],
     specs: {
       'Switch Type': 'Gateron Magnetic Jade Hall-Effect Switches',
       'Actuation Point': 'Adjustable 0.1mm - 4.0mm (0.01mm Precision)',
@@ -93,7 +93,7 @@ export const PRODUCTS = [
       { name: 'Matte Stealth Black', hex: '#111827', img: 'https://images.unsplash.com/photo-1615663245857-ac93bb7c39e7?auto=format&fit=crop&w=1000&q=85' },
       { name: 'Lunar Arctic White', hex: '#f9fafb', img: 'https://images.unsplash.com/photo-1527864550417-7fd91fc51a46?auto=format&fit=crop&w=1000&q=85' }
     ],
-    storageOptions: ['Standard 8K Receiver Edition', 'With Magnetic Fast Charging Dock (+ $25)'],
+    storageOptions: ['Standard 8K Receiver Edition', 'With Magnetic Fast Charging Dock (+ GH₵380)'],
     specs: {
       'Weight': '49 grams Ultra-light Magnesium Alloy',
       'Sensor': 'PixArt PAW3950 Optical Gaming Sensor',
@@ -146,7 +146,7 @@ export const PRODUCTS = [
       { name: 'Carbon Black & Gunmetal', hex: '#1e293b', img: 'https://images.unsplash.com/photo-1546435770-a3e426bf472b?auto=format&fit=crop&w=1000&q=85' },
       { name: 'Silver Oak Studio', hex: '#94a3b8', img: 'https://images.unsplash.com/photo-1505740420928-5e560c06d30e?auto=format&fit=crop&w=1000&q=85' }
     ],
-    storageOptions: ['Standard Wireless Edition', 'With Desktop High-Res DAC Station (+ $60)'],
+    storageOptions: ['Standard Wireless Edition', 'With Desktop High-Res DAC Station (+ GH₵900)'],
     specs: {
       'Drivers': '90mm Ultra-Thin Planar Magnetic Transducers',
       'Frequency Range': '10 Hz - 50,000 Hz Hi-Res Certified',
@@ -197,7 +197,7 @@ export const PRODUCTS = [
       { name: 'Matte Stealth Black', hex: '#1e293b', img: 'https://images.unsplash.com/photo-1527443224154-c4a3942d3acf?auto=format&fit=crop&w=1000&q=85' },
       { name: 'Brushed Silver Aluminum', hex: '#cbd5e1', img: 'https://images.unsplash.com/photo-1593642632823-8f785ba67e45?auto=format&fit=crop&w=1000&q=85' }
     ],
-    storageOptions: ['Dual Arm Setup', 'Single Heavy-Duty Ultrawide Arm (- $30)'],
+    storageOptions: ['Dual Arm Setup', 'Single Heavy-Duty Ultrawide Arm (- GH₵450)'],
     specs: {
       'Screen Size Compatibility': '17" to 35" per arm (Flat & Curved)',
       'Weight Capacity': 'Up to 12 kg (26.5 lbs) per monitor arm',
@@ -245,7 +245,7 @@ export const PRODUCTS = [
     colors: [
       { name: 'Space Gray Machined', hex: '#334155', img: 'https://images.unsplash.com/photo-1544652478-6653e09f18a2?auto=format&fit=crop&w=1000&q=85' }
     ],
-    storageOptions: ['Standard Dock Package', 'With 2m 40Gbps Certified Cable Bundle (+ $20)'],
+    storageOptions: ['Standard Dock Package', 'With 2m 40Gbps Certified Cable Bundle (+ GH₵300)'],
     specs: {
       'Chipset': 'Intel Goshen Ridge Thunderbolt 4 JHL8440 Controller',
       'Speed': 'Up to 40Gbps Total Bidirectional Bandwidth',
@@ -295,7 +295,7 @@ export const PRODUCTS = [
       { name: 'Stealth Black', hex: '#0f172a', img: 'https://images.unsplash.com/photo-1616401784845-180882ba9ba8?auto=format&fit=crop&w=1000&q=85' },
       { name: 'Topographic Minimalist', hex: '#475569', img: 'https://images.unsplash.com/photo-1527864550417-7fd91fc51a46?auto=format&fit=crop&w=1000&q=85' }
     ],
-    storageOptions: ['XL (900 x 400 x 4mm)', 'XXL Extended (1200 x 600 x 4mm + $15)'],
+    storageOptions: ['XL (900 x 400 x 4mm)', 'XXL Extended (1200 x 600 x 4mm + GH₵220)'],
     specs: {
       'Surface Material': 'Genuine Cordura 500D High-Tenacity Fabric',
       'Base Material': 'Anti-Slip Natural Textured Cellular Rubber Base',
@@ -341,7 +341,7 @@ export const PRODUCTS = [
     colors: [
       { name: 'Matte Obsidian Black', hex: '#18181b', img: 'https://images.unsplash.com/photo-1590602847861-f357a9332bbc?auto=format&fit=crop&w=1000&q=85' }
     ],
-    storageOptions: ['Desk Stand Edition', 'With Heavy-Duty Boom Arm & Pop Filter (+ $35)'],
+    storageOptions: ['Desk Stand Edition', 'With Heavy-Duty Boom Arm & Pop Filter (+ GH₵520)'],
     specs: {
       'Capsule': '25mm Gold-Sputtered Condenser Transducer',
       'Polar Pattern': 'Cardioid Directional Pickup (Rejects desk typing noise)',
@@ -390,7 +390,7 @@ export const PRODUCTS = [
       { name: 'Cyberpunk Neon', hex: '#6366f1', img: 'https://images.unsplash.com/photo-1618384887929-16ec33fab9ef?auto=format&fit=crop&w=1000&q=85' },
       { name: 'Classic Dolch Slate', hex: '#334155', img: 'https://images.unsplash.com/photo-1595225476474-87563907a212?auto=format&fit=crop&w=1000&q=85' }
     ],
-    storageOptions: ['142-Key Base Kit', 'Base Kit + Novelty Spacebar Accents (+ $15)'],
+    storageOptions: ['142-Key Base Kit', 'Base Kit + Novelty Spacebar Accents (+ GH₵220)'],
     specs: {
       'Material': '1.5mm Extra-Thick Premium PBT (Polybutylene Terephthalate)',
       'Profile': 'Ergonomic Sculpted Cherry Profile',
@@ -484,7 +484,7 @@ export const PRODUCTS = [
     colors: [
       { name: 'Space Black Machined', hex: '#1e293b', img: 'https://images.unsplash.com/photo-1593642632823-8f785ba67e45?auto=format&fit=crop&w=1000&q=85' }
     ],
-    storageOptions: ['Standard Flat Monitor Model', 'Curved Monitor Adapter Kit (+ $15)'],
+    storageOptions: ['Standard Flat Monitor Model', 'Curved Monitor Adapter Kit (+ GH₵220)'],
     specs: {
       'Optics': 'Asymmetric 45° Glare-Free Optical Design',
       'Color Temperature': 'Adjustable 2700K (Warm Glow) to 6500K (Cool White)',
@@ -531,7 +531,7 @@ export const PRODUCTS = [
     colors: [
       { name: 'Gunmetal Gray', hex: '#334155', img: 'https://images.unsplash.com/photo-1597872200969-2b65d56bd16b?auto=format&fit=crop&w=1000&q=85' }
     ],
-    storageOptions: ['Enclosure Only', 'Bundled with 1TB PCIe 4.0 NVMe (+ $80)', 'Bundled with 2TB PCIe 4.0 NVMe (+ $145)'],
+    storageOptions: ['Enclosure Only', 'Bundled with 1TB PCIe 4.0 NVMe (+ GH₵1,200)', 'Bundled with 2TB PCIe 4.0 NVMe (+ GH₵2,200)'],
     specs: {
       'Interface': 'USB4 / Thunderbolt 4 & 3 (40Gbps Protocol)',
       'Max Speed': 'Up to 3,800 MB/s Sequential Read / Write',
@@ -577,7 +577,7 @@ export const PRODUCTS = [
     colors: [
       { name: 'Midnight Black', hex: '#0f172a', img: 'https://images.unsplash.com/photo-1542751371-adc38448a05e?auto=format&fit=crop&w=1000&q=85' }
     ],
-    storageOptions: ['15-Key Deck', '32-Key XL Deck (+ $95)'],
+    storageOptions: ['15-Key Deck', '32-Key XL Deck (+ GH₵1,450)'],
     specs: {
       'Keys': '15 Programmable Full-Color Transparent LCD Display Keys',
       'Interface': 'Detachable Braided USB-C Cable (1.5m)',
@@ -625,7 +625,7 @@ export const PRODUCTS = [
       { name: 'Space Black Anodized', hex: '#1c1c1e', img: 'https://images.unsplash.com/photo-1517336714731-489689fd1ca8?auto=format&fit=crop&w=1000&q=85' },
       { name: 'Silver Machined Aluminum', hex: '#e2e8f0', img: 'https://images.unsplash.com/photo-1611186871348-b1ce696e52c9?auto=format&fit=crop&w=1000&q=85' }
     ],
-    storageOptions: ['48GB RAM / 1TB SSD', '64GB RAM / 2TB SSD (+ $500)', '128GB RAM / 4TB SSD (+ $1400)'],
+    storageOptions: ['48GB RAM / 1TB SSD', '64GB RAM / 2TB SSD (+ GH₵7,500)', '128GB RAM / 4TB SSD (+ GH₵21,000)'],
     specs: {
       'Processor': 'Apple M3 Max (16-Core CPU with 12 performance cores)',
       'Graphics': '40-Core GPU with Hardware Ray Tracing',
@@ -677,7 +677,7 @@ export const PRODUCTS = [
       { name: 'Crystal Stealth Black', hex: '#0f172a', img: 'https://images.unsplash.com/photo-1587202372775-e229f172b9d7?auto=format&fit=crop&w=1000&q=85' },
       { name: 'Arctic Glacier White', hex: '#f8fafc', img: 'https://images.unsplash.com/photo-1591488320449-011701bb6704?auto=format&fit=crop&w=1000&q=85' }
     ],
-    storageOptions: ['64GB DDR5 / 2TB Gen5 SSD', '128GB DDR5 / 4TB Gen5 SSD (+ $650)'],
+    storageOptions: ['64GB DDR5 / 2TB Gen5 SSD', '128GB DDR5 / 4TB Gen5 SSD (+ GH₵9,800)'],
     specs: {
       'CPU': 'AMD Ryzen 9 7950X3D (16 Cores, 32 Threads, 144MB 3D V-Cache)',
       'GPU': 'NVIDIA GeForce RTX 4090 24GB GDDR6X Liquid Cooled',
@@ -728,7 +728,7 @@ export const PRODUCTS = [
       { name: 'Eclipse Gray CNC', hex: '#262626', img: 'https://images.unsplash.com/photo-1603302576837-37561b2e2302?auto=format&fit=crop&w=1000&q=85' },
       { name: 'Platinum White CNC', hex: '#f5f5f5', img: 'https://images.unsplash.com/photo-1603302576837-37561b2e2302?auto=format&fit=crop&w=1000&q=85' }
     ],
-    storageOptions: ['32GB LPDDR5X / 1TB SSD', '64GB LPDDR5X / 2TB SSD (+ $350)'],
+    storageOptions: ['32GB LPDDR5X / 1TB SSD', '64GB LPDDR5X / 2TB SSD (+ GH₵5,250)'],
     specs: {
       'CPU': 'Intel Core Ultra 9 185H (16 Cores, Intel AI Boost NPU)',
       'GPU': 'NVIDIA GeForce RTX 4090 Laptop GPU 16GB GDDR6',
@@ -779,7 +779,7 @@ export const PRODUCTS = [
       { name: 'Platinum Silver Aluminum', hex: '#d1d5db', img: 'https://images.unsplash.com/photo-1593642702821-c8da6771f0c6?auto=format&fit=crop&w=1000&q=85' },
       { name: 'Graphite Anodized', hex: '#374151', img: 'https://images.unsplash.com/photo-1593642702821-c8da6771f0c6?auto=format&fit=crop&w=1000&q=85' }
     ],
-    storageOptions: ['32GB LPDDR5X / 1TB SSD', '64GB LPDDR5X / 2TB SSD (+ $400)'],
+    storageOptions: ['32GB LPDDR5X / 1TB SSD', '64GB LPDDR5X / 2TB SSD (+ GH₵6,000)'],
     specs: {
       'CPU': 'Intel Core Ultra 7 155H (16 Cores, 22 Threads up to 4.8GHz)',
       'GPU': 'NVIDIA GeForce RTX 4070 8GB GDDR6 (60W TGP)',

@@ -233,7 +233,7 @@ export function renderCatalogView(container) {
             <div class="sidebar-vip-card">
               <div class="vip-badge">AURA PRIVILEGE</div>
               <div class="vip-title">Complimentary Global Express</div>
-              <p class="vip-desc">Free insured courier on all orders exceeding $500 with tamper-evident seal.</p>
+              <p class="vip-desc">Free insured courier on all orders exceeding GH₵1,500 with tamper-evident seal.</p>
             </div>
           </aside>
 

@@ -26,6 +26,8 @@ export function initCartDrawer() {
   });
 
   store.subscribe('cart_item_added', () => {
+    const page = store.state.currentView ? store.state.currentView.page : 'catalog';
+    if (!shouldShowMiniCartRail(page)) return;
     // Only auto-open on desktop — on mobile the user opens it via the cart icon
     if (window.innerWidth >= 992) {
       openMiniCartRail();
@@ -41,19 +43,22 @@ export function initCartDrawer() {
     renderMiniCartRail();
   });
 
-  // Keep mini-cart rail docked on desktop across page navigation
-  store.subscribe('view_changed', () => {
+  // Keep mini-cart rail docked on desktop across page navigation (hidden on cart, checkout, admin)
+  store.subscribe('view_changed', ({ page } = {}) => {
+    const activePage = page || (store.state.currentView ? store.state.currentView.page : 'catalog');
+    if (!shouldShowMiniCartRail(activePage)) {
+      closeMiniCartRail(true);
+      return;
+    }
     if (store.state.cart && store.state.cart.length > 0) {
       const railEl = document.getElementById('amazon-mini-cart-rail');
       if (window.innerWidth >= 992) {
-        // Desktop: keep rail open across page changes
         if (railEl && !railEl.classList.contains('is-open')) {
           openMiniCartRail();
         } else {
           renderMiniCartRail();
         }
       } else {
-        // Mobile: just refresh content, don't auto-open
         renderMiniCartRail();
       }
     }
@@ -122,7 +127,7 @@ export function renderCartDrawerContent() {
 
   footer.style.display = 'block';
 
-  // Progress Bar for Free Global Express Shipping ($500 threshold)
+  // Progress Bar for Free Global Express Shipping (GH₵1,500 threshold)
   const isFree = summary.amountNeededForFreeShipping === 0 || (appliedPromo && appliedPromo.freeShipping);
   const progressBarHtml = `
     <div class="shipping-progress-box">
@@ -324,15 +329,7 @@ function attachCartDrawerEvents(body, footer) {
     const isLoggedIn = !!(store.state.user && store.state.user.isLoggedIn);
     if (!isLoggedIn) {
       ui.toggleDrawer('cart-drawer', false);
-      ui.showToast({
-        title: 'Sign In Required',
-        message: 'Please sign in or create an account to proceed to checkout.',
-        type: 'info'
-      });
-      openAuthModal('login', {
-        redirectTo: 'checkout',
-        notice: '<strong>Sign In Required:</strong> Please sign in or create an account to proceed with checkout.'
-      });
+      store.setView('auth', null, { redirectTo: 'checkout', tab: 'login', mode: 'login' });
       return;
     }
     ui.toggleDrawer('cart-drawer', false);
@@ -410,15 +407,31 @@ export function initMiniCartRail() {
   window.closeMiniCartRail = closeMiniCartRail;
   window.renderMiniCartRail = renderMiniCartRail;
 
-  // On page load: auto-open on desktop only — mobile requires explicit tap on cart icon
-  if (store.state.cart && store.state.cart.length > 0 && window.innerWidth >= 992) {
+  // On page load: auto-open on desktop only if allowed on current page
+  const initialPage = store.state.currentView ? store.state.currentView.page : 'catalog';
+  if (!shouldShowMiniCartRail(initialPage)) {
+    closeMiniCartRail(true);
+  } else if (store.state.cart && store.state.cart.length > 0 && window.innerWidth >= 992) {
     openMiniCartRail();
   } else {
     renderMiniCartRail();
   }
 }
 
+/**
+ * Checks whether the subtotal menu (mini-cart rail & edge tab) is allowed on this page.
+ * It should NOT show on the cart page, during the delivery/checkout process, or at the admin section.
+ */
+export function shouldShowMiniCartRail(page) {
+  return page !== 'cart' && page !== 'checkout' && page !== 'admin' && page !== 'auth' && page !== 'login';
+}
+
 export function openMiniCartRail() {
+  const activePage = store.state.currentView ? store.state.currentView.page : 'catalog';
+  if (!shouldShowMiniCartRail(activePage)) {
+    closeMiniCartRail(true);
+    return;
+  }
   const railEl = document.getElementById('amazon-mini-cart-rail');
   const edgeTab = document.getElementById('mini-cart-edge-tab');
   if (!railEl) return;
@@ -433,12 +446,18 @@ export function openMiniCartRail() {
   }
 }
 
-export function closeMiniCartRail() {
+export function closeMiniCartRail(hideEdgeTab = false) {
   const railEl = document.getElementById('amazon-mini-cart-rail');
   const edgeTab = document.getElementById('mini-cart-edge-tab');
 
   if (railEl) railEl.classList.remove('is-open');
   document.body.classList.remove('has-cart-rail');
+
+  const activePage = store.state.currentView ? store.state.currentView.page : 'catalog';
+  if (hideEdgeTab || !shouldShowMiniCartRail(activePage)) {
+    if (edgeTab) edgeTab.classList.remove('is-visible');
+    return;
+  }
 
   // Show edge tab with count when rail is closed and cart has items
   const count = store.getCartCount();
@@ -456,8 +475,16 @@ export function closeMiniCartRail() {
 function updateEdgeTab() {
   const railEl = document.getElementById('amazon-mini-cart-rail');
   const edgeTab = document.getElementById('mini-cart-edge-tab');
-  const count = store.getCartCount();
+  const activePage = store.state.currentView ? store.state.currentView.page : 'catalog';
 
+  if (!shouldShowMiniCartRail(activePage)) {
+    if (railEl) railEl.classList.remove('is-open');
+    document.body.classList.remove('has-cart-rail');
+    if (edgeTab) edgeTab.classList.remove('is-visible');
+    return;
+  }
+
+  const count = store.getCartCount();
   // If cart becomes empty, close rail and hide edge tab
   if (count === 0) {
     if (railEl) railEl.classList.remove('is-open');
