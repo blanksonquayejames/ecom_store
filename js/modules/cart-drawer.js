@@ -133,9 +133,9 @@ export function renderCartDrawerContent() {
     <div class="shipping-progress-box">
       <div class="progress-message">
         ${isFree
-          ? '<span>🎉 <strong>Complimentary Global Express Courier Unlocked!</strong></span>'
-          : `<span>Add <strong>${convertPrice(summary.amountNeededForFreeShipping, currency).formatted}</strong> more for <strong>Free Global Express Shipping</strong></span>`
-        }
+      ? '<span>🎉 <strong>Complimentary Global Express Courier Unlocked!</strong></span>'
+      : `<span>Add <strong>${convertPrice(summary.amountNeededForFreeShipping, currency).formatted}</strong> more for <strong>Free Global Express Shipping</strong></span>`
+    }
       </div>
       <div class="progress-track">
         <div class="progress-fill" style="width: ${isFree ? 100 : summary.freeShippingProgress}%"></div>
@@ -147,8 +147,8 @@ export function renderCartDrawerContent() {
   const itemsHtml = `
     <div class="cart-items-list">
       ${cart.map(item => {
-        const itemTotal = item.price * item.quantity;
-        return `
+    const itemTotal = item.price * item.quantity;
+    return `
           <div class="cart-item-card" data-cart-id="${item.id}">
             <div class="cart-item-img-wrap">
               <img src="${item.heroImage}" alt="${item.name}" />
@@ -177,7 +177,7 @@ export function renderCartDrawerContent() {
             </div>
           </div>
         `;
-      }).join('')}
+  }).join('')}
     </div>
   `;
 

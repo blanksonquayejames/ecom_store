@@ -160,7 +160,7 @@ export function renderCheckoutView(container) {
                   <div class="chk-saved-addr-chips">
                     ${user.addresses.map((a, i) => `
                       <button type="button" class="chk-addr-chip ${a.isDefault ? 'is-active' : ''}" data-addr-id="${a.id}">
-                        <span class="chk-chip-title">${a.type || 'Destination ' + (i+1)}</span>
+                        <span class="chk-chip-title">${a.type || 'Destination ' + (i + 1)}</span>
                         <span class="chk-chip-detail">${a.address}, ${a.city}</span>
                       </button>
                     `).join('')}
@@ -196,27 +196,35 @@ export function renderCheckoutView(container) {
                     <input type="text" class="custom-input" id="chk-city" value="${formData.city}" placeholder="Accra" required />
                   </div>
                   <div class="form-group flex-1">
-                    <label>State / Region</label>
-                    <input type="text" class="custom-input" id="chk-state" value="${formData.state}" placeholder="Greater Accra" required />
-                  </div>
-                  <div class="form-group flex-1">
-                    <label>Postal Code</label>
-                    <input type="text" class="custom-input" id="chk-zip" value="${formData.zip}" placeholder="00233" required />
+                    <label>Region</label>
+                    <select class="custom-select" id="chk-state" required>
+                      <option value="">Select Region</option>
+                      <option value="Ahafo" ${formData.state === 'Ahafo' ? 'selected' : ''}>Ahafo</option>
+                      <option value="Ashanti" ${formData.state === 'Ashanti' ? 'selected' : ''}>Ashanti</option>
+                      <option value="Bono" ${formData.state === 'Bono' ? 'selected' : ''}>Bono</option>
+                      <option value="Bono East" ${formData.state === 'Bono East' ? 'selected' : ''}>Bono East</option>
+                      <option value="Central" ${formData.state === 'Central' ? 'selected' : ''}>Central</option>
+                      <option value="Eastern" ${formData.state === 'Eastern' ? 'selected' : ''}>Eastern</option>
+                      <option value="Greater Accra" ${(formData.state === 'Greater Accra' || !formData.state) ? 'selected' : ''}>Greater Accra</option>
+                      <option value="North East" ${formData.state === 'North East' ? 'selected' : ''}>North East</option>
+                      <option value="Northern" ${formData.state === 'Northern' ? 'selected' : ''}>Northern</option>
+                      <option value="Oti" ${formData.state === 'Oti' ? 'selected' : ''}>Oti</option>
+                      <option value="Savannah" ${formData.state === 'Savannah' ? 'selected' : ''}>Savannah</option>
+                      <option value="Upper East" ${formData.state === 'Upper East' ? 'selected' : ''}>Upper East</option>
+                      <option value="Upper West" ${formData.state === 'Upper West' ? 'selected' : ''}>Upper West</option>
+                      <option value="Volta" ${formData.state === 'Volta' ? 'selected' : ''}>Volta</option>
+                      <option value="Western" ${formData.state === 'Western' ? 'selected' : ''}>Western</option>
+                      <option value="Western North" ${formData.state === 'Western North' ? 'selected' : ''}>Western North</option>
+                    </select>
                   </div>
                 </div>
 
                 <div class="form-group">
                   <label>Country / Territory</label>
-                  <select class="custom-select" id="chk-country">
-                    <option value="Ghana" ${formData.country === 'Ghana' ? 'selected' : ''}>Ghana</option>
-                    <option value="United States" ${formData.country === 'United States' ? 'selected' : ''}>United States</option>
-                    <option value="United Kingdom" ${formData.country === 'United Kingdom' ? 'selected' : ''}>United Kingdom</option>
-                    <option value="Germany" ${formData.country === 'Germany' ? 'selected' : ''}>Germany</option>
-                    <option value="Switzerland" ${formData.country === 'Switzerland' ? 'selected' : ''}>Switzerland</option>
-                    <option value="Japan" ${formData.country === 'Japan' ? 'selected' : ''}>Japan</option>
-                    <option value="Canada" ${formData.country === 'Canada' ? 'selected' : ''}>Canada</option>
-                    <option value="Australia" ${formData.country === 'Australia' ? 'selected' : ''}>Australia</option>
-                  </select>
+                  <div class="custom-input ghana-country-static" id="chk-country" style="display:flex;align-items:center;gap:8px;background:var(--color-surface,#f8f9fa);cursor:default;">
+                    <span>Ghana</span>
+                  </div>
+                  <input type="hidden" id="chk-country-value" value="Ghana" />
                 </div>
 
                 <div class="step-actions">
@@ -448,16 +456,12 @@ function attachCheckoutEvents(container, formData) {
       const addrInput = container.querySelector('#chk-address');
       const cityInput = container.querySelector('#chk-city');
       const stateInput = container.querySelector('#chk-state');
-      const zipInput = container.querySelector('#chk-zip');
-      const countrySelect = container.querySelector('#chk-country');
 
       if (nameInput) nameInput.value = addr.fullName || store.state.user?.name || '';
       if (phoneInput) phoneInput.value = addr.phone || store.state.user?.phone || '';
       if (addrInput) addrInput.value = addr.address || '';
       if (cityInput) cityInput.value = addr.city || '';
       if (stateInput) stateInput.value = addr.region || addr.state || '';
-      if (zipInput) zipInput.value = addr.zip || '00233';
-      if (countrySelect && addr.country) countrySelect.value = addr.country;
     });
   });
 
@@ -483,8 +487,7 @@ function attachCheckoutEvents(container, formData) {
     formData.address = address;
     formData.city = city;
     formData.state = container.querySelector('#chk-state')?.value || 'Greater Accra';
-    formData.zip = container.querySelector('#chk-zip')?.value || '00233';
-    formData.country = container.querySelector('#chk-country')?.value || 'Ghana';
+    formData.country = 'Ghana';
 
     goToStep(2);
   });
