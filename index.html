@@ -384,7 +384,7 @@
       display: none !important;
     }
 
-    /* Hide subtotal menu & mini-cart rail when at cart page, delivery/checkout process, and admin section */
+    /* Hide subtotal menu & mini-cart rail when at cart page, delivery/checkout process, admin section, and account profile page */
     body[data-view="cart"] #amazon-mini-cart-rail,
     body[data-view="cart"] #mini-cart-edge-tab,
     body[data-view="checkout"] #amazon-mini-cart-rail,
@@ -392,7 +392,9 @@
     body[data-view="admin"] #amazon-mini-cart-rail,
     body[data-view="admin"] #mini-cart-edge-tab,
     body[data-view="auth"] #amazon-mini-cart-rail,
-    body[data-view="auth"] #mini-cart-edge-tab {
+    body[data-view="auth"] #mini-cart-edge-tab,
+    body[data-view="account"] #amazon-mini-cart-rail,
+    body[data-view="account"] #mini-cart-edge-tab {
       display: none !important;
       visibility: hidden !important;
       pointer-events: none !important;
@@ -401,9 +403,18 @@
     body[data-view="cart"].has-cart-rail,
     body[data-view="checkout"].has-cart-rail,
     body[data-view="admin"].has-cart-rail,
-    body[data-view="auth"].has-cart-rail {
+    body[data-view="auth"].has-cart-rail,
+    body[data-view="account"].has-cart-rail {
       padding-right: 0 !important;
       margin-right: 0 !important;
+    }
+
+    body[data-view="cart"].has-cart-rail .site-header,
+    body[data-view="checkout"].has-cart-rail .site-header,
+    body[data-view="admin"].has-cart-rail .site-header,
+    body[data-view="auth"].has-cart-rail .site-header,
+    body[data-view="account"].has-cart-rail .site-header {
+      right: 0 !important;
     }
   </style>
 </head>

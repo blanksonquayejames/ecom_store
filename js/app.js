@@ -219,9 +219,16 @@ function updateHeaderLayoutForView(page) {
     if (cartBtn) cartBtn.style.display = '';
   }
 
-  // Ensure mini-cart subtotal menu is closed and hidden on cart page, delivery/checkout process, and admin section
-  if (page === 'cart' || page === 'checkout' || page === 'admin' || page === 'auth' || page === 'login') {
+  // Ensure mini-cart subtotal menu is closed and hidden on cart page, delivery/checkout process, admin section, and account profile page
+  if (page === 'cart' || page === 'checkout' || page === 'admin' || page === 'auth' || page === 'login' || page === 'account') {
     if (window.closeMiniCartRail) window.closeMiniCartRail(true);
+    const cartDrawer = document.getElementById('cart-drawer');
+    if (cartDrawer && cartDrawer.classList.contains('is-open')) {
+      cartDrawer.classList.remove('is-open');
+      const backdrop = document.getElementById('global-backdrop');
+      if (backdrop) backdrop.classList.remove('is-active');
+      document.body.classList.remove('no-scroll');
+    }
   }
 }
 

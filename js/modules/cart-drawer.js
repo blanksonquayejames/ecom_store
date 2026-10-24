@@ -420,10 +420,10 @@ export function initMiniCartRail() {
 
 /**
  * Checks whether the subtotal menu (mini-cart rail & edge tab) is allowed on this page.
- * It should NOT show on the cart page, during the delivery/checkout process, or at the admin section.
+ * It should NOT show on the cart page, during the delivery/checkout process, at the admin section, or on the account profile page.
  */
 export function shouldShowMiniCartRail(page) {
-  return page !== 'cart' && page !== 'checkout' && page !== 'admin' && page !== 'auth' && page !== 'login';
+  return page !== 'cart' && page !== 'checkout' && page !== 'admin' && page !== 'auth' && page !== 'login' && page !== 'account';
 }
 
 export function openMiniCartRail() {

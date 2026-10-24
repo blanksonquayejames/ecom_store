@@ -13464,6 +13464,7 @@ body[data-view="admin"] .mobile-header-search-bar {
    2. Delivery/checkout process (data-view="checkout")
    3. Admin section (data-view="admin")
    4. Client Auth view (data-view="auth")
+   5. Account profile page (data-view="account")
    ========================================================================== */
 body[data-view="cart"] #amazon-mini-cart-rail,
 body[data-view="cart"] .amazon-mini-cart-rail,
@@ -13480,7 +13481,11 @@ body[data-view="admin"] .mini-cart-edge-tab,
 body[data-view="auth"] #amazon-mini-cart-rail,
 body[data-view="auth"] .amazon-mini-cart-rail,
 body[data-view="auth"] #mini-cart-edge-tab,
-body[data-view="auth"] .mini-cart-edge-tab {
+body[data-view="auth"] .mini-cart-edge-tab,
+body[data-view="account"] #amazon-mini-cart-rail,
+body[data-view="account"] .amazon-mini-cart-rail,
+body[data-view="account"] #mini-cart-edge-tab,
+body[data-view="account"] .mini-cart-edge-tab {
   display: none !important;
   visibility: hidden !important;
   transform: translateX(120%) !important;
@@ -13490,7 +13495,8 @@ body[data-view="auth"] .mini-cart-edge-tab {
 body[data-view="cart"].has-cart-rail,
 body[data-view="checkout"].has-cart-rail,
 body[data-view="admin"].has-cart-rail,
-body[data-view="auth"].has-cart-rail {
+body[data-view="auth"].has-cart-rail,
+body[data-view="account"].has-cart-rail {
   padding-right: 0 !important;
   margin-right: 0 !important;
 }
@@ -13498,6 +13504,7 @@ body[data-view="auth"].has-cart-rail {
 body[data-view="cart"].has-cart-rail .site-header,
 body[data-view="checkout"].has-cart-rail .site-header,
 body[data-view="admin"].has-cart-rail .site-header,
-body[data-view="auth"].has-cart-rail .site-header {
+body[data-view="auth"].has-cart-rail .site-header,
+body[data-view="account"].has-cart-rail .site-header {
   right: 0 !important;
 }
