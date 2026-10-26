@@ -161,30 +161,34 @@ export function renderProductDetailPage(container, productId) {
             
             <!-- Tab 1: Specs -->
             <div class="pdp-tab-pane is-active" id="tab-specs">
-              <table class="specs-table">
-                <tbody>
-                  ${Object.entries(product.specs || {}).map(([key, val]) => `
-                    <tr>
-                      <td class="spec-name">${key}</td>
-                      <td class="spec-val">${val}</td>
-                    </tr>
-                  `).join('')}
-                </tbody>
-              </table>
+              ${product.specs && Object.keys(product.specs).length > 0 ? `
+                <table class="specs-table">
+                  <tbody>
+                    ${Object.entries(product.specs).map(([key, val]) => `
+                      <tr>
+                        <td class="spec-name">${key}</td>
+                        <td class="spec-val">${val}</td>
+                      </tr>
+                    `).join('')}
+                  </tbody>
+                </table>
+              ` : `
+                <p class="text-muted" style="padding: 1rem 0;">Technical specifications certified by 7th June engineering.</p>
+              `}
 
-              <div class="features-highlight-box">
-                <h4>Engineered Highlights & Features</h4>
-                <ul class="features-bullet-list">
-                  ${(product.features || []).map(f => `
-                    <li>
-                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--color-accent)" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
-                      <span>${f}</span>
-                    </li>
-                  `).join('')}
-                </ul>
-              </div>
-
-
+              ${product.features && product.features.length > 0 ? `
+                <div class="features-highlight-box">
+                  <h4>Engineered Highlights &amp; Features</h4>
+                  <ul class="features-bullet-list">
+                    ${product.features.map(f => `
+                      <li>
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--color-accent)" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+                        <span>${f}</span>
+                      </li>
+                    `).join('')}
+                  </ul>
+                </div>
+              ` : ''}
             </div>
 
             <!-- Tab 2: Reviews -->

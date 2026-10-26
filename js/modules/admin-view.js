@@ -596,7 +596,7 @@ function renderProductsTab() {
                 </td>
                 <td>
                   <strong>${prod.name}</strong>
-                  <div class="admin-sku-label">ID: ${prod.id}</div>
+                  <div class="admin-sku-label">ID: ${prod.id}${prod.specs && Object.keys(prod.specs).length > 0 ? ` • <span style="color: #DC2626; font-weight: 700;">${Object.keys(prod.specs).length} specs</span>` : ''}</div>
                 </td>
                 <td><span class="category-pill">${prod.category}</span></td>
                 <td>
@@ -1795,8 +1795,8 @@ export function openProductModal(product = null) {
     dropzoneCtrl?.clearActiveImage();
   }
 
-  // Setup Overview Highlight Dropdowns & Presets
-  setupOverviewHighlightDropdowns();
+  // Setup Technical Specifications & Highlights Builder (Matches Storefront PDP)
+  setupProductSpecsBuilder(product);
 
   ui.openModal('admin-product-modal');
 
@@ -1813,6 +1813,7 @@ export function openProductModal(product = null) {
     const badge = document.getElementById('modal-prod-badge').value.trim();
     const heroImage = document.getElementById('modal-prod-img').value.trim();
     const description = document.getElementById('modal-prod-desc').value.trim();
+    const { specs, features } = serializeProductSpecs();
 
     // Verify an image was uploaded or chosen
     if (!heroImage) {
@@ -1837,11 +1838,13 @@ export function openProductModal(product = null) {
         category,
         badge,
         heroImage,
-        description
+        description,
+        specs,
+        features
       });
       ui.showToast({
         title: 'Product Updated',
-        message: `"${name}" updated successfully.`,
+        message: `"${name}" specifications updated successfully.`,
         type: 'success'
       });
     } else {
@@ -1854,11 +1857,13 @@ export function openProductModal(product = null) {
         category,
         badge,
         heroImage,
-        description
+        description,
+        specs,
+        features
       });
       ui.showToast({
         title: 'Product Created',
-        message: `"${name}" added to 7th June catalog.`,
+        message: `"${name}" added to 7th June catalog with specifications.`,
         type: 'success'
       });
     }
@@ -1878,92 +1883,469 @@ export function openProductModal(product = null) {
   });
 }
 
-function setupOverviewHighlightDropdowns() {
+/**
+ * Technical Specifications & Engineered Highlights Builder Controller
+ * Replicates the Storefront PDP Specifications Section (Matches Reference Screenshot)
+ */
+export const SPEC_TEMPLATES = {
+  keyboard: {
+    label: 'Keyboard',
+    category: 'Keyboards & Keycaps',
+    desc: 'Engineered for competitive gamers and high-speed typing enthusiasts. Features custom magnetic Hall-Effect switches with adjustable actuation.',
+    specs: {
+      'Switch Type': 'Gateron Magnetic Jade Hall-Effect Switches',
+      'Actuation Point': 'Adjustable 0.1mm - 4.0mm (0.01mm Precision)',
+      'Polling Rate': '8000Hz (0.125ms Ultra-Low Latency)',
+      'Chassis': 'Solid CNC 6063 Anodized Aluminum',
+      'Keycaps': 'Double-shot PBT Cherry Profile',
+      'Connectivity': 'Detachable Braided USB-C / 2.4GHz Wireless / BT 5.3',
+      'Battery': '8000 mAh (Up to 320 hours battery life)'
+    },
+    features: [
+      'Rapid Trigger technology for instantaneous key resets',
+      'Dynamic Keystroke (DKS) assigns 4 actions to a single press',
+      'Hot-swappable magnetic switch sockets',
+      'Multi-layer Poron & IXPE acoustic sound dampeners'
+    ]
+  },
+  mouse: {
+    label: 'Mouse',
+    category: 'Mice & Precision',
+    desc: 'Tournament-grade wireless precision engineered for pinpoint accuracy, 8000Hz polling, and ultralight featherweight shell.',
+    specs: {
+      'Sensor': 'PAW3395 Ultra-Gaming Optical Sensor',
+      'Resolution': 'Up to 26,000 DPI (50 DPI increments)',
+      'Polling Rate': '8000Hz True Hyper-Polling Wireless',
+      'Max Speed / Acceleration': '650 IPS / 50G Acceleration',
+      'Switches': 'Optical Light-Strike Switches (90M Clicks)',
+      'Weight': '49g Featherweight Ultra-Light Shell',
+      'Battery Life': 'Up to 150 Hours continuous gameplay'
+    },
+    features: [
+      '8000Hz Hyper-Polling rate with sub-0.125ms wireless latency',
+      'PAW3395 optical sensor with 1:1 raw tracking precision',
+      'Zero-debounce optical micro-switches preventing double clicks',
+      'Pure virgin PTFE rounded glide skates for effortless glide'
+    ]
+  },
+  audio: {
+    label: 'Headset',
+    category: 'Audio & Headsets',
+    desc: 'Studio-grade audiophile acoustics tuned for high-fidelity spatial awareness, 50mm bio-cellulose drivers, and broadcast mic.',
+    specs: {
+      'Driver Diameter': '50mm Custom Bio-Cellulose Diaphragms',
+      'Frequency Response': '10Hz – 40,000Hz (Hi-Res Audio Certified)',
+      'Impedance': '32 Ohms @ 1kHz',
+      'Microphone': 'Detachable 9.7mm Broadcast-Grade Condenser',
+      'Connectivity': '2.4GHz Ultra-Low Latency / BT 5.3 / 3.5mm Analog',
+      'Battery Life': 'Up to 80 Hours (Fast charge: 15min = 8hrs)'
+    },
+    features: [
+      'Hi-Res certified 50mm bio-cellulose acoustic soundstage',
+      'Custom spatial 7.1 directional audio positioning engine',
+      'Ultra-dense memory foam ear cushions with cooling gel layer',
+      'Broadcast-grade detachable noise-cancelling boom microphone'
+    ]
+  },
+  laptop: {
+    label: 'Laptop',
+    category: 'Laptops & Workstations',
+    desc: 'Flagship engineering mobile workstation powered by 24-core processing, RTX graphics, and color-calibrated 240Hz display.',
+    specs: {
+      'Processor (CPU)': 'Intel Core i9-14900HX (24 Cores, up to 5.8GHz)',
+      'Graphics (GPU)': 'NVIDIA GeForce RTX 4080 (12GB GDDR6X, 175W TGP)',
+      'Memory (RAM)': '32GB DDR5 5600MHz (Dual-Channel, Expandable to 64GB)',
+      'Storage (SSD)': '1TB PCIe 4.0 NVMe M.2 High-Speed SSD',
+      'Display': '16.0" QHD+ (2560x1600) 240Hz 3ms, 100% DCI-P3 500 nits',
+      'Cooling': 'Vapor Chamber Liquid Metal Dual-Fan Thermal Architecture',
+      'Operating System': 'Windows 11 Pro 64-bit Genuine Licensed'
+    },
+    features: [
+      '24-core flagship processing with extreme multi-threaded throughput',
+      'RTX 40-series ray tracing and DLSS 3.5 AI neural rendering',
+      '240Hz color-calibrated display with 100% DCI-P3 cinema gamut',
+      'Vapor chamber liquid cooling keeping sustained peak clock speeds'
+    ]
+  },
+  gamingpc: {
+    label: 'Gaming PC',
+    category: 'Gaming PCs & Towers',
+    desc: 'Mastercraft custom liquid-cooled gaming PC delivering pinnacle 4K ray-traced frame rates and panoramic showcase glass.',
+    specs: {
+      'Processor (CPU)': 'AMD Ryzen 7 7800X3D (8 Cores, 16 Threads, 3D V-Cache)',
+      'Graphics (GPU)': 'NVIDIA GeForce RTX 4090 24GB GDDR6X',
+      'Motherboard': 'ASUS ROG Strix X670E Gaming WiFi',
+      'Memory (RAM)': '64GB (2x32GB) DDR5 6000MHz CL30 EXPO RGB',
+      'Storage (SSD)': '2TB Samsung 990 PRO PCIe 4.0 NVMe SSD',
+      'Cooling': '360mm AIO Liquid Cooler with LCD Display & ARGB',
+      'Power Supply': '1000W 80+ Gold Fully Modular ATX 3.0 / PCIe 5.0'
+    },
+    features: [
+      '3D V-Cache architecture delivering unmatched gaming frame rates',
+      'Titan-class RTX 4090 with 24GB VRAM for 4K ray tracing and AI',
+      'Ultra-silent 360mm closed-loop liquid thermal distribution',
+      'Dual-chamber tempered glass panoramic showcase chassis'
+    ]
+  },
+  monitor: {
+    label: 'Monitor',
+    category: 'Monitors & Mounts',
+    desc: 'Esports-grade 240Hz fast IPS display with ergonomic heavy-duty gas spring articulating arm and DisplayHDR 600.',
+    specs: {
+      'Panel Type': 'Fast IPS Quantum Dot LED Backlit',
+      'Screen Size & Resolution': '27-inch QHD (2560 x 1440) 16:9 Aspect Ratio',
+      'Refresh Rate & Response': '240Hz Hyper-Smooth / 0.5ms (GtG Min)',
+      'Color Gamut & HDR': '99% DCI-P3, 10-Bit Color, VESA DisplayHDR 600',
+      'Sync Technology': 'NVIDIA G-SYNC Compatible & AMD FreeSync Premium Pro',
+      'Mount / Ergonomics': 'Integrated Heavy-Duty Gas-Spring Articulating Arm'
+    },
+    features: [
+      '240Hz Fast IPS panel delivering razor-sharp motion clarity',
+      '0.5ms response time eliminating ghosting and inverse trails',
+      'VESA DisplayHDR 600 certified with vibrant color precision',
+      'Fully articulating dynamic gas-spring arm with concealed cable channel'
+    ]
+  },
+  hub: {
+    label: 'Hub/Dock',
+    category: 'Hubs & Docks',
+    desc: 'Enterprise 40Gbps Thunderbolt 4 expansion dock powering dual external 4K monitors and 100W laptop fast-charging.',
+    specs: {
+      'Interface': 'Thunderbolt 4 / USB4 (40Gbps Bi-Directional Bandwidth)',
+      'Power Delivery': 'Up to 100W Host Fast-Charging (PD 3.0)',
+      'Video Outputs': 'Dual 4K @ 60Hz or Single 8K @ 30Hz (HDMI 2.1 + DP 1.4)',
+      'Ports': '3x USB-A 3.2, 2x USB-C 10Gbps, Gigabit Ethernet RJ45, SD/TF 4.0',
+      'Housing': 'Precision CNC Machined Anodized Heat-Dissipating Aluminum'
+    },
+    features: [
+      '40Gbps extreme transfer speeds with dual 4K display expansion',
+      '100W Power Delivery charges laptops and workstations simultaneously',
+      'Industrial solid aluminum casing for passive heat mitigation',
+      'Plug-and-play driverless compatibility across Mac, Windows, and Linux'
+    ]
+  }
+};
+
+function escapeSpecHtml(str) {
+  if (!str) return '';
+  return String(str)
+    .replace(/&/g, '&amp;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;');
+}
+
+function setupProductSpecsBuilder(product = null) {
+  const container = document.getElementById('admin-specs-builder-group');
+  if (!container) return;
+
+  const tbody = document.getElementById('admin-specs-tbody');
+  const featuresList = document.getElementById('admin-features-list');
+  const editModeBtn = document.getElementById('specs-mode-edit-btn');
+  const previewModeBtn = document.getElementById('specs-mode-preview-btn');
+  const editorPane = document.getElementById('specs-editor-pane');
+  const previewPane = document.getElementById('specs-live-preview-pane');
+  const addSpecBtn = document.getElementById('admin-add-spec-row-btn');
+  const addFeatureBtn = document.getElementById('admin-add-feature-row-btn');
+  const categorySelect = document.getElementById('modal-prod-category');
   const descEl = document.getElementById('modal-prod-desc');
-  if (!descEl) return;
 
-  // Dropdowns setup with instant hover
-  const dropdownWraps = document.querySelectorAll('.overview-dropdown-wrap');
-  dropdownWraps.forEach(wrap => {
-    const btn = wrap.querySelector('.overview-dropdown-btn');
-    const menu = wrap.querySelector('.overview-dropdown-menu');
-    if (!btn || !menu) return;
-
-    let timer = null;
-    const openMenu = () => {
-      if (timer) clearTimeout(timer);
-      menu.style.display = 'block';
-      wrap.classList.add('is-open');
-      btn.setAttribute('aria-expanded', 'true');
-    };
-    const closeMenu = (immediate = false) => {
-      if (immediate) {
-        if (timer) clearTimeout(timer);
-        menu.style.display = 'none';
-        wrap.classList.remove('is-open');
-        btn.setAttribute('aria-expanded', 'false');
-      } else {
-        if (timer) clearTimeout(timer);
-        timer = setTimeout(() => {
-          menu.style.display = 'none';
-          wrap.classList.remove('is-open');
-          btn.setAttribute('aria-expanded', 'false');
-        }, 150);
-      }
-    };
-
-    wrap.onpointerenter = openMenu;
-    wrap.onpointerleave = () => closeMenu(false);
-    btn.onclick = (e) => {
+  // Mode Toggle (Editor vs Storefront Live Preview)
+  if (editModeBtn && previewModeBtn && editorPane && previewPane) {
+    editModeBtn.onclick = (e) => {
       e.preventDefault();
-      e.stopPropagation();
       sounds.playClick();
-      if (wrap.classList.contains('is-open')) closeMenu(true);
-      else openMenu();
+      editModeBtn.classList.add('is-active');
+      previewModeBtn.classList.remove('is-active');
+      editorPane.style.display = 'block';
+      previewPane.style.display = 'none';
     };
 
-    menu.querySelectorAll('li').forEach(item => {
-      item.onclick = (e) => {
-        e.preventDefault();
-        e.stopPropagation();
-        sounds.playClick();
-        const textToInsert = item.dataset.insert;
-        if (textToInsert) {
-          const current = descEl.value.trim();
-          descEl.value = current ? `${current}\n${textToInsert}` : textToInsert;
-          descEl.dispatchEvent(new Event('input', { bubbles: true }));
-          ui.showToast({
-            title: 'Highlight Appended',
-            message: textToInsert.replace(/^•\s*/, ''),
-            type: 'info'
-          });
-        }
-        closeMenu(true);
-      };
-    });
-  });
+    previewModeBtn.onclick = (e) => {
+      e.preventDefault();
+      sounds.playClick();
+      previewModeBtn.classList.add('is-active');
+      editModeBtn.classList.remove('is-active');
+      editorPane.style.display = 'none';
+      previewPane.style.display = 'block';
+      updateSpecsCountAndPreview();
+    };
+  }
 
-  // Preset Template Chips
-  const presets = {
-    keyboard: "Engineered for elite esports and coding supremacy.\n• Magnetic Hall-Effect Rapid Trigger Analog Switches (0.1mm - 4.0mm)\n• 8,000Hz True Hyper-Polling Rate with Sub-Millisecond Input Latency\n• CNC 6063 Aluminum Chassis with Double-Shot PBT Keycaps\n• Factory Lubed Stabilizers with 5-Layer Acoustic Dampening",
-    mouse: "Tournament-grade wireless precision engineered for pinpoint accuracy.\n• PAW3395 Ultra-Gaming Optical Sensor (26,000 DPI, 650 IPS)\n• 8,000Hz Wireless Polling Rate with 0.125ms Response\n• Ultralight 49g Featherweight Ergonomic Shell\n• Up to 150 Hours Ultra-Endurance Battery Life",
-    audio: "Studio-grade audiophile acoustics tuned for high-fidelity spatial awareness.\n• 50mm Bio-Cellulose High-Resolution Drivers with Neodymium Magnets\n• Spatial 7.1 Surround Sound Engine with Precise Directional Audio\n• Tri-Mode Wireless & Detachable Broadcast-Grade Condenser Microphone\n• Memory Foam Ear Cushions with Breathable Cooling Gel",
-    mount: "Heavy-duty ergonomic articulating gas-spring arm with smooth dynamic counterbalancing.\n• Aerospace-Grade Aluminum Alloy supports up to 35-inch ultra-wide displays (33 lbs)\n• 360-Degree Rotation, +90/-45 Tilt, 180 Swivel Range\n• Integrated Concealed Cable Management Channel\n• Desk Clamp & Grommet Dual Installation System",
-    clear: ""
+  // Row Creation Helpers
+  const createSpecRow = (key = '', val = '') => {
+    const tr = document.createElement('tr');
+    tr.className = 'admin-spec-row-item';
+    tr.innerHTML = `
+      <td>
+        <input type="text" class="admin-spec-key-input" list="common-spec-keys" placeholder="e.g. Switch Type" value="${escapeSpecHtml(key)}" />
+      </td>
+      <td>
+        <input type="text" class="admin-spec-val-input" placeholder="e.g. Gateron Magnetic Jade" value="${escapeSpecHtml(val)}" />
+      </td>
+      <td style="text-align: center;">
+        <button type="button" class="admin-spec-del-btn" title="Remove specification row" aria-label="Remove row">&times;</button>
+      </td>
+    `;
+
+    tr.querySelector('.admin-spec-del-btn').addEventListener('click', () => {
+      sounds.playPop();
+      tr.remove();
+      updateSpecsCountAndPreview();
+    });
+
+    tr.querySelectorAll('input').forEach(input => {
+      input.addEventListener('input', () => updateSpecsCountAndPreview());
+    });
+
+    return tr;
   };
 
-  document.querySelectorAll('.overview-preset-chip').forEach(chip => {
+  const createFeatureRow = (text = '') => {
+    const div = document.createElement('div');
+    div.className = 'admin-feature-row';
+    div.innerHTML = `
+      <span class="feature-check-icon">✓</span>
+      <input type="text" class="admin-feature-input" placeholder="e.g. Rapid Trigger technology for instantaneous key resets" value="${escapeSpecHtml(text)}" />
+      <button type="button" class="admin-feature-del-btn" title="Remove highlight" aria-label="Remove highlight">&times;</button>
+    `;
+
+    div.querySelector('.admin-feature-del-btn').addEventListener('click', () => {
+      sounds.playPop();
+      div.remove();
+      updateSpecsCountAndPreview();
+    });
+
+    div.querySelector('input').addEventListener('input', () => updateSpecsCountAndPreview());
+
+    return div;
+  };
+
+  const updateSpecsCountAndPreview = () => {
+    const specRows = tbody ? Array.from(tbody.querySelectorAll('.admin-spec-row-item')) : [];
+    const featureRows = featuresList ? Array.from(featuresList.querySelectorAll('.admin-feature-row')) : [];
+
+    // Update Counts Badges
+    const specsBadge = document.getElementById('admin-specs-count-badge');
+    const featuresBadge = document.getElementById('admin-features-count-badge');
+    if (specsBadge) specsBadge.textContent = `${specRows.length} specs`;
+    if (featuresBadge) featuresBadge.textContent = `${featureRows.length} highlights`;
+
+    // Update Storefront Live Preview
+    const previewTbody = document.getElementById('specs-preview-tbody');
+    const previewFeaturesList = document.getElementById('specs-preview-features-list');
+
+    if (previewTbody) {
+      if (specRows.length === 0) {
+        previewTbody.innerHTML = `<tr><td colspan="2" class="specs-empty-notice">No specifications added yet. Click "+ Add Spec Row" or choose a Quick Preset above.</td></tr>`;
+      } else {
+        previewTbody.innerHTML = specRows.map(row => {
+          const k = row.querySelector('.admin-spec-key-input')?.value.trim() || 'Specification';
+          const v = row.querySelector('.admin-spec-val-input')?.value.trim() || '—';
+          return `
+            <tr>
+              <td class="preview-spec-name">${escapeSpecHtml(k)}</td>
+              <td class="preview-spec-val">${escapeSpecHtml(v)}</td>
+            </tr>
+          `;
+        }).join('');
+      }
+    }
+
+    if (previewFeaturesList) {
+      if (featureRows.length === 0) {
+        previewFeaturesList.innerHTML = `<li class="specs-empty-notice" style="grid-column: 1 / -1;">No features added yet. Click "+ Add Highlight" to include engineered selling points.</li>`;
+      } else {
+        previewFeaturesList.innerHTML = featureRows.map(row => {
+          const f = row.querySelector('.admin-feature-input')?.value.trim();
+          if (!f) return '';
+          return `
+            <li>
+              <span class="preview-check-icon">✓</span>
+              <span>${escapeSpecHtml(f)}</span>
+            </li>
+          `;
+        }).join('');
+      }
+    }
+  };
+
+  // Add Spec Button
+  if (addSpecBtn && tbody) {
+    addSpecBtn.onclick = (e) => {
+      e.preventDefault();
+      sounds.playClick();
+      const row = createSpecRow('', '');
+      tbody.appendChild(row);
+      row.querySelector('.admin-spec-key-input')?.focus();
+      updateSpecsCountAndPreview();
+    };
+  }
+
+  // Add Feature Button
+  if (addFeatureBtn && featuresList) {
+    addFeatureBtn.onclick = (e) => {
+      e.preventDefault();
+      sounds.playClick();
+      const row = createFeatureRow('');
+      featuresList.appendChild(row);
+      row.querySelector('.admin-feature-input')?.focus();
+      updateSpecsCountAndPreview();
+    };
+  }
+
+  // Quick Attribute Chips
+  container.querySelectorAll('.quick-attr-chip').forEach(chip => {
     chip.onclick = (e) => {
       e.preventDefault();
       sounds.playClick();
-      const tpl = chip.dataset.template;
-      if (tpl === 'clear') {
-        descEl.value = '';
-      } else if (presets[tpl]) {
-        descEl.value = presets[tpl];
-      }
-      descEl.dispatchEvent(new Event('input', { bubbles: true }));
+      const key = chip.dataset.key;
+      if (!tbody) return;
+      const row = createSpecRow(key, '');
+      tbody.appendChild(row);
+      row.querySelector('.admin-spec-val-input')?.focus();
+      updateSpecsCountAndPreview();
     };
   });
+
+  // Quick Feature Chips
+  container.querySelectorAll('.quick-feature-chip').forEach(chip => {
+    chip.onclick = (e) => {
+      e.preventDefault();
+      sounds.playClick();
+      const feat = chip.dataset.feature;
+      if (!featuresList) return;
+      const row = createFeatureRow(feat);
+      featuresList.appendChild(row);
+      updateSpecsCountAndPreview();
+    };
+  });
+
+  // Template Loader
+  const loadTemplate = (tplKey) => {
+    if (!tbody || !featuresList) return;
+    tbody.innerHTML = '';
+    featuresList.innerHTML = '';
+
+    // Update template button active styles
+    container.querySelectorAll('.specs-tpl-btn').forEach(btn => {
+      btn.classList.toggle('is-active', btn.dataset.tpl === tplKey);
+    });
+
+    if (tplKey === 'clear') {
+      updateSpecsCountAndPreview();
+      return;
+    }
+
+    const tpl = SPEC_TEMPLATES[tplKey];
+    if (tpl) {
+      // Populate Specs Table
+      Object.entries(tpl.specs || {}).forEach(([k, v]) => {
+        tbody.appendChild(createSpecRow(k, v));
+      });
+
+      // Populate Features
+      (tpl.features || []).forEach(f => {
+        featuresList.appendChild(createFeatureRow(f));
+      });
+
+      // Update description if currently blank
+      if (descEl && (!descEl.value || descEl.value.trim() === '')) {
+        descEl.value = tpl.desc || '';
+      }
+
+      updateSpecsCountAndPreview();
+    }
+  };
+
+  // Wire Template Buttons
+  container.querySelectorAll('.specs-tpl-btn').forEach(btn => {
+    btn.onclick = (e) => {
+      e.preventDefault();
+      sounds.playClick();
+      const tplKey = btn.dataset.tpl;
+      loadTemplate(tplKey);
+      if (tplKey !== 'clear') {
+        ui.showToast({
+          title: 'Specs Template Loaded',
+          message: `Loaded ${SPEC_TEMPLATES[tplKey]?.label || tplKey} table & highlights.`,
+          type: 'info'
+        });
+      }
+    };
+  });
+
+  // Category Auto-Mapper for new products
+  if (categorySelect) {
+    categorySelect.onchange = () => {
+      const isNew = !document.getElementById('modal-prod-id')?.value;
+      if (isNew) {
+        const cat = categorySelect.value;
+        let matchedTpl = 'keyboard';
+        if (cat.includes('Mice')) matchedTpl = 'mouse';
+        else if (cat.includes('Audio')) matchedTpl = 'audio';
+        else if (cat.includes('Laptops')) matchedTpl = 'laptop';
+        else if (cat.includes('Towers') || cat.includes('Gaming PCs')) matchedTpl = 'gamingpc';
+        else if (cat.includes('Monitors')) matchedTpl = 'monitor';
+        else if (cat.includes('Hubs')) matchedTpl = 'hub';
+        loadTemplate(matchedTpl);
+      }
+    };
+  }
+
+  // Populate Initial State
+  if (tbody && featuresList) {
+    tbody.innerHTML = '';
+    featuresList.innerHTML = '';
+
+    const hasSpecs = product && product.specs && Object.keys(product.specs).length > 0;
+    const hasFeatures = product && product.features && product.features.length > 0;
+
+    if (hasSpecs || hasFeatures) {
+      if (hasSpecs) {
+        Object.entries(product.specs).forEach(([k, v]) => {
+          tbody.appendChild(createSpecRow(k, v));
+        });
+      }
+      if (hasFeatures) {
+        product.features.forEach(f => {
+          featuresList.appendChild(createFeatureRow(f));
+        });
+      }
+      updateSpecsCountAndPreview();
+    } else {
+      // Default to keyboard preset (matches user reference screenshot)
+      loadTemplate('keyboard');
+    }
+  }
+}
+
+export function serializeProductSpecs() {
+  const tbody = document.getElementById('admin-specs-tbody');
+  const featuresList = document.getElementById('admin-features-list');
+
+  const specs = {};
+  if (tbody) {
+    tbody.querySelectorAll('.admin-spec-row-item').forEach(row => {
+      const key = row.querySelector('.admin-spec-key-input')?.value.trim();
+      const val = row.querySelector('.admin-spec-val-input')?.value.trim();
+      if (key && val) {
+        specs[key] = val;
+      }
+    });
+  }
+
+  const features = [];
+  if (featuresList) {
+    featuresList.querySelectorAll('.admin-feature-row').forEach(row => {
+      const f = row.querySelector('.admin-feature-input')?.value.trim();
+      if (f) {
+        features.push(f);
+      }
+    });
+  }
+
+  return { specs, features };
 }
 

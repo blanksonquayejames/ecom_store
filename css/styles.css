@@ -13507,4 +13507,543 @@ body[data-view="admin"].has-cart-rail .site-header,
 body[data-view="auth"].has-cart-rail .site-header,
 body[data-view="account"].has-cart-rail .site-header {
   right: 0 !important;
-}
+}
+
+/* ==========================================================================
+   Admin Product Technical Specifications Table & Highlights Builder
+   Replicates Storefront PDP Specs Card (Matches User's Reference Screenshot)
+   ========================================================================== */
+.admin-specs-builder-group {
+  background: #F8FAFC;
+  border: 1px solid #E2E8F0;
+  border-radius: 16px;
+  padding: 1.25rem;
+  margin-bottom: 1.5rem;
+  transition: all 0.25s ease;
+}
+
+.specs-builder-header-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  margin-bottom: 0.85rem;
+}
+
+.specs-builder-titles .form-label-bold {
+  display: block;
+  font-size: 1rem;
+  font-weight: 800;
+  color: #0F172A;
+  margin-bottom: 0.15rem;
+}
+
+.specs-builder-subtitle {
+  font-size: 0.8rem;
+  color: #64748B;
+}
+
+.specs-mode-toggle-wrap {
+  display: inline-flex;
+  background: #E2E8F0;
+  padding: 3px;
+  border-radius: 999px;
+  gap: 2px;
+}
+
+.specs-mode-btn {
+  border: none;
+  background: transparent;
+  padding: 0.35rem 0.85rem;
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: #64748B;
+  border-radius: 999px;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  transition: all 0.2s ease;
+}
+
+.specs-mode-btn:hover {
+  color: #0F172A;
+}
+
+.specs-mode-btn.is-active {
+  background: #FFFFFF;
+  color: #0F172A;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+}
+
+/* Quick Templates Toolbar */
+.specs-templates-bar {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  flex-wrap: wrap;
+  padding: 0.65rem 0;
+  border-top: 1px dashed #CBD5E1;
+  border-bottom: 1px dashed #CBD5E1;
+  margin-bottom: 1rem;
+}
+
+.specs-templates-label {
+  font-size: 0.74rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: #64748B;
+  margin-right: 0.2rem;
+}
+
+.specs-tpl-btn {
+  font-size: 0.78rem;
+  font-weight: 600;
+  padding: 0.3rem 0.65rem;
+  border-radius: 8px;
+  border: 1px solid #CBD5E1;
+  background: #FFFFFF;
+  color: #334155;
+  cursor: pointer;
+  transition: all 0.18s ease;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+.specs-tpl-btn:hover {
+  border-color: #DC2626;
+  color: #DC2626;
+  background: #FEF2F2;
+}
+
+.specs-tpl-btn.is-active {
+  border-color: #DC2626;
+  background: #FEF2F2;
+  color: #DC2626;
+  font-weight: 700;
+  box-shadow: 0 1px 3px rgba(220, 38, 38, 0.15);
+}
+
+/* Cards inside Editor */
+.specs-table-card,
+.features-checklist-card {
+  background: #FFFFFF;
+  border: 1px solid #E2E8F0;
+  border-radius: 12px;
+  padding: 1rem 1.15rem;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.02);
+}
+
+.specs-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.85rem;
+}
+
+.specs-card-title-wrap {
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+}
+
+.specs-card-badge-icon {
+  font-size: 1.1rem;
+}
+
+.specs-card-title {
+  font-size: 0.92rem;
+  font-weight: 800;
+  color: #0F172A;
+}
+
+.specs-count-badge {
+  font-size: 0.72rem;
+  font-weight: 700;
+  background: #F1F5F9;
+  color: #475569;
+  padding: 0.15rem 0.55rem;
+  border-radius: 999px;
+  border: 1px solid #E2E8F0;
+}
+
+/* Specs Editor Table */
+.specs-table-scroll-container {
+  overflow-x: auto;
+  margin-bottom: 0.65rem;
+}
+
+.admin-specs-editor-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.admin-specs-editor-table th {
+  text-align: left;
+  font-size: 0.72rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.6px;
+  color: #64748B;
+  padding: 0.45rem 0.4rem;
+  border-bottom: 1px solid #E2E8F0;
+}
+
+.admin-specs-editor-table td {
+  padding: 0.35rem 0.4rem;
+}
+
+.admin-spec-key-input,
+.admin-spec-val-input {
+  width: 100%;
+  padding: 0.45rem 0.65rem;
+  font-size: 0.84rem;
+  border: 1px solid #CBD5E1;
+  border-radius: 6px;
+  background: #FFFFFF;
+  color: #0F172A;
+  transition: all 0.15s ease;
+  outline: none;
+}
+
+.admin-spec-key-input {
+  font-weight: 700;
+  color: #0F172A;
+}
+
+.admin-spec-key-input:focus,
+.admin-spec-val-input:focus {
+  border-color: #DC2626;
+  box-shadow: 0 0 0 3px rgba(220, 38, 38, 0.12);
+}
+
+.admin-spec-del-btn {
+  width: 30px;
+  height: 30px;
+  border: none;
+  background: transparent;
+  color: #94A3B8;
+  border-radius: 6px;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.15rem;
+  line-height: 1;
+  transition: all 0.15s ease;
+}
+
+.admin-spec-del-btn:hover {
+  color: #DC2626;
+  background: #FEE2E2;
+}
+
+/* Quick Attribute & Feature Chips Strip */
+.specs-quick-attr-strip {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  flex-wrap: wrap;
+  padding-top: 0.65rem;
+  border-top: 1px solid #F1F5F9;
+}
+
+.quick-attr-label {
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: #64748B;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-right: 0.2rem;
+}
+
+.quick-attr-chip,
+.quick-feature-chip {
+  font-size: 0.74rem;
+  font-weight: 600;
+  padding: 0.2rem 0.55rem;
+  border-radius: 999px;
+  border: 1px solid #E2E8F0;
+  background: #F8FAFC;
+  color: #334155;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.quick-attr-chip:hover,
+.quick-feature-chip:hover {
+  border-color: #DC2626;
+  background: #FEF2F2;
+  color: #DC2626;
+}
+
+/* Features Checklist Editor */
+.admin-features-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.45rem;
+}
+
+.admin-feature-row {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  animation: fadeIn 0.2s ease;
+}
+
+.feature-check-icon {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: #FFF7ED;
+  border: 1px solid #FFEDD5;
+  color: #EA580C;
+  font-size: 0.8rem;
+  font-weight: 900;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.admin-feature-input {
+  flex: 1;
+  padding: 0.45rem 0.65rem;
+  font-size: 0.84rem;
+  border: 1px solid #CBD5E1;
+  border-radius: 6px;
+  background: #FFFFFF;
+  color: #0F172A;
+  outline: none;
+  transition: all 0.15s ease;
+}
+
+.admin-feature-input:focus {
+  border-color: #DC2626;
+  box-shadow: 0 0 0 3px rgba(220, 38, 38, 0.12);
+}
+
+.admin-feature-del-btn {
+  width: 30px;
+  height: 30px;
+  border: none;
+  background: transparent;
+  color: #94A3B8;
+  border-radius: 6px;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.15rem;
+  line-height: 1;
+  transition: all 0.15s ease;
+}
+
+.admin-feature-del-btn:hover {
+  color: #DC2626;
+  background: #FEE2E2;
+}
+
+/* ==========================================================================
+   Storefront Live Preview Card (Replicates User's Screenshot Exactly)
+   ========================================================================== */
+.specs-preview-showcase-box {
+  background: #FFFFFF;
+  border: 1px solid #E2E8F0;
+  border-radius: 16px;
+  padding: 1.75rem;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04);
+}
+
+.specs-preview-tabs-nav {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 1.75rem;
+  flex-wrap: wrap;
+}
+
+.specs-preview-tab-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  padding: 0.55rem 1.15rem;
+  border-radius: 999px;
+  font-size: 0.86rem;
+  font-weight: 700;
+  border: 1px solid #E2E8F0;
+  color: #475569;
+  background: #FFFFFF;
+  user-select: none;
+}
+
+.specs-preview-tab-pill.is-active {
+  background: #DC2626;
+  color: #FFFFFF;
+  border-color: #DC2626;
+  box-shadow: 0 4px 14px rgba(220, 38, 38, 0.35);
+}
+
+.specs-preview-tab-pill .pill-icon {
+  font-size: 0.95rem;
+}
+
+.specs-preview-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 1.75rem;
+}
+
+.specs-preview-table tr {
+  border-bottom: 1px solid #F1F5F9;
+}
+
+.specs-preview-table tr:last-child {
+  border-bottom: none;
+}
+
+.specs-preview-table td {
+  padding: 0.85rem 0;
+  font-size: 0.88rem;
+  vertical-align: top;
+}
+
+.preview-spec-name {
+  width: 35%;
+  font-weight: 700;
+  color: #0F172A;
+  padding-right: 1rem;
+}
+
+.preview-spec-val {
+  color: #475569;
+  font-weight: 500;
+}
+
+.specs-preview-features-box {
+  padding-top: 1.5rem;
+  border-top: 1px solid #F1F5F9;
+}
+
+.specs-preview-features-title {
+  font-size: 1.05rem;
+  font-weight: 800;
+  color: #0F172A;
+  margin: 0 0 1rem 0;
+}
+
+.specs-preview-features-list {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.75rem 1.5rem;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+@media (max-width: 640px) {
+  .specs-preview-features-list {
+    grid-template-columns: 1fr;
+  }
+  .preview-spec-name {
+    width: 42%;
+  }
+}
+
+.specs-preview-features-list li {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.55rem;
+  font-size: 0.86rem;
+  color: #475569;
+  line-height: 1.45;
+}
+
+.preview-check-icon {
+  color: #EA580C;
+  font-weight: 900;
+  font-size: 0.95rem;
+  flex-shrink: 0;
+  margin-top: 1px;
+}
+
+.specs-empty-notice {
+  text-align: center;
+  padding: 2rem 1rem;
+  color: #94A3B8;
+  font-size: 0.88rem;
+}
+
+/* Dark Mode Overrides for Specs Builder */
+[data-theme="dark"] .admin-specs-builder-group {
+  background: #0F172A;
+  border-color: #1E293B;
+}
+
+[data-theme="dark"] .specs-builder-titles .form-label-bold,
+[data-theme="dark"] .specs-card-title,
+[data-theme="dark"] .preview-spec-name,
+[data-theme="dark"] .specs-preview-features-title {
+  color: #F8FAFC;
+}
+
+[data-theme="dark"] .specs-mode-toggle-wrap {
+  background: #1E293B;
+}
+
+[data-theme="dark"] .specs-mode-btn {
+  color: #94A3B8;
+}
+
+[data-theme="dark"] .specs-mode-btn.is-active {
+  background: #334155;
+  color: #F8FAFC;
+}
+
+[data-theme="dark"] .specs-tpl-btn {
+  background: #1E293B;
+  border-color: #334155;
+  color: #CBD5E1;
+}
+
+[data-theme="dark"] .specs-tpl-btn.is-active {
+  background: rgba(220, 38, 38, 0.2);
+  border-color: #EF4444;
+  color: #FCA5A5;
+}
+
+[data-theme="dark"] .specs-table-card,
+[data-theme="dark"] .features-checklist-card,
+[data-theme="dark"] .specs-preview-showcase-box {
+  background: #1E293B;
+  border-color: #334155;
+}
+
+[data-theme="dark"] .admin-spec-key-input,
+[data-theme="dark"] .admin-spec-val-input,
+[data-theme="dark"] .admin-feature-input {
+  background: #0F172A;
+  border-color: #334155;
+  color: #F8FAFC;
+}
+
+[data-theme="dark"] .quick-attr-chip,
+[data-theme="dark"] .quick-feature-chip {
+  background: #0F172A;
+  border-color: #334155;
+  color: #CBD5E1;
+}
+
+[data-theme="dark"] .preview-spec-val,
+[data-theme="dark"] .specs-preview-features-list li {
+  color: #CBD5E1;
+}
+
+[data-theme="dark"] .specs-preview-table tr,
+[data-theme="dark"] .specs-preview-features-box {
+  border-color: #334155;
+}
+
