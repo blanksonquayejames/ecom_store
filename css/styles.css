@@ -8173,8 +8173,7 @@ body.no-scroll .site-header {
   }
 
   .checkout-summary-panel {
-    padding: 0 !important;
-    width: 100% !important;
+    display: none !important;
   }
 
   .summary-card {
@@ -12603,7 +12602,7 @@ body[data-view="account"] .header-inner {
   background: #F4F6F8;
   background-image: radial-gradient(#E2E8F0 0.75px, transparent 0.75px);
   background-size: 16px 16px;
-  padding: 2.75rem 1rem 2.25rem 1rem;
+  padding: 1.25rem 1rem 0.85rem 1rem;
   border-bottom: 1px solid #E5E7EB;
   text-align: center;
 }
@@ -12920,7 +12919,7 @@ body[data-view="account"] .header-inner {
 /* Professional Responsive Cart Mobile Card Layout */
 @media (max-width: 767px) {
   .cart-banner {
-    padding: 1.5rem 1rem 1.25rem 1rem;
+    padding: 0.75rem 1rem 0.6rem 1rem;
   }
 
   .cart-banner-title {
@@ -13948,6 +13947,7 @@ body[data-view="account"].has-cart-rail .site-header {
   .specs-preview-features-list {
     grid-template-columns: 1fr;
   }
+
   .preview-spec-name {
     width: 42%;
   }
@@ -14046,4 +14046,3 @@ body[data-view="account"].has-cart-rail .site-header {
 [data-theme="dark"] .specs-preview-features-box {
   border-color: #334155;
 }
-

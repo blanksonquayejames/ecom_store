@@ -112,21 +112,21 @@ export function renderCartView(container) {
               <!-- Cart Item Rows -->
               <div class="cart-table-body">
                 ${cart.map(item => {
-                  const itemSubtotal = item.price * item.quantity;
-                  const unitPriceFormatted = convertPrice(item.price, currency).formatted;
-                  const subtotalFormatted = convertPrice(itemSubtotal, currency).formatted;
-                  
-                  // Product subtext / variant info
-                  let subtext = '';
-                  if (item.selectedColor || item.selectedOption) {
-                    subtext = [item.selectedColor, item.selectedOption].filter(Boolean).join(' • ');
-                  } else if (item.weight) {
-                    subtext = item.weight;
-                  } else {
-                    subtext = '500 g';
-                  }
+    const itemSubtotal = item.price * item.quantity;
+    const unitPriceFormatted = convertPrice(item.price, currency).formatted;
+    const subtotalFormatted = convertPrice(itemSubtotal, currency).formatted;
 
-                  return `
+    // Product subtext / variant info
+    let subtext = '';
+    if (item.selectedColor || item.selectedOption) {
+      subtext = [item.selectedColor, item.selectedOption].filter(Boolean).join(' • ');
+    } else if (item.weight) {
+      subtext = item.weight;
+    } else {
+      subtext = '500 g';
+    }
+
+    return `
                     <div class="cart-table-row" data-cart-id="${item.id}">
                       <!-- Remove Icon -->
                       <button type="button" class="cart-item-remove-btn" data-id="${item.id}" title="Remove item" aria-label="Remove ${item.name}">
@@ -165,7 +165,7 @@ export function renderCartView(container) {
                       </div>
                     </div>
                   `;
-                }).join('')}
+  }).join('')}
               </div>
             </div>
           </div>
