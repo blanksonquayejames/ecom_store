@@ -553,16 +553,7 @@
       <!-- Header Action Controls (Currency, Sound, Theme, Wishlist, Account, Bag) -->
       <div class="header-actions">
 
-        <!-- Store Currency Badge (Ghana Cedis Only) -->
-        <div class="currency-dropdown-wrap" id="currency-dropdown-wrap" title="Store Currency: Ghana Cedis (GH₵)">
-          <div class="currency-trigger-btn currency-static-pill" id="currency-trigger-btn" role="status" aria-label="Currency: Ghana Cedis">
-            <span class="currency-flag-icon" id="currency-display-flag">🇬🇭</span>
-            <span class="currency-display-symbol" id="currency-display-symbol">GH₵</span>
-          </div>
-          <select id="currency-selector" class="sr-only" style="display: none;" aria-hidden="true" tabindex="-1">
-            <option value="GHS" selected>GHS (GH₵)</option>
-          </select>
-        </div>
+
 
 
 
@@ -628,15 +619,7 @@
                   <span>Profile & Security</span>
                 </a>
               </li>
-              <li>
-                <a href="#/account/rewards" class="dropdown-link-item" id="dropdown-link-rewards">
-                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <polygon
-                      points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" />
-                  </svg>
-                  <span>VIP Rewards Club</span>
-                </a>
-              </li>
+
               <li class="user-dropdown-divider" id="dropdown-admin-divider" style="display: none;"></li>
               <li id="dropdown-admin-item" style="display: none;">
                 <a href="#/admin/overview" class="dropdown-link-item text-primary" id="dropdown-link-admin">
@@ -666,7 +649,8 @@
 
         <!-- Cart Button -->
         <button class="header-icon-btn header-cart-btn" id="header-cart-btn" aria-label="Shopping Cart">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+            stroke-linecap="round" stroke-linejoin="round">
             <circle cx="8" cy="21" r="1.5" fill="currentColor" />
             <circle cx="19" cy="21" r="1.5" fill="currentColor" />
             <path d="M2.5 3.5h3l2.4 11.5a1 1 0 0 0 1 .8h10.2a1 1 0 0 0 1-.8l1.8-7.5H6.2" />
@@ -720,7 +704,8 @@
       <div class="mobile-drawer-currency-box">
         <span class="drawer-section-label">Currency</span>
         <div class="mobile-currency-toggles">
-          <div class="mobile-curr-chip is-active" data-currency="GHS" id="mobile-curr-ghs" style="width: 100%; justify-content: center; cursor: default;">
+          <div class="mobile-curr-chip is-active" data-currency="GHS" id="mobile-curr-ghs"
+            style="width: 100%; justify-content: center; cursor: default;">
             <span>🇬🇭 Ghanaian Cedi (GH₵)</span>
           </div>
         </div>
@@ -1141,191 +1126,212 @@
                 <input type="url" class="custom-input custom-input-sm" id="modal-prod-url-fallback"
                   placeholder="Paste external image URL (e.g. https://images.unsplash.com/...)" />
                 <button type="button" class="btn btn-se          <!-- Technical Specifications & Engineered Highlights Builder (Matches Storefront PDP) -->
-          <div class="form-group admin-specs-builder-group" id="admin-specs-builder-group">
-            <div class="specs-builder-header-row">
-              <div class="specs-builder-titles">
-                <label class="form-label-bold">Technical Specifications &amp; Highlights Builder</label>
-                <span class="specs-builder-subtitle">Configure structured specs table and engineered feature checklist</span>
+          <div class=" form-group admin-specs-builder-group" id="admin-specs-builder-group">
+                  <div class="specs-builder-header-row">
+                    <div class="specs-builder-titles">
+                      <label class="form-label-bold">Technical Specifications &amp; Highlights Builder</label>
+                      <span class="specs-builder-subtitle">Configure structured specs table and engineered feature
+                        checklist</span>
+                    </div>
+                    <div class="specs-mode-toggle-wrap">
+                      <button type="button" class="specs-mode-btn is-active" id="specs-mode-edit-btn" data-mode="edit">
+                        <span>📝 Table Editor</span>
+                      </button>
+                      <button type="button" class="specs-mode-btn" id="specs-mode-preview-btn" data-mode="preview">
+                        <span>👁️ Storefront Live Preview</span>
+                      </button>
+                    </div>
+                  </div>
+
+                  <!-- Quick Template Presets Bar -->
+                  <div class="specs-templates-bar">
+                    <span class="specs-templates-label">Quick Presets:</span>
+                    <button type="button" class="specs-tpl-btn is-active" data-tpl="keyboard"
+                      title="Load Keyboard Specs (Screenshot)">⌨️ Keyboard</button>
+                    <button type="button" class="specs-tpl-btn" data-tpl="mouse" title="Load Mouse Specs">🖱️
+                      Mouse</button>
+                    <button type="button" class="specs-tpl-btn" data-tpl="audio" title="Load Headset Specs">🎧
+                      Headset</button>
+                    <button type="button" class="specs-tpl-btn" data-tpl="laptop" title="Load Laptop Specs">💻
+                      Laptop</button>
+                    <button type="button" class="specs-tpl-btn" data-tpl="gamingpc" title="Load Tower Specs">🖥️ Gaming
+                      PC</button>
+                    <button type="button" class="specs-tpl-btn" data-tpl="monitor" title="Load Monitor Specs">📺
+                      Monitor</button>
+                    <button type="button" class="specs-tpl-btn" data-tpl="hub" title="Load Hub/Dock Specs">🔌
+                      Hub/Dock</button>
+                    <button type="button" class="specs-tpl-btn text-muted" data-tpl="clear" title="Clear all rows">↺
+                      Clear</button>
+                  </div>
+
+                  <!-- VIEW 1: Interactive Table & Checklist Editor -->
+                  <div class="specs-editor-pane" id="specs-editor-pane">
+
+                    <!-- Section 1: Specifications Table -->
+                    <div class="specs-table-card">
+                      <div class="specs-card-header">
+                        <div class="specs-card-title-wrap">
+                          <span class="specs-card-badge-icon">📐</span>
+                          <strong class="specs-card-title">Technical Specifications Table</strong>
+                          <span class="specs-count-badge" id="admin-specs-count-badge">7 specs</span>
+                        </div>
+                        <button type="button" class="btn btn-secondary btn-xs" id="admin-add-spec-row-btn">
+                          + Add Spec Row
+                        </button>
+                      </div>
+
+                      <div class="specs-table-scroll-container">
+                        <table class="admin-specs-editor-table" id="admin-specs-editor-table">
+                          <thead>
+                            <tr>
+                              <th style="width: 38%;">Specification Attribute</th>
+                              <th style="width: 54%;">Specification Details / Value</th>
+                              <th style="width: 8%; text-align: center;">Remove</th>
+                            </tr>
+                          </thead>
+                          <tbody id="admin-specs-tbody">
+                            <!-- Dynamically injected rows -->
+                          </tbody>
+                        </table>
+                      </div>
+
+                      <!-- Autocomplete Datalist for Common Spec Keys -->
+                      <datalist id="common-spec-keys">
+                        <option value="Switch Type"></option>
+                        <option value="Actuation Point"></option>
+                        <option value="Polling Rate"></option>
+                        <option value="Chassis"></option>
+                        <option value="Keycaps"></option>
+                        <option value="Connectivity"></option>
+                        <option value="Battery"></option>
+                        <option value="Sensor"></option>
+                        <option value="Resolution / DPI"></option>
+                        <option value="Max Speed / Acceleration"></option>
+                        <option value="Weight"></option>
+                        <option value="Driver Diameter"></option>
+                        <option value="Frequency Response"></option>
+                        <option value="Impedance"></option>
+                        <option value="Processor (CPU)"></option>
+                        <option value="Graphics (GPU)"></option>
+                        <option value="Memory (RAM)"></option>
+                        <option value="Storage (SSD)"></option>
+                        <option value="Display / Resolution"></option>
+                        <option value="Refresh Rate &amp; Response"></option>
+                        <option value="Power Delivery"></option>
+                        <option value="Cooling Architecture"></option>
+                        <option value="Operating System"></option>
+                        <option value="Warranty"></option>
+                      </datalist>
+
+                      <!-- Quick Spec Attribute Injectors -->
+                      <div class="specs-quick-attr-strip">
+                        <span class="quick-attr-label">Quick Add Row:</span>
+                        <button type="button" class="quick-attr-chip" data-key="Switch Type">+ Switch Type</button>
+                        <button type="button" class="quick-attr-chip" data-key="Actuation Point">+ Actuation
+                          Point</button>
+                        <button type="button" class="quick-attr-chip" data-key="Polling Rate">+ Polling Rate</button>
+                        <button type="button" class="quick-attr-chip" data-key="Chassis">+ Chassis</button>
+                        <button type="button" class="quick-attr-chip" data-key="Keycaps">+ Keycaps</button>
+                        <button type="button" class="quick-attr-chip" data-key="Connectivity">+ Connectivity</button>
+                        <button type="button" class="quick-attr-chip" data-key="Battery">+ Battery</button>
+                        <button type="button" class="quick-attr-chip" data-key="Sensor">+ Sensor</button>
+                        <button type="button" class="quick-attr-chip" data-key="Weight">+ Weight</button>
+                        <button type="button" class="quick-attr-chip" data-key="Warranty">+ Warranty</button>
+                      </div>
+                    </div>
+
+                    <!-- Section 2: Engineered Highlights & Features -->
+                    <div class="features-checklist-card mt-3">
+                      <div class="specs-card-header">
+                        <div class="specs-card-title-wrap">
+                          <span class="specs-card-badge-icon">✨</span>
+                          <strong class="specs-card-title">Engineered Highlights &amp; Features</strong>
+                          <span class="specs-count-badge" id="admin-features-count-badge">4 highlights</span>
+                        </div>
+                        <button type="button" class="btn btn-secondary btn-xs" id="admin-add-feature-row-btn">
+                          + Add Highlight
+                        </button>
+                      </div>
+
+                      <div class="admin-features-list" id="admin-features-list">
+                        <!-- Dynamically injected feature highlight rows -->
+                      </div>
+
+                      <!-- Quick Feature Injectors -->
+                      <div class="specs-quick-attr-strip mt-2">
+                        <span class="quick-attr-label">Quick Add Highlight:</span>
+                        <button type="button" class="quick-feature-chip"
+                          data-feature="Rapid Trigger technology for instantaneous key resets">+ Rapid Trigger</button>
+                        <button type="button" class="quick-feature-chip"
+                          data-feature="Dynamic Keystroke (DKS) assigns 4 actions to a single press">+ Dynamic
+                          Keystroke</button>
+                        <button type="button" class="quick-feature-chip"
+                          data-feature="Hot-swappable magnetic switch sockets">+ Hot-Swappable</button>
+                        <button type="button" class="quick-feature-chip"
+                          data-feature="Multi-layer Poron &amp; IXPE acoustic sound dampeners">+ Multi-Layer
+                          Poron</button>
+                        <button type="button" class="quick-feature-chip"
+                          data-feature="8000Hz True Hyper-Polling Wireless ultra-low latency">+ 8000Hz
+                          Hyper-Polling</button>
+                        <button type="button" class="quick-feature-chip"
+                          data-feature="6-Month 7th June Comprehensive Hardware Replacement Guarantee">+ 6-Month
+                          Warranty</button>
+                      </div>
+                    </div>
+
+                  </div>
+
+                  <!-- VIEW 2: Storefront Live Preview Card (Matches User's Screenshot) -->
+                  <div class="specs-live-preview-pane" id="specs-live-preview-pane" style="display: none;">
+                    <div class="specs-preview-showcase-box">
+                      <!-- Tab pills replicating Storefront PDP -->
+                      <div class="specs-preview-tabs-nav">
+                        <div class="specs-preview-tab-pill is-active">
+                          <span class="pill-icon">📐</span>
+                          <span>Technical Specifications</span>
+                        </div>
+                        <div class="specs-preview-tab-pill">
+                          <span class="pill-icon">⭐</span>
+                          <span>Client Reviews (184)</span>
+                        </div>
+                        <div class="specs-preview-tab-pill">
+                          <span class="pill-icon">🚚</span>
+                          <span>Shipping &amp; Returns</span>
+                        </div>
+                      </div>
+
+                      <!-- Replicated Specs Table -->
+                      <table class="specs-preview-table" id="specs-preview-table">
+                        <tbody id="specs-preview-tbody">
+                          <!-- Populated dynamically -->
+                        </tbody>
+                      </table>
+
+                      <!-- Replicated Highlights Section -->
+                      <div class="specs-preview-features-box">
+                        <h4 class="specs-preview-features-title">Engineered Highlights &amp; Features</h4>
+                        <ul class="specs-preview-features-list" id="specs-preview-features-list">
+                          <!-- Populated dynamically -->
+                        </ul>
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- Short Overview Description Input -->
+                  <div class="specs-desc-wrap mt-3">
+                    <label for="modal-prod-desc" class="form-label-bold">Product Short Overview &amp; Tagline</label>
+                    <textarea class="custom-input custom-textarea" id="modal-prod-desc" rows="2"
+                      placeholder="Brief 1-2 sentence executive summary of the hardware..." required></textarea>
+                  </div>
               </div>
-              <div class="specs-mode-toggle-wrap">
-                <button type="button" class="specs-mode-btn is-active" id="specs-mode-edit-btn" data-mode="edit">
-                  <span>📝 Table Editor</span>
+
+              <div class="admin-modal-actions mt-3">
+                <button type="button" class="btn btn-ghost"
+                  onclick="ui.closeModal('admin-product-modal')">Cancel</button>
+                <button type="submit" class="btn btn-primary btn-lg" id="modal-prod-save-btn">
+                  Save Product to Catalog
                 </button>
-                <button type="button" class="specs-mode-btn" id="specs-mode-preview-btn" data-mode="preview">
-                  <span>👁️ Storefront Live Preview</span>
-                </button>
               </div>
-            </div>
-
-            <!-- Quick Template Presets Bar -->
-            <div class="specs-templates-bar">
-              <span class="specs-templates-label">Quick Presets:</span>
-              <button type="button" class="specs-tpl-btn is-active" data-tpl="keyboard" title="Load Keyboard Specs (Screenshot)">⌨️ Keyboard</button>
-              <button type="button" class="specs-tpl-btn" data-tpl="mouse" title="Load Mouse Specs">🖱️ Mouse</button>
-              <button type="button" class="specs-tpl-btn" data-tpl="audio" title="Load Headset Specs">🎧 Headset</button>
-              <button type="button" class="specs-tpl-btn" data-tpl="laptop" title="Load Laptop Specs">💻 Laptop</button>
-              <button type="button" class="specs-tpl-btn" data-tpl="gamingpc" title="Load Tower Specs">🖥️ Gaming PC</button>
-              <button type="button" class="specs-tpl-btn" data-tpl="monitor" title="Load Monitor Specs">📺 Monitor</button>
-              <button type="button" class="specs-tpl-btn" data-tpl="hub" title="Load Hub/Dock Specs">🔌 Hub/Dock</button>
-              <button type="button" class="specs-tpl-btn text-muted" data-tpl="clear" title="Clear all rows">↺ Clear</button>
-            </div>
-
-            <!-- VIEW 1: Interactive Table & Checklist Editor -->
-            <div class="specs-editor-pane" id="specs-editor-pane">
-              
-              <!-- Section 1: Specifications Table -->
-              <div class="specs-table-card">
-                <div class="specs-card-header">
-                  <div class="specs-card-title-wrap">
-                    <span class="specs-card-badge-icon">📐</span>
-                    <strong class="specs-card-title">Technical Specifications Table</strong>
-                    <span class="specs-count-badge" id="admin-specs-count-badge">7 specs</span>
-                  </div>
-                  <button type="button" class="btn btn-secondary btn-xs" id="admin-add-spec-row-btn">
-                    + Add Spec Row
-                  </button>
-                </div>
-
-                <div class="specs-table-scroll-container">
-                  <table class="admin-specs-editor-table" id="admin-specs-editor-table">
-                    <thead>
-                      <tr>
-                        <th style="width: 38%;">Specification Attribute</th>
-                        <th style="width: 54%;">Specification Details / Value</th>
-                        <th style="width: 8%; text-align: center;">Remove</th>
-                      </tr>
-                    </thead>
-                    <tbody id="admin-specs-tbody">
-                      <!-- Dynamically injected rows -->
-                    </tbody>
-                  </table>
-                </div>
-
-                <!-- Autocomplete Datalist for Common Spec Keys -->
-                <datalist id="common-spec-keys">
-                  <option value="Switch Type"></option>
-                  <option value="Actuation Point"></option>
-                  <option value="Polling Rate"></option>
-                  <option value="Chassis"></option>
-                  <option value="Keycaps"></option>
-                  <option value="Connectivity"></option>
-                  <option value="Battery"></option>
-                  <option value="Sensor"></option>
-                  <option value="Resolution / DPI"></option>
-                  <option value="Max Speed / Acceleration"></option>
-                  <option value="Weight"></option>
-                  <option value="Driver Diameter"></option>
-                  <option value="Frequency Response"></option>
-                  <option value="Impedance"></option>
-                  <option value="Processor (CPU)"></option>
-                  <option value="Graphics (GPU)"></option>
-                  <option value="Memory (RAM)"></option>
-                  <option value="Storage (SSD)"></option>
-                  <option value="Display / Resolution"></option>
-                  <option value="Refresh Rate &amp; Response"></option>
-                  <option value="Power Delivery"></option>
-                  <option value="Cooling Architecture"></option>
-                  <option value="Operating System"></option>
-                  <option value="Warranty"></option>
-                </datalist>
-
-                <!-- Quick Spec Attribute Injectors -->
-                <div class="specs-quick-attr-strip">
-                  <span class="quick-attr-label">Quick Add Row:</span>
-                  <button type="button" class="quick-attr-chip" data-key="Switch Type">+ Switch Type</button>
-                  <button type="button" class="quick-attr-chip" data-key="Actuation Point">+ Actuation Point</button>
-                  <button type="button" class="quick-attr-chip" data-key="Polling Rate">+ Polling Rate</button>
-                  <button type="button" class="quick-attr-chip" data-key="Chassis">+ Chassis</button>
-                  <button type="button" class="quick-attr-chip" data-key="Keycaps">+ Keycaps</button>
-                  <button type="button" class="quick-attr-chip" data-key="Connectivity">+ Connectivity</button>
-                  <button type="button" class="quick-attr-chip" data-key="Battery">+ Battery</button>
-                  <button type="button" class="quick-attr-chip" data-key="Sensor">+ Sensor</button>
-                  <button type="button" class="quick-attr-chip" data-key="Weight">+ Weight</button>
-                  <button type="button" class="quick-attr-chip" data-key="Warranty">+ Warranty</button>
-                </div>
-              </div>
-
-              <!-- Section 2: Engineered Highlights & Features -->
-              <div class="features-checklist-card mt-3">
-                <div class="specs-card-header">
-                  <div class="specs-card-title-wrap">
-                    <span class="specs-card-badge-icon">✨</span>
-                    <strong class="specs-card-title">Engineered Highlights &amp; Features</strong>
-                    <span class="specs-count-badge" id="admin-features-count-badge">4 highlights</span>
-                  </div>
-                  <button type="button" class="btn btn-secondary btn-xs" id="admin-add-feature-row-btn">
-                    + Add Highlight
-                  </button>
-                </div>
-
-                <div class="admin-features-list" id="admin-features-list">
-                  <!-- Dynamically injected feature highlight rows -->
-                </div>
-
-                <!-- Quick Feature Injectors -->
-                <div class="specs-quick-attr-strip mt-2">
-                  <span class="quick-attr-label">Quick Add Highlight:</span>
-                  <button type="button" class="quick-feature-chip" data-feature="Rapid Trigger technology for instantaneous key resets">+ Rapid Trigger</button>
-                  <button type="button" class="quick-feature-chip" data-feature="Dynamic Keystroke (DKS) assigns 4 actions to a single press">+ Dynamic Keystroke</button>
-                  <button type="button" class="quick-feature-chip" data-feature="Hot-swappable magnetic switch sockets">+ Hot-Swappable</button>
-                  <button type="button" class="quick-feature-chip" data-feature="Multi-layer Poron &amp; IXPE acoustic sound dampeners">+ Multi-Layer Poron</button>
-                  <button type="button" class="quick-feature-chip" data-feature="8000Hz True Hyper-Polling Wireless ultra-low latency">+ 8000Hz Hyper-Polling</button>
-                  <button type="button" class="quick-feature-chip" data-feature="6-Month 7th June Comprehensive Hardware Replacement Guarantee">+ 6-Month Warranty</button>
-                </div>
-              </div>
-
-            </div>
-
-            <!-- VIEW 2: Storefront Live Preview Card (Matches User's Screenshot) -->
-            <div class="specs-live-preview-pane" id="specs-live-preview-pane" style="display: none;">
-              <div class="specs-preview-showcase-box">
-                <!-- Tab pills replicating Storefront PDP -->
-                <div class="specs-preview-tabs-nav">
-                  <div class="specs-preview-tab-pill is-active">
-                    <span class="pill-icon">📐</span>
-                    <span>Technical Specifications</span>
-                  </div>
-                  <div class="specs-preview-tab-pill">
-                    <span class="pill-icon">⭐</span>
-                    <span>Client Reviews (184)</span>
-                  </div>
-                  <div class="specs-preview-tab-pill">
-                    <span class="pill-icon">🚚</span>
-                    <span>Shipping &amp; Returns</span>
-                  </div>
-                </div>
-
-                <!-- Replicated Specs Table -->
-                <table class="specs-preview-table" id="specs-preview-table">
-                  <tbody id="specs-preview-tbody">
-                    <!-- Populated dynamically -->
-                  </tbody>
-                </table>
-
-                <!-- Replicated Highlights Section -->
-                <div class="specs-preview-features-box">
-                  <h4 class="specs-preview-features-title">Engineered Highlights &amp; Features</h4>
-                  <ul class="specs-preview-features-list" id="specs-preview-features-list">
-                    <!-- Populated dynamically -->
-                  </ul>
-                </div>
-              </div>
-            </div>
-
-            <!-- Short Overview Description Input -->
-            <div class="specs-desc-wrap mt-3">
-              <label for="modal-prod-desc" class="form-label-bold">Product Short Overview &amp; Tagline</label>
-              <textarea class="custom-input custom-textarea" id="modal-prod-desc" rows="2"
-                placeholder="Brief 1-2 sentence executive summary of the hardware..." required></textarea>
-            </div>
-          </div>
-
-          <div class="admin-modal-actions mt-3">
-            <button type="button" class="btn btn-ghost" onclick="ui.closeModal('admin-product-modal')">Cancel</button>
-            <button type="submit" class="btn btn-primary btn-lg" id="modal-prod-save-btn">
-              Save Product to Catalog
-            </button>
-          </div>
         </form>
       </div>
     </div>
@@ -1450,7 +1456,7 @@
   <div class="toast-container" id="toast-container"></div>
 
   <!-- Global Luxury Footer -->
-  <footer class="site-footer">
+  <footer class="site-footer" id="site-footer">
     <div class="container">
       <div class="footer-top-grid">
 

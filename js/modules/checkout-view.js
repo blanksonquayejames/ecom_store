@@ -501,7 +501,8 @@ function attachCheckoutEvents(container, formData) {
 
   // Back to Bag
   container.querySelector('#chk-back-to-bag')?.addEventListener('click', () => {
-    ui.toggleDrawer('cart-drawer', true);
+    sounds.playClick();
+    store.setView('cart');
   });
 
   // Mobile Order Summary Accordion Toggle

@@ -96,17 +96,7 @@ function renderAuthenticatedHub(container, user, orders, currency, firstName) {
     <div class="account-page-wrapper animate-fade-in">
       <div class="container">
         
-        <!-- Breadcrumbs -->
-        <nav class="account-breadcrumb-nav mb-3" aria-label="Account Breadcrumbs">
-          <a href="#/catalog" class="account-breadcrumb-link" id="account-bread-store">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
-            Storefront
-          </a>
-          <span class="breadcrumb-sep">/</span>
-          <a href="#/account/overview" class="account-breadcrumb-link" id="account-bread-hub">Client Services</a>
-          <span class="breadcrumb-sep">/</span>
-          <span class="breadcrumb-active" id="account-active-breadcrumb">${getAccountTabLabel(activeAccountTab)}</span>
-        </nav>
+
 
         <!-- Executive Account Profile Header Banner -->
         <div class="account-header-card">
@@ -136,16 +126,7 @@ function renderAuthenticatedHub(container, user, orders, currency, firstName) {
             </div>
           </div>
 
-          <!-- Loyalty Card -->
-          <div class="loyalty-card-box">
-            <div class="loyalty-card-tag">7TH JUNE VIP CLUB</div>
-            <div class="loyalty-points-number">${user.points.toLocaleString()} <span class="pts-label">PTS</span></div>
-            <p class="loyalty-points-sub">Equivalent to ${convertPrice(Math.floor(user.points / 10), currency).formatted} in redeemable credit</p>
-            <div class="loyalty-progress-track">
-              <div class="loyalty-progress-fill" style="width: ${Math.min(100, Math.round((user.points / 5000) * 100))}%;"></div>
-            </div>
-            <div class="loyalty-tier-status">Next Tier: <strong>Titanium Sovereign (5,000 pts)</strong></div>
-          </div>
+
         </div>
 
         <!-- Account Hub Navigation Tabs -->
@@ -168,10 +149,7 @@ function renderAuthenticatedHub(container, user, orders, currency, firstName) {
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
             <span>Profile & Security</span>
           </button>
-          <button class="account-tab-btn ${activeAccountTab === 'rewards' ? 'is-active' : ''}" data-tab="rewards">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
-            <span>VIP Rewards Club</span>
-          </button>
+
         </div>
 
         <!-- Dynamic Tab Content Pane -->

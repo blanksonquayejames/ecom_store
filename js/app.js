@@ -201,6 +201,7 @@ function updateHeaderLayoutForView(page) {
   const cartBtn = document.getElementById('header-cart-btn');
   const siteHeader = document.getElementById('site-header');
   const mobileBottomNav = document.querySelector('.mobile-bottom-nav');
+  const siteFooter = document.getElementById('site-footer');
 
   siteHeader?.classList.remove('is-mobile-search-open');
 
@@ -219,6 +220,9 @@ function updateHeaderLayoutForView(page) {
     if (cartBtn) cartBtn.style.display = '';
   }
 
+  // Hide footer on checkout page
+  if (siteFooter) siteFooter.style.display = page === 'checkout' ? 'none' : '';
+
   // Ensure mini-cart subtotal menu is closed and hidden on cart page, delivery/checkout process, admin section, and account profile page
   if (page === 'cart' || page === 'checkout' || page === 'admin' || page === 'auth' || page === 'login' || page === 'account') {
     if (window.closeMiniCartRail) window.closeMiniCartRail(true);
@@ -231,6 +235,7 @@ function updateHeaderLayoutForView(page) {
     }
   }
 }
+
 
 
 function updateHeaderUserStatus(user) {

@@ -4,18 +4,205 @@
  */
 
 import { sounds } from './audio.js';
+import { store } from './state.js';
+import { convertPrice } from './currency.js';
 
 class UIManager {
   constructor() {
     this.toastContainer = null;
+    this.navCartTimer = null;
   }
 
   init() {
     this.toastContainer = document.getElementById('toast-container');
     this.setupEscapeListener();
+
+    // Close nav cart popover on click outside
+    document.addEventListener('click', (e) => {
+      const popover = document.getElementById('nav-cart-popover');
+      const cartWrap = document.getElementById('header-cart-wrap');
+      if (popover && popover.classList.contains('is-open')) {
+        if (!cartWrap || !cartWrap.contains(e.target)) {
+          this.closeNavCartNotification();
+        }
+      }
+    });
+
+    // Close on view changes
+    store.subscribe('view_changed', () => {
+      this.closeNavCartNotification();
+    });
+
+    // Automatically trigger navbar notification on cart item added
+    store.subscribe('cart_item_added', (payload) => {
+      const item = payload && payload.item ? payload.item : store.state.lastAddedItem;
+      this.showNavCartNotification({
+        title: payload && !payload.isNew ? 'Cart Updated' : 'Added to Cart',
+        item
+      });
+    });
   }
 
-  showToast({ title, message, type = 'info', actionText = null, onAction = null, duration = 4000 }) {
+  isCartToast(title, message) {
+    const t = (title || '').toLowerCase();
+    const m = (message || '').toLowerCase();
+    return (
+      t.includes('added to cart') ||
+      t.includes('cart updated') ||
+      t.includes('added to bag') ||
+      t.includes('reorder added') ||
+      (t.includes('cart') && (m.includes('added') || m.includes('shopping cart') || m.includes('in your cart')))
+    );
+  }
+
+  showNavCartNotification({ title = 'Added to Cart', message = '', item = null, duration = 4500 } = {}) {
+    const popover = document.getElementById('nav-cart-popover');
+    if (!popover) return;
+
+    if (this.navCartTimer) {
+      clearTimeout(this.navCartTimer);
+      this.navCartTimer = null;
+    }
+
+    const targetItem = item || store.state.lastAddedItem || (store.state.cart && store.state.cart[store.state.cart.length - 1]);
+    const cartCount = store.getCartCount();
+    const summary = store.getCartSummary();
+    const currency = store.state.currency || 'GHS';
+    const subtotalFormatted = convertPrice(summary.subtotal, currency).formatted;
+
+    const itemName = targetItem ? targetItem.name : 'Item added to your cart';
+    const itemImg = targetItem ? targetItem.heroImage : 'image/7th June logo.png';
+    const itemPriceFormatted = targetItem ? convertPrice(targetItem.price * (targetItem.quantity || 1), currency).formatted : '';
+    const itemQty = targetItem ? targetItem.quantity : 1;
+    const variantParts = [];
+    if (targetItem && targetItem.selectedColor && targetItem.selectedColor !== 'Default') {
+      variantParts.push(targetItem.selectedColor);
+    }
+    if (targetItem && targetItem.selectedOption && targetItem.selectedOption !== 'Standard') {
+      variantParts.push(targetItem.selectedOption);
+    }
+    variantParts.push(`Qty: ${itemQty}`);
+    const metaString = variantParts.join(' • ');
+
+    popover.innerHTML = `
+      <div class="nav-cart-popover-inner">
+        <div class="nav-cart-popover-header">
+          <div class="nav-cart-status-badge">
+            <span class="nav-cart-check-icon">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="20 6 9 17 4 12"></polyline>
+              </svg>
+            </span>
+            <span class="nav-cart-status-title">${title || 'Added to Cart'}</span>
+          </div>
+          <button type="button" class="nav-cart-popover-close" id="nav-cart-popover-close" aria-label="Dismiss">&times;</button>
+        </div>
+
+        <div class="nav-cart-item-row">
+          <img src="${itemImg}" alt="${itemName}" class="nav-cart-item-img" />
+          <div class="nav-cart-item-info">
+            <span class="nav-cart-item-name" title="${itemName}">${itemName}</span>
+            <span class="nav-cart-item-meta">${metaString}</span>
+          </div>
+          <span class="nav-cart-item-price">${itemPriceFormatted}</span>
+        </div>
+
+        <div class="nav-cart-popover-subtotal-row">
+          <span>Cart Subtotal (${cartCount} ${cartCount === 1 ? 'item' : 'items'}):</span>
+          <strong class="nav-cart-subtotal-val">${subtotalFormatted}</strong>
+        </div>
+
+        <div class="nav-cart-popover-actions">
+          <button type="button" class="btn btn-secondary btn-sm nav-cart-btn-view" id="nav-cart-btn-view">
+            View Cart
+          </button>
+          <button type="button" class="btn btn-primary btn-sm nav-cart-btn-checkout" id="nav-cart-btn-checkout">
+            Checkout
+          </button>
+        </div>
+
+        <div class="nav-cart-timer-track">
+          <div class="nav-cart-timer-bar" style="animation-duration: ${duration}ms;"></div>
+        </div>
+      </div>
+    `;
+
+    popover.style.display = 'block';
+    popover.classList.add('is-open');
+
+    // Bounce the cart count badge in navbar
+    const cartBadge = document.querySelector('.cart-count-badge');
+    if (cartBadge) {
+      cartBadge.classList.remove('badge-bump');
+      void cartBadge.offsetWidth;
+      cartBadge.classList.add('badge-bump');
+    }
+
+    // Attach button events
+    popover.querySelector('#nav-cart-popover-close')?.addEventListener('click', (e) => {
+      e.stopPropagation();
+      this.closeNavCartNotification();
+    });
+
+    popover.querySelector('#nav-cart-btn-view')?.addEventListener('click', (e) => {
+      e.stopPropagation();
+      this.closeNavCartNotification();
+      store.setView('cart');
+    });
+
+    popover.querySelector('#nav-cart-btn-checkout')?.addEventListener('click', (e) => {
+      e.stopPropagation();
+      this.closeNavCartNotification();
+      store.setView('checkout');
+    });
+
+    // Auto-dismiss with hover pause
+    let remainingTime = duration;
+    let startTime = Date.now();
+
+    const startTimer = (ms) => {
+      this.navCartTimer = setTimeout(() => {
+        this.closeNavCartNotification();
+      }, ms);
+    };
+
+    popover.onmouseenter = () => {
+      if (this.navCartTimer) {
+        clearTimeout(this.navCartTimer);
+        this.navCartTimer = null;
+        remainingTime -= (Date.now() - startTime);
+      }
+      const bar = popover.querySelector('.nav-cart-timer-bar');
+      if (bar) bar.style.animationPlayState = 'paused';
+    };
+
+    popover.onmouseleave = () => {
+      startTime = Date.now();
+      const bar = popover.querySelector('.nav-cart-timer-bar');
+      if (bar) bar.style.animationPlayState = 'running';
+      startTimer(Math.max(1000, remainingTime));
+    };
+
+    startTimer(duration);
+  }
+
+  closeNavCartNotification() {
+    const popover = document.getElementById('nav-cart-popover');
+    if (!popover) return;
+    if (this.navCartTimer) {
+      clearTimeout(this.navCartTimer);
+      this.navCartTimer = null;
+    }
+    popover.classList.remove('is-open');
+    popover.style.display = 'none';
+  }
+
+  showToast({ title, message, type = 'info', actionText = null, onAction = null, duration = 4000, item = null }) {
+    // If it's an item addition or cart update, show it professionally at the navbar!
+    if (this.isCartToast(title, message)) {
+      this.showNavCartNotification({ title, message, item, duration: 4500 });
+      return;
+    }
     if (!this.toastContainer) {
       this.toastContainer = document.getElementById('toast-container');
     }
