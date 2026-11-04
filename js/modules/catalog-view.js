@@ -697,7 +697,10 @@ function attachCardEvents(grid) {
             : `${prod.name} (${selectedColor || 'Default'}) added to your shopping cart.`,
           type: 'success',
           actionText: 'View Cart',
-          onAction: () => ui.toggleDrawer('cart-drawer', true)
+          onAction: () => {
+            ui.toggleDrawer('cart-drawer', false);
+            store.setView('cart');
+          }
         });
       }
     });

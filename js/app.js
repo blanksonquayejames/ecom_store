@@ -105,6 +105,7 @@ function initApp() {
 
   // Subscribe to View changes from store
   store.subscribe('view_changed', ({ page, productId, tab, options = {} }) => {
+    ui.toggleDrawer('cart-drawer', false);
     handleRoute(page, productId, tab, !options.skipHash, options);
   });
 
@@ -199,6 +200,7 @@ function updateHeaderLayoutForView(page) {
   const currencyWrap = document.getElementById('currency-dropdown-wrap') || document.querySelector('.currency-selector-wrap');
   const userHubWrap = document.getElementById('header-user-hub-wrap');
   const cartBtn = document.getElementById('header-cart-btn');
+  const searchTriggerBtn = document.getElementById('mobile-search-trigger-btn');
   const siteHeader = document.getElementById('site-header');
   const mobileBottomNav = document.querySelector('.mobile-bottom-nav');
   const siteFooter = document.getElementById('site-footer');
@@ -218,6 +220,7 @@ function updateHeaderLayoutForView(page) {
     if (currencyWrap) currencyWrap.style.display = '';
     if (userHubWrap) userHubWrap.style.display = '';
     if (cartBtn) cartBtn.style.display = '';
+    if (searchTriggerBtn) searchTriggerBtn.style.display = (page === 'account' || page === 'auth' || page === 'login') ? 'none' : '';
   }
 
   // Hide footer on checkout page
@@ -673,7 +676,8 @@ function setupMobileNav() {
   bottomTabs.cart?.addEventListener('click', () => {
     sounds.playClick();
     closeMobileSearch();
-    ui.toggleDrawer('cart-drawer', true);
+    ui.toggleDrawer('cart-drawer', false);
+    store.setView('cart');
   });
 
   bottomTabs.account?.addEventListener('click', () => {
@@ -694,7 +698,7 @@ function setupMobileNav() {
       setBottomTabActive('home');
     } else if (page === 'account') {
       setBottomTabActive('account');
-    } else if (page === 'checkout') {
+    } else if (page === 'checkout' || page === 'cart') {
       setBottomTabActive('cart');
     } else {
       setBottomTabActive('');

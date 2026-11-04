@@ -1,4 +1,4 @@
-﻿/**
+/**
  * AURA LUXE - Central Reactive State Store
  * Handles persistent state for cart, wishlist, comparison, orders, currency, and theme.
  */
@@ -210,7 +210,7 @@ class Store {
   }
 
   // --- Cart Actions ---
-  addToCart(product, selectedColor = null, selectedOption = null, quantity = 1) {
+  addToCart(product, selectedColor = null, selectedOption = null, quantity = 1, options = {}) {
     const color = selectedColor || (product.colors && product.colors[0] ? product.colors[0].name : 'Default');
     const option = selectedOption || (product.storageOptions && product.storageOptions[0] ? product.storageOptions[0] : 'Standard');
     const heroImg = (product.colors && product.colors.find(c => c.name === color))?.img || product.heroImage;
@@ -242,7 +242,9 @@ class Store {
       ? this.state.cart[existingIndex]
       : this.state.cart[this.state.cart.length - 1];
     this.state.lastAddedItem = addedItem;
-    this.notify('cart_item_added', { item: addedItem, isNew: existingIndex === -1 });
+    if (!options || !options.silent) {
+      this.notify('cart_item_added', { item: addedItem, isNew: existingIndex === -1 });
+    }
     return true;
   }
 

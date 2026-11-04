@@ -805,7 +805,10 @@ function attachAccountPaneSpecificEvents(container, tab) {
           message: `${ord.items.length} item(s) re-added from order ${id}.`,
           type: 'success',
           actionText: 'View Cart',
-          onAction: () => ui.toggleDrawer('cart-drawer', true)
+          onAction: () => {
+            ui.toggleDrawer('cart-drawer', false);
+            store.setView('cart');
+          }
         });
       }
     });
@@ -969,7 +972,10 @@ function attachAccountPaneSpecificEvents(container, tab) {
           message: `GH₵${Math.round(discount * 15.65)} discount applied directly to your cart.`,
           type: 'success',
           actionText: 'View Cart',
-          onAction: () => ui.toggleDrawer('cart-drawer', true)
+          onAction: () => {
+            ui.toggleDrawer('cart-drawer', false);
+            store.setView('cart');
+          }
         });
 
         renderAccountView(container, 'rewards');

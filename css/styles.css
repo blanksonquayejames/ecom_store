@@ -9085,7 +9085,8 @@ body[data-view="account"] #top-announcement-bar,
 body[data-view="account"] .announcement-bar,
 body[data-view="account"] .header-search-wrap,
 body[data-view="account"] .currency-selector-wrap,
-body[data-view="account"] #header-account-btn {
+body[data-view="account"] #header-account-btn,
+body[data-view="account"] .mobile-search-trigger-btn {
   display: none !important;
 }
 

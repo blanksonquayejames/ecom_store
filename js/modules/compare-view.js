@@ -163,7 +163,10 @@ export function renderCompareModal() {
           message: `${prod.name} added to your cart.`,
           type: 'success',
           actionText: 'View Cart',
-          onAction: () => ui.toggleDrawer('cart-drawer', true)
+          onAction: () => {
+            ui.toggleDrawer('cart-drawer', false);
+            store.setView('cart');
+          }
         });
       }
     });

@@ -145,8 +145,12 @@ function setupChatInteractions() {
             title: 'Added to Bag',
             message: `${prod.name} added.`,
             type: 'success',
-            actionText: 'View Bag',
-            onAction: () => ui.toggleDrawer('cart-drawer', true)
+            actionText: 'View Cart',
+            onAction: () => {
+              ui.closeModal('ai-stylist-modal');
+              ui.toggleDrawer('cart-drawer', false);
+              store.setView('cart');
+            }
           });
         }
       });
