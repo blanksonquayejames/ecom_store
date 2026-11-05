@@ -168,10 +168,10 @@ class Store {
           };
         }
         if (!parsed.role) parsed.role = 'customer';
-        if (!parsed.addresses || !Array.isArray(parsed.addresses) || parsed.addresses.length === 0) {
-          parsed.addresses = defaultAddresses;
+        if (!parsed.addresses || !Array.isArray(parsed.addresses)) {
+          parsed.addresses = [];
         }
-        if (!parsed.phone) parsed.phone = '+233 24 555 7788';
+        if (!parsed.phone) parsed.phone = '';
         return parsed;
       })(),
       filters: {

@@ -50,21 +50,25 @@ export function renderCheckoutView(container) {
   const summary = store.getCartSummary();
 
   const defaultAddr = (user.addresses && user.addresses.find(a => a.isDefault)) || (user.addresses && user.addresses[0]) || null;
+  const isDemoAddress = defaultAddr && (defaultAddr.fullName === 'Julian Vance' || defaultAddr.address === '7th June Tech Tower, Suite 400');
+  const activeAddr = isDemoAddress ? null : defaultAddr;
+
+  const isRealUser = Boolean(user && user.isLoggedIn && user.name && user.name !== 'Julian Vance' && user.name !== 'Guest Shopper');
 
   const formData = {
-    email: user.email || 'julian.vance@7thjune.com',
-    fullName: user.name || 'Julian Vance',
-    phone: defaultAddr?.phone || user.phone || '+233 24 555 7788',
-    address: defaultAddr ? defaultAddr.address : '7th June Tech Tower, Suite 400',
-    city: defaultAddr ? defaultAddr.city : 'Accra',
-    state: defaultAddr ? (defaultAddr.region || defaultAddr.state || 'Greater Accra') : 'Greater Accra',
-    zip: defaultAddr ? (defaultAddr.zip || '00233') : '00233',
-    country: defaultAddr ? defaultAddr.country : 'Ghana',
+    email: (isRealUser && user.email && !user.email.includes('julian.vance')) ? user.email : (activeAddr?.email || ''),
+    fullName: isRealUser ? user.name : (activeAddr ? activeAddr.fullName : ''),
+    phone: activeAddr?.phone || (isRealUser && user.phone && user.phone !== '+233 24 555 7788' ? user.phone : ''),
+    address: activeAddr ? activeAddr.address : '',
+    city: activeAddr ? activeAddr.city : '',
+    state: activeAddr ? (activeAddr.region || activeAddr.state || '') : '',
+    zip: activeAddr ? (activeAddr.zip || '') : '',
+    country: activeAddr ? activeAddr.country : 'Ghana',
     shippingMethod: 'FedEx White Glove Priority Courier',
     paymentMethod: 'Mobile Money',
     momoNetwork: 'MTN MoMo',
-    momoPhone: defaultAddr?.phone || user.phone || '024 555 7788',
-    momoAccountName: user.name || 'Kwame Blankson'
+    momoPhone: '',
+    momoAccountName: isRealUser ? user.name : ''
   };
 
   container.innerHTML = `
@@ -162,7 +166,7 @@ export function renderCheckoutView(container) {
                 <h3>Contact & Insured Delivery Address</h3>
               </div>
 
-              ${user.addresses && user.addresses.length > 0 ? `
+              ${user.addresses && user.addresses.length > 0 && !isDemoAddress ? `
                 <div class="chk-saved-addresses-box mb-4">
                   <div class="chk-saved-addr-label">
                     <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
@@ -182,34 +186,34 @@ export function renderCheckoutView(container) {
               <div class="checkout-form">
                 <div class="form-group">
                   <label>Email Address for Order Confirmation</label>
-                  <input type="email" class="custom-input" id="chk-email" value="${formData.email}" placeholder="your.name@domain.com" required />
+                  <input type="email" class="custom-input" id="chk-email" value="${formData.email || ''}" placeholder="your.name@domain.com" required />
                 </div>
 
                 <div class="form-row">
                   <div class="form-group flex-1">
                     <label>Full Legal Name</label>
-                    <input type="text" class="custom-input" id="chk-name" value="${formData.fullName}" placeholder="Julian Vance" required />
+                    <input type="text" class="custom-input" id="chk-name" value="${formData.fullName || ''}" placeholder="Julian Vance" required />
                   </div>
                   <div class="form-group flex-1">
                     <label>Phone Number</label>
-                    <input type="tel" class="custom-input" id="chk-phone" value="${formData.phone}" placeholder="+233 24 555 7788" />
+                    <input type="tel" class="custom-input" id="chk-phone" value="${formData.phone || ''}" placeholder="+233 24 555 7788" />
                   </div>
                 </div>
 
                 <div class="form-group">
                   <label>Street Address & Suite / Penthouse</label>
-                  <input type="text" class="custom-input" id="chk-address" value="${formData.address}" placeholder="123 Luxury Blvd, Suite 800" required />
+                  <input type="text" class="custom-input" id="chk-address" value="${formData.address || ''}" placeholder="7th June Tech Tower, Suite 400" required />
                 </div>
 
                 <div class="form-row">
                   <div class="form-group flex-2">
                     <label>City</label>
-                    <input type="text" class="custom-input" id="chk-city" value="${formData.city}" placeholder="Accra" required />
+                    <input type="text" class="custom-input" id="chk-city" value="${formData.city || ''}" placeholder="Accra" required />
                   </div>
                   <div class="form-group flex-1">
                     <label>Region</label>
                     <select class="custom-select" id="chk-state" required>
-                      <option value="">Select Region</option>
+                      <option value="" ${!formData.state ? 'selected' : ''}>Select Region</option>
                       <option value="Ahafo" ${formData.state === 'Ahafo' ? 'selected' : ''}>Ahafo</option>
                       <option value="Ashanti" ${formData.state === 'Ashanti' ? 'selected' : ''}>Ashanti</option>
                       <option value="Bono" ${formData.state === 'Bono' ? 'selected' : ''}>Bono</option>
@@ -342,13 +346,13 @@ export function renderCheckoutView(container) {
                     <label>Mobile Money Phone Number (Ghana)</label>
                     <div class="phone-input-wrap">
                       <span class="phone-prefix">🇬🇭 +233</span>
-                      <input type="tel" class="custom-input" id="input-momo-phone" placeholder="024 123 4567" value="${formData.momoPhone || '024 555 7788'}" />
+                      <input type="tel" class="custom-input" id="input-momo-phone" placeholder="024 123 4567" value="${formData.momoPhone || ''}" />
                     </div>
                   </div>
 
                   <div class="form-group">
                     <label>Registered Account Name</label>
-                    <input type="text" class="custom-input" id="input-momo-name" placeholder="Kwame Blankson" value="${formData.momoAccountName || formData.fullName || 'Kwame Blankson'}" />
+                    <input type="text" class="custom-input" id="input-momo-name" placeholder="Kwame Blankson" value="${formData.momoAccountName || ''}" />
                   </div>
 
                   <div class="momo-instructions-box">
