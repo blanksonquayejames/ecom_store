@@ -55,196 +55,50 @@ export function renderAdminView(container, subTab = null) {
 }
 
 /**
- * 1. Admin Security Checkpoint Gate (Multi-Tier Role Authentication)
+ * 1. Admin Security Gate (Direct Login Prompt)
  */
 function renderAdminLoginGate(container) {
-  const { user, subAdmins } = store.state;
-  const isCustomerLoggedIn = Boolean(user && user.isLoggedIn);
-  const activeSubs = subAdmins || [];
-  const defaultSub = activeSubs.find(s => s.username === 'john') || activeSubs[0] || {
-    name: 'John',
-    username: 'john',
-    email: 'john@7thjune.com',
-    permissions: ['orders']
-  };
-
   container.innerHTML = `
     <div class="admin-auth-wrapper animate-fade-in">
-      <div class="admin-auth-card" style="max-width: 580px;">
-        <div class="admin-auth-header text-center">
-          <div class="admin-shield-icon">🛡️</div>
-          <h2 class="admin-auth-title">7th June Enterprise Console</h2>
-          <p class="admin-auth-sub">Select your administrative tier to authenticate and access store management.</p>
-        </div>
-
-        <div class="admin-gate-role-sections mt-3">
-          
-          <!-- SECTION 1: MAIN ADMINISTRATOR -->
-          <div class="admin-gate-tier-box">
-            <div class="gate-tier-header">
-              <span class="gate-tier-icon">👑</span>
-              <div class="gate-tier-text">
-                <strong class="gate-tier-title">Main Administrator</strong>
-                <div class="text-xs text-muted">Executive full access: Catalog, Orders, Analytics, Settings & Sub-Admin Provisioning</div>
-              </div>
-            </div>
-            <button type="button" class="btn btn-primary w-100 mt-3 btn-lg" id="admin-gate-login-admin-btn">
-              👑 Sign In as Main Admin (Kwame Blankson)
-            </button>
-          </div>
-
-          <!-- SECTION 2: SUB-ADMINISTRATOR PORTAL -->
-          <div class="admin-gate-tier-box mt-3">
-            <div class="gate-tier-header">
-              <span class="gate-tier-icon">📋</span>
-              <div class="gate-tier-text">
-                <strong class="gate-tier-title">Sub-Administrator Portal</strong>
-                <div class="text-xs text-muted">Delegated staff access with assigned module access limits (e.g. Order Status only)</div>
-              </div>
-            </div>
-
-            <!-- Quick 1-Click for Sub-Admin John -->
-            <button type="button" class="btn btn-secondary w-100 mt-2" id="admin-gate-login-sub-btn">
-              ⚡ Quick Sign In as Sub-Admin: ${defaultSub.name} (Order Status Access)
-            </button>
-
-            <!-- Direct Sub-Admin Credential Login -->
-            <form class="admin-subadmin-quick-form mt-3" id="gate-subadmin-form">
-              <div class="form-row">
-                <div class="form-group flex-1">
-                  <label class="text-xs">Sub-Admin Username / Email</label>
-                  <input type="text" class="custom-input custom-input-sm" id="gate-sub-username" placeholder="e.g. john" value="${defaultSub.username}" required />
-                </div>
-                <div class="form-group flex-1">
-                  <label class="text-xs">Password</label>
-                  <input type="password" class="custom-input custom-input-sm" id="gate-sub-pwd" value="password123" required />
-                </div>
-              </div>
-              <button type="submit" class="btn btn-secondary btn-sm w-100 mt-2">
-                🔑 Sign In with Sub-Admin Credentials
-              </button>
-            </form>
-          </div>
-
-        </div>
-
-        <div class="admin-gate-actions mt-3">
-          <button type="button" class="btn btn-ghost w-100" id="admin-return-store-btn">
+      <div class="container text-center" style="max-width: 500px; margin: 4.5rem auto; padding: 2.75rem 2rem; background: #FFFFFF; border-radius: var(--radius-xl); border: 1px solid #E2E8F0; box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);">
+        <div style="font-size: 2.75rem; margin-bottom: 1rem;">🔒</div>
+        <h2 style="font-family: var(--font-display); font-weight: 800; font-size: 1.6rem; color: #0F172A; margin-bottom: 0.5rem;">Sign In to Access Admin</h2>
+        <p style="color: #64748B; font-size: 0.9rem; line-height: 1.5; margin-bottom: 1.75rem;">
+          Please sign in to your account with administrator credentials to access the 7th June store management console.
+        </p>
+        <button type="button" class="btn btn-primary btn-lg w-100" id="admin-gate-open-login-btn">
+          Sign In to Account
+        </button>
+        <div class="mt-3">
+          <a href="#/catalog" class="text-muted text-sm" style="text-decoration: underline;" id="admin-return-store-btn">
             ← Return to Live Customer Store
-          </button>
-        </div>
-
-        <div class="admin-security-footer mt-4">
-          <span>🔒 Role-Based Multi-Tier Security • 7th June Computers</span>
+          </a>
         </div>
       </div>
     </div>
   `;
 
-  // Authenticate as Main Admin Kwame Blankson
-  container.querySelector('#admin-gate-login-admin-btn')?.addEventListener('click', () => {
-    sounds.playSuccess();
-    const adminUser = {
-      isLoggedIn: true,
-      role: 'admin',
-      name: 'Kwame Blankson',
-      email: 'admin@7thjune.com',
-      phone: '+233 24 555 8899',
-      tier: 'Main Administrator (Full Control)',
-      points: 9999,
-      avatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=400&q=80',
-      addresses: [
-        {
-          id: 'addr-admin-1',
-          type: '7th June Headquarters (Vault)',
-          fullName: 'Kwame Blankson (Admin)',
-          address: '7th June Tech Tower, Suite 400',
-          city: 'Accra',
-          region: 'Airport Residential Area',
-          country: 'Ghana',
-          phone: '+233 24 555 8899',
-          isDefault: true
-        }
-      ]
-    };
-    store.setUser(adminUser);
-    ui.showToast({
-      title: 'Main Administrator Verified',
-      message: 'Logged in as Chief Administrator Kwame Blankson with full control.',
-      type: 'success'
-    });
-    renderAdminView(container, 'overview');
-  });
-
-  // Authenticate as Sub-Admin John (Order Status Access)
-  container.querySelector('#admin-gate-login-sub-btn')?.addEventListener('click', () => {
-    sounds.playSuccess();
-    const sub = store.findSubAdmin('john') || defaultSub;
-    const subUser = {
-      isLoggedIn: true,
-      role: 'sub-admin',
-      name: sub.name,
-      username: sub.username,
-      email: sub.email,
-      permissions: sub.permissions || ['orders'],
-      phone: '+233 24 555 4422',
-      tier: 'Sub-Admin (Order Status Access Only)',
-      points: 500,
-      avatar: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=400&q=80',
-      addresses: []
-    };
-    store.setUser(subUser);
-    ui.showToast({
-      title: `Sub-Admin ${sub.name} Verified`,
-      message: 'Session limited exclusively to Order Status & MoMo Gateway.',
-      type: 'success'
-    });
-    renderAdminView(container, 'orders');
-  });
-
-  // Direct Sub-Admin Credential Login
-  container.querySelector('#gate-subadmin-form')?.addEventListener('submit', (e) => {
-    e.preventDefault();
+  // Attach button event to open the login modal
+  container.querySelector('#admin-gate-open-login-btn')?.addEventListener('click', () => {
     sounds.playClick();
-    const username = container.querySelector('#gate-sub-username')?.value.trim();
-    const sub = store.findSubAdmin(username);
-    if (!sub) {
-      ui.showToast({
-        title: 'Sub-Admin Not Found',
-        message: `No sub-admin account matching "${username}". Ask Main Admin to provision your login.`,
-        type: 'error'
-      });
-      return;
-    }
-
-    const permLabels = (sub.permissions || ['orders']).map(p => p === 'orders' ? 'Order Status' : p).join(', ');
-    const subUser = {
-      isLoggedIn: true,
-      role: 'sub-admin',
-      name: sub.name,
-      username: sub.username,
-      email: sub.email,
-      permissions: sub.permissions || ['orders'],
-      phone: '+233 24 555 4422',
-      tier: `Sub-Admin (${permLabels})`,
-      points: 500,
-      avatar: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=400&q=80',
-      addresses: []
-    };
-    store.setUser(subUser);
-    ui.showToast({
-      title: `Welcome, Sub-Admin ${sub.name}!`,
-      message: `Signed in with access limits: ${permLabels}.`,
-      type: 'success'
+    openAuthModal('login', {
+      redirectTo: 'admin',
+      notice: 'Please sign in to access the Admin Console.'
     });
-    renderAdminView(container, sub.permissions[0] || 'orders');
   });
 
   // Return to Storefront
-  container.querySelector('#admin-return-store-btn')?.addEventListener('click', () => {
+  container.querySelector('#admin-return-store-btn')?.addEventListener('click', (e) => {
+    e.preventDefault();
     sounds.playClick();
     window.location.hash = '#/catalog';
     store.setView('catalog');
+  });
+
+  // Directly open the login modal
+  openAuthModal('login', {
+    redirectTo: 'admin',
+    notice: 'Please sign in to access the Admin Console.'
   });
 }
 

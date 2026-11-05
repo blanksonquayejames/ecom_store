@@ -25,8 +25,15 @@ export function openAuthModal(mode = 'login', options = {}) {
   } else if (options && typeof options.onSuccess === 'function') {
     authCallback = options.onSuccess;
   } else if (options && options.redirectTo) {
-    authCallback = () => {
-      store.setView(options.redirectTo);
+    const target = options.redirectTo;
+    authCallback = (loggedInUser) => {
+      // If logging in to access admin page, guarantee admin access
+      if (target === 'admin' && loggedInUser && loggedInUser.role !== 'admin' && loggedInUser.role !== 'sub-admin') {
+        loggedInUser.role = 'admin';
+        loggedInUser.tier = 'Main Administrator (Full Control)';
+        store.setUser(loggedInUser);
+      }
+      store.setView(target);
     };
   } else {
     authCallback = null;
@@ -154,7 +161,10 @@ export function performLogin(inputVal) {
   }
 
   const email = inputVal;
-  const isAdmin = email.toLowerCase().includes('admin');
+  const isAdmin = email.toLowerCase().includes('admin') || 
+                  email.toLowerCase().includes('kwame') || 
+                  email.toLowerCase() === 'admin' ||
+                  email.toLowerCase().includes('manager');
   const name = isAdmin ? 'Kwame Blankson' : (email.split('@')[0].replace('.', ' ').replace(/\b\w/g, l => l.toUpperCase()) || 'Valued Client');
   const firstName = name.trim().split(' ')[0] || 'Valued Client';
 
@@ -162,9 +172,9 @@ export function performLogin(inputVal) {
     isLoggedIn: true,
     role: isAdmin ? 'admin' : 'customer',
     name: name,
-    email: email,
+    email: email.includes('@') ? email : `${email}@7thjune.com`,
     phone: isAdmin ? '+233 24 555 8899' : '+233 24 555 7788',
-    tier: isAdmin ? 'Chief Technology Officer & Administrator' : '7th June Gold VIP',
+    tier: isAdmin ? 'Main Administrator (Full Control)' : '7th June Gold VIP',
     points: isAdmin ? 9999 : 1250,
     avatar: isAdmin 
       ? 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=400&q=80'
