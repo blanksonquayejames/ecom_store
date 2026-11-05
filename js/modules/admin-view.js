@@ -307,21 +307,9 @@ function renderAdminDashboard(container) {
         </div>
       </div>
 
-      <!-- Main Admin Body with Breadcrumbs & Tabs -->
+      <!-- Main Admin Body with Tabs -->
       <div class="container admin-body-container mt-3">
         
-        <!-- Interactive Breadcrumbs -->
-        <nav class="admin-breadcrumb-nav mb-3" aria-label="Admin Navigation Breadcrumb">
-          <a href="#/catalog" class="admin-breadcrumb-link" id="admin-bread-store">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
-            Storefront
-          </a>
-          <span class="breadcrumb-sep">/</span>
-          <a href="#/admin/${permissions[0]}" class="admin-breadcrumb-link" id="admin-bread-console">Admin Console</a>
-          <span class="breadcrumb-sep">/</span>
-          <span class="breadcrumb-active" id="admin-active-breadcrumb">${getTabLabel(activeAdminTab)}</span>
-        </nav>
-
         <!-- Access-Filtered Admin Navigation Tabs -->
         <div class="admin-nav-tabs">
           ${permissions.includes('overview') ? `
@@ -919,46 +907,141 @@ function renderSubAdminsTab() {
 function renderCustomersTab() {
   const { user, orders, currency } = store.state;
 
-  const totalSpent = orders.reduce((sum, o) => sum + (Number(o.total) || 0), 0);
+  const currentSpend = orders.reduce((sum, o) => sum + (Number(o.total) || 0), 0);
+
+  // Professional client concierge directory
+  const customers = [
+    {
+      id: 'cust-001',
+      name: user.name || 'Kwame Blankson',
+      email: user.email || 'admin@7thjune.com',
+      phone: user.phone || '+233 24 555 7788',
+      location: 'Accra Central, Ghana',
+      tier: user.role === 'admin' ? 'Chief Administrator' : (user.tier || 'VIP Sovereign Gold'),
+      tierClass: user.role === 'admin' ? 'tier-admin' : 'tier-gold',
+      tierIcon: user.role === 'admin' ? '👑' : '⭐',
+      points: user.points || 9999,
+      ordersCount: orders.length || 1,
+      totalSpent: currentSpend || 2518.40,
+      avatar: user.avatar || 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=400&q=80',
+      status: 'Active'
+    },
+    {
+      id: 'cust-002',
+      name: 'Julian Vance',
+      email: 'julian.vance@techcorp.gh',
+      phone: '+233 20 442 8901',
+      location: 'Airport Residential, Accra',
+      tier: 'VIP Sovereign Gold',
+      tierClass: 'tier-gold',
+      tierIcon: '⭐',
+      points: 14250,
+      ordersCount: 4,
+      totalSpent: 8420.00,
+      avatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=200&q=80',
+      status: 'Active'
+    },
+    {
+      id: 'cust-003',
+      name: 'Ama Osei Boateng',
+      email: 'ama.osei@ghana-invest.com',
+      phone: '+233 27 889 1234',
+      location: 'Cantonments, Accra',
+      tier: 'Platinum Patron',
+      tierClass: 'tier-platinum',
+      tierIcon: '💎',
+      points: 8400,
+      ordersCount: 2,
+      totalSpent: 5420.00,
+      avatar: 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=200&q=80',
+      status: 'Active'
+    },
+    {
+      id: 'cust-004',
+      name: 'Dr. Kojo Mensah',
+      email: 'k.mensah@ug.edu.gh',
+      phone: '+233 24 119 5500',
+      location: 'Legon Campus, Accra',
+      tier: 'Verified Member',
+      tierClass: 'tier-member',
+      tierIcon: '🏷️',
+      points: 2800,
+      ordersCount: 1,
+      totalSpent: 1850.00,
+      avatar: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=200&q=80',
+      status: 'Active'
+    }
+  ];
 
   return `
     <div class="admin-customers-section animate-fade-in">
+      
+      <!-- Main Customers Table Card -->
       <div class="admin-card-section">
-        <h3>Registered Client Concierge Accounts</h3>
-        <p class="section-desc">Manage customer loyalty points, order frequencies, and VIP sovereign tiers.</p>
+        <div class="section-title-row">
+          <div>
+            <h3>Client Concierge & Loyalty Directory</h3>
+            <p class="section-desc">Manage verified client profiles, loyalty point allocations, order histories, and sovereign tiers.</p>
+          </div>
+        </div>
 
         <div class="admin-table-wrap mt-3">
           <table class="admin-data-table">
             <thead>
               <tr>
                 <th>Customer</th>
-                <th>Email</th>
+                <th>Contact Email</th>
                 <th>Membership Tier</th>
                 <th>Loyalty Balance</th>
                 <th>Orders Placed</th>
                 <th>Total Spent</th>
-                <th style="text-align: right;">Actions</th>
+                <th style="text-align: right;">Status</th>
               </tr>
             </thead>
             <tbody>
-              <tr>
-                <td>
-                  <div class="customer-info-cell">
-                    <img src="${user.avatar || 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=400&q=80'}" alt="${user.name}" class="customer-avatar-sm" />
-                    <strong>${user.name}</strong>
-                  </div>
-                </td>
-                <td>${user.email}</td>
-                <td><span class="tier-pill">${user.tier || '7th June Gold Member'}</span></td>
-                <td><strong>${(user.points || 0).toLocaleString()} PTS</strong></td>
-                <td>${orders.length} orders</td>
-                <td><strong>${convertPrice(totalSpent, currency).formatted}</strong></td>
-                <td style="text-align: right;">
-                  <button class="btn btn-secondary btn-xs admin-bonus-pts-btn" data-pts="500">
-                    + 500 Bonus Pts
-                  </button>
-                </td>
-              </tr>
+              ${customers.map(c => `
+                <tr>
+                  <td>
+                    <div class="customer-info-cell">
+                      <img src="${c.avatar}" alt="${c.name}" class="customer-avatar-sm" loading="lazy" />
+                      <div class="customer-details">
+                        <span class="customer-name">${c.name}</span>
+                        <span class="customer-sub">${c.phone} • ${c.location}</span>
+                      </div>
+                    </div>
+                  </td>
+                  <td>
+                    <span class="customer-email">${c.email}</span>
+                  </td>
+                  <td>
+                    <span class="tier-pill-modern ${c.tierClass}">
+                      <span>${c.tierIcon}</span>
+                      <span>${c.tier}</span>
+                    </span>
+                  </td>
+                  <td>
+                    <span class="loyalty-pts-badge">
+                      <strong>${c.points.toLocaleString()}</strong>
+                      <small>PTS</small>
+                    </span>
+                  </td>
+                  <td>
+                    <span class="order-count-badge">
+                      ${c.ordersCount} ${c.ordersCount === 1 ? 'order' : 'orders'}
+                    </span>
+                  </td>
+                  <td>
+                    <span class="customer-total-spent">
+                      ${convertPrice(c.totalSpent, currency).formatted}
+                    </span>
+                  </td>
+                  <td style="text-align: right;">
+                    <span class="status-badge-chip status-active">
+                      ● Active
+                    </span>
+                  </td>
+                </tr>
+              `).join('')}
             </tbody>
           </table>
         </div>
@@ -1071,21 +1154,6 @@ function attachAdminDashboardEvents(container) {
     });
     window.location.hash = '#/catalog';
     store.setView('catalog');
-  });
-
-  // Breadcrumb Store Link
-  container.querySelector('#admin-bread-store')?.addEventListener('click', (e) => {
-    e.preventDefault();
-    sounds.playClick();
-    window.location.hash = '#/catalog';
-    store.setView('catalog');
-  });
-
-  // Breadcrumb Console Link
-  container.querySelector('#admin-bread-console')?.addEventListener('click', (e) => {
-    e.preventDefault();
-    sounds.playClick();
-    switchToTab(container, 'overview');
   });
 
   // Tab Navigation Switcher
@@ -1346,24 +1414,6 @@ function attachPaneSpecificEvents(container, tab) {
     switchToTab(container, target);
   });
 
-  // Customers Tab Bonus Points Action
-  if (tab === 'customers') {
-    container.querySelectorAll('.admin-bonus-pts-btn').forEach(btn => {
-      btn.addEventListener('click', () => {
-        sounds.playSuccess();
-        const pts = Number(btn.dataset.pts) || 500;
-        store.updateCustomerPoints(pts);
-        ui.showToast({
-          title: 'Reward Points Credited',
-          message: `Added +${pts} loyalty points to Julian Vance.`,
-          type: 'success'
-        });
-        container.querySelector('#admin-pane-content').innerHTML = renderCustomersTab();
-        attachPaneSpecificEvents(container, 'customers');
-      });
-    });
-  }
-
   // Settings Tab
   if (tab === 'settings') {
     container.querySelector('#admin-reset-demo-btn')?.addEventListener('click', async () => {
@@ -1411,10 +1461,6 @@ function switchToTab(container, tabName) {
   container.querySelectorAll('.admin-tab-btn').forEach(b => {
     b.classList.toggle('is-active', b.dataset.tab === tabName);
   });
-  const breadcrumbActive = container.querySelector('#admin-active-breadcrumb');
-  if (breadcrumbActive) {
-    breadcrumbActive.textContent = getTabLabel(tabName);
-  }
   const pane = container.querySelector('#admin-pane-content');
   if (pane) {
     pane.innerHTML = renderActiveAdminPaneContent(tabName);
@@ -1705,16 +1751,16 @@ export function openProductModal(product = null) {
   // Prepopulate form fields
   document.getElementById('modal-prod-id').value = isEdit ? product.id : '';
   document.getElementById('modal-prod-name').value = isEdit ? product.name : '';
-  document.getElementById('modal-prod-price').value = isEdit ? product.price : '199';
-  document.getElementById('modal-prod-orig-price').value = isEdit ? (product.originalPrice || '') : '249';
-  document.getElementById('modal-prod-category').value = isEdit ? product.category : (CATEGORIES[1] || 'Keyboards & Keycaps');
-  document.getElementById('modal-prod-badge').value = isEdit ? (product.badge || 'NEW') : 'NEW';
-  document.getElementById('modal-prod-desc').value = isEdit ? product.description : 'High-precision engineering mastercraft hardware with quantum response.';
+  document.getElementById('modal-prod-price').value = isEdit ? product.price : '';
+  document.getElementById('modal-prod-orig-price').value = isEdit ? (product.originalPrice || '') : '';
+  document.getElementById('modal-prod-category').value = isEdit ? product.category : (CATEGORIES[0] || 'Laptops & Workstations');
+  document.getElementById('modal-prod-badge').value = isEdit ? (product.badge || '') : '';
+  document.getElementById('modal-prod-desc').value = isEdit ? product.description : '';
 
   // Stock Management Controller in Edit Modal
   const initialStock = isEdit
     ? (product.stockCount !== undefined ? product.stockCount : (product.stock !== undefined ? product.stock : 15))
-    : 20;
+    : 10;
   const stockInput = document.getElementById('modal-prod-stock');
   const stockLabel = document.getElementById('modal-stock-label');
   const stockStatusPill = document.getElementById('modal-stock-status-pill');
@@ -1770,22 +1816,6 @@ export function openProductModal(product = null) {
     };
   }
 
-  // Quick Chips inside Edit Modal
-  modal.querySelectorAll('.stock-quick-chip').forEach(chip => {
-    chip.onclick = (e) => {
-      e.preventDefault();
-      sounds.playClick();
-      if (!stockInput) return;
-      if (chip.dataset.set !== undefined) {
-        stockInput.value = Number(chip.dataset.set);
-      } else if (chip.dataset.delta !== undefined) {
-        const delta = Number(chip.dataset.delta);
-        const current = Number(stockInput.value) || 0;
-        stockInput.value = Math.max(0, current + delta);
-      }
-      updateStockPill();
-    };
-  });
 
   // Setup Image Dropzone
   const dropzoneCtrl = setupProductImageDropzone();
@@ -2195,32 +2225,6 @@ function setupProductSpecsBuilder(product = null) {
     };
   }
 
-  // Quick Attribute Chips
-  container.querySelectorAll('.quick-attr-chip').forEach(chip => {
-    chip.onclick = (e) => {
-      e.preventDefault();
-      sounds.playClick();
-      const key = chip.dataset.key;
-      if (!tbody) return;
-      const row = createSpecRow(key, '');
-      tbody.appendChild(row);
-      row.querySelector('.admin-spec-val-input')?.focus();
-      updateSpecsCountAndPreview();
-    };
-  });
-
-  // Quick Feature Chips
-  container.querySelectorAll('.quick-feature-chip').forEach(chip => {
-    chip.onclick = (e) => {
-      e.preventDefault();
-      sounds.playClick();
-      const feat = chip.dataset.feature;
-      if (!featuresList) return;
-      const row = createFeatureRow(feat);
-      featuresList.appendChild(row);
-      updateSpecsCountAndPreview();
-    };
-  });
 
   // Template Loader
   const loadTemplate = (tplKey) => {
@@ -2315,8 +2319,7 @@ function setupProductSpecsBuilder(product = null) {
       }
       updateSpecsCountAndPreview();
     } else {
-      // Default to keyboard preset (matches user reference screenshot)
-      loadTemplate('keyboard');
+      updateSpecsCountAndPreview();
     }
   }
 }

@@ -1,4 +1,4 @@
-﻿/**
+/**
  * 7TH JUNE COMPUTERS / ECOM STORE - Full Shopping Cart View Component
  * Modeled after modern e-commerce shopping cart UI:
  * - Breadcrumb Header Banner ("Shopping Cart", Home / Shopping Cart)
@@ -12,6 +12,7 @@ import { store } from './state.js';
 import { convertPrice } from './currency.js';
 import { ui } from './ui.js';
 import { sounds } from './audio.js';
+import { openAuthModal } from './auth-modal.js';
 
 let isCartSubscribed = false;
 
@@ -129,8 +130,13 @@ export function renderCartView(container) {
     return `
                     <div class="cart-table-row" data-cart-id="${item.id}">
                       <!-- Remove Icon -->
-                      <button type="button" class="cart-item-remove-btn" data-id="${item.id}" title="Remove item" aria-label="Remove ${item.name}">
-                        &times;
+                      <button type="button" class="cart-item-remove-btn" data-id="${item.id}" title="Delete item" aria-label="Delete ${item.name}">
+                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                          <polyline points="3 6 5 6 21 6"></polyline>
+                          <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+                          <line x1="10" y1="11" x2="10" y2="17"></line>
+                          <line x1="14" y1="11" x2="14" y2="17"></line>
+                        </svg>
                       </button>
 
                       <!-- Product Image & Title -->
@@ -153,7 +159,7 @@ export function renderCartView(container) {
                       <!-- Quantity Pill Box -->
                       <div class="cart-qty-cell">
                         <div class="cart-qty-pill-wrap">
-                          <button type="button" class="cart-qty-btn cart-qty-minus" data-id="${item.id}" aria-label="Decrease quantity">−</button>
+                          <button type="button" class="cart-qty-btn cart-qty-minus ${item.quantity <= 1 ? 'is-delete-icon' : ''}" data-id="${item.id}" aria-label="${item.quantity <= 1 ? 'Remove item' : 'Decrease quantity'}" title="${item.quantity <= 1 ? 'Remove item' : 'Decrease quantity'}">${item.quantity <= 1 ? `<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="pointer-events:none;"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path><line x1="10" y1="11" x2="10" y2="17"></line><line x1="14" y1="11" x2="14" y2="17"></line></svg>` : '−'}</button>
                           <span class="cart-qty-value">${item.quantity}</span>
                           <button type="button" class="cart-qty-btn cart-qty-plus" data-id="${item.id}" aria-label="Increase quantity">+</button>
                         </div>
@@ -298,9 +304,8 @@ function attachCartViewEvents(container) {
   // Proceed to Checkout / Buy Now
   container.querySelector('#cart-proceed-checkout-btn')?.addEventListener('click', () => {
     sounds.playClick();
-    const isLoggedIn = Boolean(store.state.user && store.state.user.isLoggedIn);
-    if (!isLoggedIn) {
-      store.setView('auth', null, { redirectTo: 'checkout', tab: 'login', mode: 'login' });
+    if (!store.isUserLoggedIn()) {
+      openAuthModal('login', { redirectTo: 'checkout' });
       return;
     }
     store.setView('checkout');

@@ -177,7 +177,7 @@ export function renderCartDrawerContent() {
               </div>
               <div class="cart-item-actions-row">
                 <div class="cart-qty-spinner">
-                  <button class="cart-qty-btn cart-qty-minus" data-id="${item.id}">-</button>
+                  <button class="cart-qty-btn cart-qty-minus ${item.quantity <= 1 ? 'is-delete-icon' : ''}" data-id="${item.id}" aria-label="${item.quantity <= 1 ? 'Remove item' : 'Decrease quantity'}" title="${item.quantity <= 1 ? 'Remove item' : 'Decrease quantity'}">${item.quantity <= 1 ? `<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="pointer-events:none;"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path><line x1="10" y1="11" x2="10" y2="17"></line><line x1="14" y1="11" x2="14" y2="17"></line></svg>` : '-'}</button>
                   <span class="cart-qty-number">${item.quantity}</span>
                   <button class="cart-qty-btn cart-qty-plus" data-id="${item.id}">+</button>
                 </div>
@@ -341,10 +341,9 @@ function attachCartDrawerEvents(body, footer) {
   // Checkout Button
   footer.querySelector('#drawer-checkout-btn')?.addEventListener('click', () => {
     sounds.playClick();
-    const isLoggedIn = !!(store.state.user && store.state.user.isLoggedIn);
-    if (!isLoggedIn) {
+    if (!store.isUserLoggedIn()) {
       ui.toggleDrawer('cart-drawer', false);
-      store.setView('auth', null, { redirectTo: 'checkout', tab: 'login', mode: 'login' });
+      openAuthModal('login', { redirectTo: 'checkout' });
       return;
     }
     ui.toggleDrawer('cart-drawer', false);
@@ -551,7 +550,7 @@ export function renderMiniCartRail() {
         </div>
         <div class="mini-cart-item-price">${priceFormatted}</div>
         <div class="mini-cart-yellow-pill">
-          <button class="mini-pill-btn mini-pill-minus" data-id="${item.id}" aria-label="Decrease quantity">−</button>
+          <button class="mini-pill-btn mini-pill-minus ${item.quantity <= 1 ? 'is-delete-icon' : ''}" data-id="${item.id}" aria-label="${item.quantity <= 1 ? 'Remove item' : 'Decrease quantity'}" title="${item.quantity <= 1 ? 'Remove item' : 'Decrease quantity'}">${item.quantity <= 1 ? `<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="pointer-events:none;"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path><line x1="10" y1="11" x2="10" y2="17"></line><line x1="14" y1="11" x2="14" y2="17"></line></svg>` : '−'}</button>
           <span class="mini-pill-qty">${item.quantity}</span>
           <button class="mini-pill-btn mini-pill-plus" data-id="${item.id}" aria-label="Increase quantity">+</button>
         </div>

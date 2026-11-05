@@ -13,9 +13,9 @@ export const CURRENCIES = {
   }
 };
 
-export function convertPrice(usdAmount, targetCurrencyCode = 'GHS') {
+export function convertPrice(amount, targetCurrencyCode = 'GHS') {
   const currency = CURRENCIES.GHS;
-  const num = typeof usdAmount === 'number' ? usdAmount : Number(usdAmount) || 0;
+  const num = typeof amount === 'number' ? amount : Number(amount) || 0;
   const converted = num * currency.rate;
   return {
     raw: converted,

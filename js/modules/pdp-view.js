@@ -1,4 +1,4 @@
-﻿/**
+/**
  * AURA LUXE - Product Detail Page (PDP) & Quick View Controller
  * Full product exploration, multi-angle touch gallery, zoom lens, mobile sticky action bar, variants, reviews, and bundles.
  */
@@ -678,7 +678,7 @@ function attachPdpEvents(container, product, state) {
     });
   }
 
-  // Mobile Sticky Bar Buy Now (Direct to Checkout or Sign In)
+  // Mobile Sticky Bar Buy Now (Direct to Checkout or Auth Modal)
   const stickyBuyBtn = container.querySelector('#sticky-bar-buy-btn');
   if (stickyBuyBtn) {
     stickyBuyBtn.addEventListener('click', () => {
@@ -688,16 +688,15 @@ function attachPdpEvents(container, product, state) {
       ui.closeNavNotification();
       store.addToCart(product, state.getSelectedColor(), state.getSelectedOption(), state.getQuantity(), { silent: true });
 
-      const isLoggedIn = !!(store.state.user && store.state.user.isLoggedIn);
-      if (!isLoggedIn) {
-        store.setView('auth', null, { redirectTo: 'checkout', tab: 'login', mode: 'login' });
+      if (!store.isUserLoggedIn()) {
+        openAuthModal('login', { redirectTo: 'checkout' });
         return;
       }
       store.setView('checkout');
     });
   }
 
-  // Buy Now (Direct to Checkout or Sign In)
+  // Buy Now (Direct to Checkout or Auth Modal)
   const buyNowBtn = container.querySelector('#pdp-buy-now-btn');
   if (buyNowBtn) {
     buyNowBtn.addEventListener('click', () => {
@@ -707,9 +706,8 @@ function attachPdpEvents(container, product, state) {
       ui.closeNavNotification();
       store.addToCart(product, state.getSelectedColor(), state.getSelectedOption(), state.getQuantity(), { silent: true });
 
-      const isLoggedIn = !!(store.state.user && store.state.user.isLoggedIn);
-      if (!isLoggedIn) {
-        store.setView('auth', null, { redirectTo: 'checkout', tab: 'login', mode: 'login' });
+      if (!store.isUserLoggedIn()) {
+        openAuthModal('login', { redirectTo: 'checkout' });
         return;
       }
       store.setView('checkout');

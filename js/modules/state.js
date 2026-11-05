@@ -439,12 +439,16 @@ class Store {
     this.state.orders.unshift(newOrder);
     localStorage.setItem('aura_orders', JSON.stringify(this.state.orders));
 
-    // Award loyalty points (1 point per dollar)
+    // Award loyalty points
     this.state.user.points += Math.floor(summary.total);
 
     this.clearCart();
     this.notify('order_created', newOrder);
     return newOrder;
+  }
+
+  isUserLoggedIn() {
+    return Boolean(this.state.user && this.state.user.isLoggedIn && this.state.user.name !== 'Guest Shopper');
   }
 
   setUser(userData) {

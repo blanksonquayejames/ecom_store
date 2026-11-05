@@ -29,9 +29,20 @@ export function renderCheckoutView(container) {
     return;
   }
 
-  const isLoggedIn = Boolean(user && user.isLoggedIn);
-  if (!isLoggedIn) {
-    store.setView('auth', null, { redirectTo: 'checkout', tab: 'login', mode: 'login' });
+  if (!store.isUserLoggedIn()) {
+    container.innerHTML = `
+      <div class="checkout-empty-wrap animate-fade-in">
+        <div class="container text-center" style="max-width:540px; margin:4rem auto; padding:2rem;">
+          <h2>Sign In to Complete Checkout</h2>
+          <p class="text-muted">Please sign in to your VIP account to finalize your order and access priority courier tracking.</p>
+          <button class="btn btn-primary mt-3" id="chk-open-auth-btn">Sign In to Account</button>
+        </div>
+      </div>
+    `;
+    container.querySelector('#chk-open-auth-btn')?.addEventListener('click', () => {
+      openAuthModal('login', { redirectTo: 'checkout' });
+    });
+    openAuthModal('login', { redirectTo: 'checkout' });
     return;
   }
 

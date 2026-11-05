@@ -1002,12 +1002,12 @@
 
           <div class="form-row">
             <div class="form-group flex-1">
-              <label>Selling Price (USD base)</label>
+              <label>Selling Price</label>
               <input type="number" class="custom-input" id="modal-prod-price" min="1" step="0.01" placeholder="199"
                 required />
             </div>
             <div class="form-group flex-1">
-              <label>Original / Strikethrough Price (USD)</label>
+              <label>Original / Strikethrough Price</label>
               <input type="number" class="custom-input" id="modal-prod-orig-price" min="1" step="0.01"
                 placeholder="249" />
             </div>
@@ -1037,18 +1037,7 @@
                   </svg>
                 </button>
               </div>
-              <div class="modal-stock-quick-chips">
-                <button type="button" class="stock-quick-chip chip-subtle" data-delta="-5"
-                  title="Reduce 5 units">-5</button>
-                <button type="button" class="stock-quick-chip" data-delta="+5" title="Add 5 units">+5</button>
-                <button type="button" class="stock-quick-chip" data-delta="+10" title="Add 10 units">+10</button>
-                <button type="button" class="stock-quick-chip" data-delta="+25" title="Add 25 units">+25</button>
-                <button type="button" class="stock-quick-chip chip-zero" data-set="0" title="Mark Out of Stock">Mark
-                  0</button>
-              </div>
             </div>
-            <span class="form-field-hint">Add or reduce units using buttons, quick adjustment chips, or direct entry.
-              Changes update live store inventory upon saving.</span>
           </div>
 
           <!-- Product Photography File Upload Component -->
@@ -1109,34 +1098,13 @@
                 </div>
               </div>
             </div>
+          </div>
 
             <!-- Hidden field holding active base64 Data URL or image path -->
             <input type="hidden" id="modal-prod-img" required />
 
-            <!-- Collapsible Shortcuts / Preset Library -->
-            <div class="upload-alternatives-bar mt-2">
-              <button type="button" class="link-helper-btn" id="toggle-preset-gallery-btn">
-                <span>✦ Or pick from 7th June high-res hardware library</span>
-              </button>
-              <button type="button" class="link-helper-btn text-muted" id="toggle-url-fallback-btn">
-                <span>Or use direct URL</span>
-              </button>
-            </div>
-
-            <!-- Curated Hardware Presets Tray -->
-            <div class="presets-gallery-tray" id="presets-gallery-tray" style="display: none;">
-              <div class="presets-grid" id="presets-grid">
-                <!-- Dynamically populated hardware preset thumbnails -->
-              </div>
-            </div>
-
-            <!-- Optional Direct URL Input -->
-            <div class="url-fallback-wrap mt-2" id="url-fallback-wrap" style="display: none;">
-              <div class="input-with-button">
-                <input type="url" class="custom-input custom-input-sm" id="modal-prod-url-fallback"
-                  placeholder="Paste external image URL (e.g. https://images.unsplash.com/...)" />
-                <button type="button" class="btn btn-se          <!-- Technical Specifications & Engineered Highlights Builder (Matches Storefront PDP) -->
-          <div class=" form-group admin-specs-builder-group" id="admin-specs-builder-group">
+            <!-- Technical Specifications & Engineered Highlights Builder (Matches Storefront PDP) -->
+            <div class="form-group admin-specs-builder-group mt-3" id="admin-specs-builder-group">
                   <div class="specs-builder-header-row">
                     <div class="specs-builder-titles">
                       <label class="form-label-bold">Technical Specifications &amp; Highlights Builder</label>
@@ -1151,27 +1119,6 @@
                         <span>👁️ Storefront Live Preview</span>
                       </button>
                     </div>
-                  </div>
-
-                  <!-- Quick Template Presets Bar -->
-                  <div class="specs-templates-bar">
-                    <span class="specs-templates-label">Quick Presets:</span>
-                    <button type="button" class="specs-tpl-btn is-active" data-tpl="keyboard"
-                      title="Load Keyboard Specs (Screenshot)">⌨️ Keyboard</button>
-                    <button type="button" class="specs-tpl-btn" data-tpl="mouse" title="Load Mouse Specs">🖱️
-                      Mouse</button>
-                    <button type="button" class="specs-tpl-btn" data-tpl="audio" title="Load Headset Specs">🎧
-                      Headset</button>
-                    <button type="button" class="specs-tpl-btn" data-tpl="laptop" title="Load Laptop Specs">💻
-                      Laptop</button>
-                    <button type="button" class="specs-tpl-btn" data-tpl="gamingpc" title="Load Tower Specs">🖥️ Gaming
-                      PC</button>
-                    <button type="button" class="specs-tpl-btn" data-tpl="monitor" title="Load Monitor Specs">📺
-                      Monitor</button>
-                    <button type="button" class="specs-tpl-btn" data-tpl="hub" title="Load Hub/Dock Specs">🔌
-                      Hub/Dock</button>
-                    <button type="button" class="specs-tpl-btn text-muted" data-tpl="clear" title="Clear all rows">↺
-                      Clear</button>
                   </div>
 
                   <!-- VIEW 1: Interactive Table & Checklist Editor -->
@@ -1233,21 +1180,7 @@
                         <option value="Warranty"></option>
                       </datalist>
 
-                      <!-- Quick Spec Attribute Injectors -->
-                      <div class="specs-quick-attr-strip">
-                        <span class="quick-attr-label">Quick Add Row:</span>
-                        <button type="button" class="quick-attr-chip" data-key="Switch Type">+ Switch Type</button>
-                        <button type="button" class="quick-attr-chip" data-key="Actuation Point">+ Actuation
-                          Point</button>
-                        <button type="button" class="quick-attr-chip" data-key="Polling Rate">+ Polling Rate</button>
-                        <button type="button" class="quick-attr-chip" data-key="Chassis">+ Chassis</button>
-                        <button type="button" class="quick-attr-chip" data-key="Keycaps">+ Keycaps</button>
-                        <button type="button" class="quick-attr-chip" data-key="Connectivity">+ Connectivity</button>
-                        <button type="button" class="quick-attr-chip" data-key="Battery">+ Battery</button>
-                        <button type="button" class="quick-attr-chip" data-key="Sensor">+ Sensor</button>
-                        <button type="button" class="quick-attr-chip" data-key="Weight">+ Weight</button>
-                        <button type="button" class="quick-attr-chip" data-key="Warranty">+ Warranty</button>
-                      </div>
+
                     </div>
 
                     <!-- Section 2: Engineered Highlights & Features -->
@@ -1267,26 +1200,7 @@
                         <!-- Dynamically injected feature highlight rows -->
                       </div>
 
-                      <!-- Quick Feature Injectors -->
-                      <div class="specs-quick-attr-strip mt-2">
-                        <span class="quick-attr-label">Quick Add Highlight:</span>
-                        <button type="button" class="quick-feature-chip"
-                          data-feature="Rapid Trigger technology for instantaneous key resets">+ Rapid Trigger</button>
-                        <button type="button" class="quick-feature-chip"
-                          data-feature="Dynamic Keystroke (DKS) assigns 4 actions to a single press">+ Dynamic
-                          Keystroke</button>
-                        <button type="button" class="quick-feature-chip"
-                          data-feature="Hot-swappable magnetic switch sockets">+ Hot-Swappable</button>
-                        <button type="button" class="quick-feature-chip"
-                          data-feature="Multi-layer Poron &amp; IXPE acoustic sound dampeners">+ Multi-Layer
-                          Poron</button>
-                        <button type="button" class="quick-feature-chip"
-                          data-feature="8000Hz True Hyper-Polling Wireless ultra-low latency">+ 8000Hz
-                          Hyper-Polling</button>
-                        <button type="button" class="quick-feature-chip"
-                          data-feature="6-Month 7th June Comprehensive Hardware Replacement Guarantee">+ 6-Month
-                          Warranty</button>
-                      </div>
+
                     </div>
 
                   </div>

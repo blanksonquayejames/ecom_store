@@ -31,58 +31,14 @@ export function renderAccountView(container, subTab = null) {
     activeAccountTab = currentView.tab;
   }
 
-  const isLoggedIn = user && user.isLoggedIn;
-  const firstName = user && user.name ? user.name.trim().split(' ')[0] : 'Member';
-
-  if (!isLoggedIn) {
-    renderGuestGate(container);
+  if (!store.isUserLoggedIn()) {
+    store.setView('catalog');
+    openAuthModal('login', { redirectTo: 'account' });
     return;
   }
 
+  const firstName = user && user.name ? user.name.trim().split(' ')[0] : 'Member';
   renderAuthenticatedHub(container, user, orders, currency, firstName);
-}
-
-/**
- * 1. Guest / Logged-Out Checkpoint
- */
-function renderGuestGate(container) {
-  container.innerHTML = `
-    <div class="account-page-wrapper animate-fade-in">
-      <div class="container">
-        
-        <!-- Breadcrumb Navigation -->
-        <nav class="account-breadcrumb-nav mb-3" aria-label="Breadcrumb">
-          <a href="#/catalog" class="account-breadcrumb-link" id="guest-bread-store">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
-            Storefront
-          </a>
-          <span class="breadcrumb-sep">/</span>
-          <span class="breadcrumb-active">Client Services & Sign In</span>
-        </nav>
-
-        <!-- Guest Prompt Card -->
-        <div class="account-guest-gate-card">
-          <div class="guest-gate-icon">🔐</div>
-          <h2 class="guest-gate-title">Sign In to 7th June Account Hub</h2>
-          <p class="guest-gate-desc">
-            Access your <strong>Order History</strong>, track live courier deliveries, manage <strong>Saved Shipping Destinations</strong> in Ghana and worldwide, and redeem <strong>VIP Rewards</strong>.
-          </p>
-          
-          <div class="guest-gate-actions">
-            <button class="btn btn-primary btn-lg" id="guest-open-login-btn">
-              Sign In to Account
-            </button>
-            <button class="btn btn-secondary btn-lg" id="guest-open-reg-btn">
-              Create New VIP Account (+500 Pts)
-            </button>
-          </div>
-        </div>
-
-      </div>
-    </div>
-  `;
-
-  attachGuestAccountEvents(container);
 }
 
 /**
@@ -1060,27 +1016,6 @@ function openAddressModal(address = null) {
   ui.openModal('account-address-modal');
 }
 
-/**
- * 6. Guest Checkpoint Events
- */
-function attachGuestAccountEvents(container) {
-  container.querySelector('#guest-bread-store')?.addEventListener('click', (e) => {
-    e.preventDefault();
-    sounds.playClick();
-    window.location.hash = '#/catalog';
-    store.setView('catalog');
-  });
-
-  container.querySelector('#guest-open-login-btn')?.addEventListener('click', () => {
-    sounds.playClick();
-    store.setView('auth', null, { tab: 'login', mode: 'login' });
-  });
-
-  container.querySelector('#guest-open-reg-btn')?.addEventListener('click', () => {
-    sounds.playClick();
-    store.setView('auth', null, { tab: 'register', mode: 'register' });
-  });
-}
 
 /**
  * 7. Digital Receipt & Tax Invoice Modal Inspector
