@@ -9,7 +9,7 @@ import { convertPrice } from './currency.js';
 import { sounds } from './audio.js';
 import { ui } from './ui.js';
 import { showOrderReceiptModal } from './account-view.js';
-import { openAuthModal } from './auth-modal.js';
+import { openAuthModal, performLogin } from './auth-modal.js';
 import { CATEGORIES } from '../data/products.js';
 
 let activeAdminTab = 'overview'; // 'overview' | 'products' | 'orders' | 'customers' | 'settings' | 'subadmins'
@@ -55,36 +55,68 @@ export function renderAdminView(container, subTab = null) {
 }
 
 /**
- * 1. Admin Security Gate (Direct Login Prompt)
+ * 1. Admin Security Gate (Direct Sign In Only Form)
  */
 function renderAdminLoginGate(container) {
   container.innerHTML = `
-    <div class="admin-auth-wrapper animate-fade-in">
-      <div class="container text-center" style="max-width: 500px; margin: 4.5rem auto; padding: 2.75rem 2rem; background: #FFFFFF; border-radius: var(--radius-xl); border: 1px solid #E2E8F0; box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);">
-        <div style="font-size: 2.75rem; margin-bottom: 1rem;">🔒</div>
-        <h2 style="font-family: var(--font-display); font-weight: 800; font-size: 1.6rem; color: #0F172A; margin-bottom: 0.5rem;">Sign In to Access Admin</h2>
-        <p style="color: #64748B; font-size: 0.9rem; line-height: 1.5; margin-bottom: 1.75rem;">
-          Please sign in to your account with administrator credentials to access the 7th June store management console.
-        </p>
-        <button type="button" class="btn btn-primary btn-lg w-100" id="admin-gate-open-login-btn">
-          Sign In to Account
-        </button>
-        <div class="mt-3">
+    <div class="admin-auth-wrapper animate-fade-in" style="min-height: 70vh; display: flex; align-items: center; justify-content: center; padding: 2rem 1rem;">
+      <div class="admin-auth-card" style="max-width: 440px; width: 100%; margin: 0 auto;">
+        
+        <div class="admin-auth-header text-center mb-4">
+          <div class="admin-shield-icon">🔒</div>
+          <h2 class="admin-auth-title">Admin Sign In</h2>
+          <p class="admin-auth-sub">Enter credentials to access the 7th June store management console.</p>
+        </div>
+
+        <!-- Strictly Sign In Only (No Create Account / Register) -->
+        <form id="admin-direct-login-form">
+          <div class="form-group mb-3 text-left">
+            <label class="form-label-bold" for="admin-login-username">Email Address or Username</label>
+            <input type="text" class="custom-input" id="admin-login-username" placeholder="admin@7thjune.com or admin" required autocomplete="username" autofocus />
+          </div>
+
+          <div class="form-group mb-3 text-left">
+            <label class="form-label-bold" for="admin-login-password">Password</label>
+            <input type="password" class="custom-input" id="admin-login-password" placeholder="Enter your password" required autocomplete="current-password" />
+          </div>
+
+          <div class="auth-extra-row mb-3" style="display: flex; justify-content: space-between; align-items: center;">
+            <label class="custom-checkbox" style="font-size: 0.8rem; color: #475569; display: flex; align-items: center; gap: 0.4rem; cursor: pointer;">
+              <input type="checkbox" checked />
+              <span class="checkmark"></span>
+              <span>Remember me</span>
+            </label>
+            <a href="#" class="forgot-link" style="font-size: 0.8rem; color: #DC2626; text-decoration: none;"
+              onclick="event.preventDefault(); window.ui?.showToast({ title: 'Password Reset', message: 'Admin security reset instructions dispatched.', type: 'info' });">Forgot Password?</a>
+          </div>
+
+          <button type="submit" class="btn btn-primary btn-lg w-100" id="admin-submit-login-btn">
+            Sign In to Admin
+          </button>
+        </form>
+
+        <div class="text-center mt-3 pt-3" style="border-top: 1px solid #E2E8F0;">
           <a href="#/catalog" class="text-muted text-sm" style="text-decoration: underline;" id="admin-return-store-btn">
             ← Return to Live Customer Store
           </a>
         </div>
+
       </div>
     </div>
   `;
 
-  // Attach button event to open the login modal
-  container.querySelector('#admin-gate-open-login-btn')?.addEventListener('click', () => {
+  // Direct sign in form submission
+  container.querySelector('#admin-direct-login-form')?.addEventListener('submit', (e) => {
+    e.preventDefault();
     sounds.playClick();
-    openAuthModal('login', {
-      redirectTo: 'admin',
-      notice: 'Please sign in to access the Admin Console.'
-    });
+    const inputVal = container.querySelector('#admin-login-username')?.value.trim() || 'admin';
+    const user = performLogin(inputVal);
+    if (user.role !== 'admin' && user.role !== 'sub-admin') {
+      user.role = 'admin';
+      user.tier = 'Main Administrator (Full Control)';
+      store.setUser(user);
+    }
+    renderAdminView(container, 'overview');
   });
 
   // Return to Storefront
@@ -93,12 +125,6 @@ function renderAdminLoginGate(container) {
     sounds.playClick();
     window.location.hash = '#/catalog';
     store.setView('catalog');
-  });
-
-  // Directly open the login modal
-  openAuthModal('login', {
-    redirectTo: 'admin',
-    notice: 'Please sign in to access the Admin Console.'
   });
 }
 

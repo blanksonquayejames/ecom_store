@@ -50,16 +50,35 @@ export function openAuthModal(mode = 'login', options = {}) {
     }
   }
 
+  // Enforce strictly Sign In only when accessing admin (no Create Account option)
+  const switchWrap = modal.querySelector('.auth-switch-wrap');
+  const subTitle = modal.querySelector('.auth-modal-sub');
+  const modalTitle = document.getElementById('auth-modal-title');
+  const isForAdmin = options && (options.redirectTo === 'admin' || options.onlySignIn);
+
+  if (isForAdmin) {
+    if (switchWrap) switchWrap.style.display = 'none';
+    if (modalTitle) modalTitle.textContent = 'Admin Sign In';
+    if (subTitle) subTitle.textContent = 'Enter administrator credentials to access store management.';
+  } else {
+    if (switchWrap) switchWrap.style.display = 'block';
+    if (modalTitle) modalTitle.textContent = 'Welcome to 7th June Computers';
+    if (subTitle) subTitle.textContent = 'Sign in to track orders, save shipping addresses, and unlock VIP points.';
+  }
+
   setAuthMode(mode);
   ui.openModal('auth-modal');
 }
 
 export function closeAuthModal() {
+  const modal = document.getElementById('auth-modal');
   const noticeEl = document.getElementById('auth-modal-notice');
   if (noticeEl) {
     noticeEl.style.display = 'none';
     noticeEl.innerHTML = '';
   }
+  const switchWrap = modal?.querySelector('.auth-switch-wrap');
+  if (switchWrap) switchWrap.style.display = 'block';
   ui.closeModal('auth-modal');
 }
 
