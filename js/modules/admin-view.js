@@ -153,13 +153,21 @@ function renderAdminDashboard(container) {
     <div class="admin-portal-wrapper animate-fade-in">
       
       <!-- Top Executive Admin Bar -->
-      <div class="admin-top-bar">
-        <div class="container admin-top-bar-inner">
+      <header class="admin-top-bar">
+        <div class="admin-top-bar-inner">
           <div class="admin-brand-group">
+            <button type="button" class="admin-hamburger-btn" id="admin-sidebar-toggle-btn" aria-label="Toggle Navigation Menu" title="Open Navigation Menu">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                <line x1="3" y1="6" x2="21" y2="6"/>
+                <line x1="3" y1="12" x2="21" y2="12"/>
+                <line x1="3" y1="18" x2="21" y2="18"/>
+              </svg>
+            </button>
             <img src="image/7th June logo.png" alt="7th June Logo" class="admin-brand-logo" />
-            <div>
+            <div class="admin-brand-text-wrap">
               <div class="admin-brand-title">
-                7TH JUNE COMPUTERS • ${isMainAdmin ? 'ENTERPRISE CONSOLE' : 'SUB-ADMIN WORKSPACE'}
+                <span class="admin-brand-title-full">7TH JUNE COMPUTERS • ${isMainAdmin ? 'ENTERPRISE CONSOLE' : 'SUB-ADMIN WORKSPACE'}</span>
+                <span class="admin-brand-title-compact">7th June <span class="admin-portal-badge">${isMainAdmin ? 'Console' : 'Staff'}</span></span>
               </div>
               <div class="admin-system-status">
                 <span class="status-live-dot"></span>
@@ -169,11 +177,11 @@ function renderAdminDashboard(container) {
           </div>
 
           <div class="admin-user-controls">
-            <button class="btn btn-secondary btn-sm" id="admin-view-storefront-btn">
+            <button class="btn btn-secondary btn-sm" id="admin-view-storefront-btn" title="Return to Storefront">
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
-              <span>Return to Store</span>
+              <span class="admin-btn-label">Return to Store</span>
             </button>
-            <div class="admin-user-chip" title="${adminRoleDisplay}">
+            <div class="admin-user-chip" title="${adminName} • ${adminRoleDisplay}">
               <span class="admin-avatar">${initials}</span>
               <div class="admin-user-text">
                 <span class="admin-user-name">${adminName}</span>
@@ -181,72 +189,126 @@ function renderAdminDashboard(container) {
               </div>
             </div>
             <button class="btn btn-ghost btn-sm" id="admin-logout-btn" title="Sign out of Admin Session">
-              Sign Out
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="admin-logout-svg"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+              <span class="admin-logout-label">Sign Out</span>
             </button>
           </div>
         </div>
-      </div>
+      </header>
 
-      <!-- Main Admin Body with Tabs -->
-      <div class="container admin-body-container mt-3">
-        
-        <!-- Access-Filtered Admin Navigation Tabs -->
-        <div class="admin-nav-tabs">
-          ${permissions.includes('overview') ? `
-            <button class="admin-tab-btn ${activeAdminTab === 'overview' ? 'is-active' : ''}" data-tab="overview">
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
-              <span>Overview</span>
+      <!-- Dashboard Layout with Sidebar and Content -->
+      <div class="admin-dashboard-layout">
+
+        <!-- Mobile Sidebar Backdrop -->
+        <div class="admin-sidebar-backdrop" id="admin-sidebar-backdrop"></div>
+
+        <!-- Admin Left Sidebar -->
+        <aside class="admin-sidebar" id="admin-sidebar" aria-label="Admin Navigation Sidebar">
+          <div class="admin-sidebar-header">
+            <div class="admin-sidebar-brand-mini">
+              <span class="admin-sidebar-kicker">Navigation</span>
+              <span class="admin-sidebar-badge">${isMainAdmin ? 'SUPER ADMIN' : 'LIMITED'}</span>
+            </div>
+            <button type="button" class="admin-sidebar-close" id="admin-sidebar-close-btn" aria-label="Close navigation menu">&times;</button>
+          </div>
+
+          <!-- Quick User Card in Sidebar -->
+          <div class="admin-sidebar-user-card">
+            <span class="admin-avatar">${initials}</span>
+            <div class="admin-sidebar-user-info">
+              <span class="admin-sidebar-user-name">${adminName}</span>
+              <span class="admin-sidebar-user-role">${isMainAdmin ? 'Chief Administrator' : 'Sub-Admin Staff'}</span>
+            </div>
+          </div>
+
+          <!-- Access-Filtered Admin Navigation Tabs (Vertical Sidebar Style) -->
+          <nav class="admin-nav-tabs admin-sidebar-nav">
+            <div class="admin-nav-group-heading">Core Management</div>
+
+            ${permissions.includes('overview') ? `
+              <button class="admin-tab-btn ${activeAdminTab === 'overview' ? 'is-active' : ''}" data-tab="overview">
+                <span class="admin-tab-icon-wrap">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+                </span>
+                <span class="admin-tab-text">Overview</span>
+              </button>
+            ` : ''}
+
+            ${permissions.includes('products') ? `
+              <button class="admin-tab-btn ${activeAdminTab === 'products' ? 'is-active' : ''}" data-tab="products">
+                <span class="admin-tab-icon-wrap">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
+                </span>
+                <span class="admin-tab-text">Products &amp; Stock</span>
+                <span class="admin-tab-badge">${products.length}</span>
+              </button>
+            ` : ''}
+
+            ${permissions.includes('orders') ? `
+              <button class="admin-tab-btn ${activeAdminTab === 'orders' ? 'is-active' : ''}" data-tab="orders">
+                <span class="admin-tab-icon-wrap">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
+                </span>
+                <span class="admin-tab-text">Orders &amp; MoMo</span>
+                <span class="admin-tab-badge">${orders.length}</span>
+              </button>
+            ` : ''}
+
+            ${permissions.includes('customers') ? `
+              <button class="admin-tab-btn ${activeAdminTab === 'customers' ? 'is-active' : ''}" data-tab="customers">
+                <span class="admin-tab-icon-wrap">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+                </span>
+                <span class="admin-tab-text">Customers</span>
+                <span class="admin-tab-badge">1 VIP</span>
+              </button>
+            ` : ''}
+
+            <div class="admin-nav-group-heading">System &amp; Settings</div>
+
+            ${permissions.includes('settings') ? `
+              <button class="admin-tab-btn ${activeAdminTab === 'settings' ? 'is-active' : ''}" data-tab="settings">
+                <span class="admin-tab-icon-wrap">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+                </span>
+                <span class="admin-tab-text">Store Settings</span>
+              </button>
+            ` : ''}
+
+            ${isMainAdmin ? `
+              <button class="admin-tab-btn ${activeAdminTab === 'subadmins' ? 'is-active' : ''}" data-tab="subadmins">
+                <span class="admin-tab-icon-wrap">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+                </span>
+                <span class="admin-tab-text">Sub-Admins &amp; Staff</span>
+                <span class="admin-tab-badge">${(subAdmins || []).length} Staff</span>
+              </button>
+            ` : ''}
+          </nav>
+
+          <div class="admin-sidebar-footer">
+            <button class="btn btn-secondary btn-sm w-100 mb-2 admin-sidebar-storefront-btn">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+              <span>Storefront View</span>
             </button>
-          ` : ''}
+            <div class="admin-sidebar-status-line">
+              <span class="status-live-dot"></span>
+              <span>Online • Node Accra</span>
+            </div>
+          </div>
+        </aside>
 
-          ${permissions.includes('products') ? `
-            <button class="admin-tab-btn ${activeAdminTab === 'products' ? 'is-active' : ''}" data-tab="products">
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
-              <span>Products & Inventory</span>
-              <span class="admin-tab-badge">${products.length}</span>
-            </button>
-          ` : ''}
-
-          ${permissions.includes('orders') ? `
-            <button class="admin-tab-btn ${activeAdminTab === 'orders' ? 'is-active' : ''}" data-tab="orders">
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
-              <span>Orders & MoMo (Status)</span>
-              <span class="admin-tab-badge">${orders.length}</span>
-            </button>
-          ` : ''}
-
-          ${permissions.includes('customers') ? `
-            <button class="admin-tab-btn ${activeAdminTab === 'customers' ? 'is-active' : ''}" data-tab="customers">
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
-              <span>Customers</span>
-              <span class="admin-tab-badge">1 VIP</span>
-            </button>
-          ` : ''}
-
-          ${permissions.includes('settings') ? `
-            <button class="admin-tab-btn ${activeAdminTab === 'settings' ? 'is-active' : ''}" data-tab="settings">
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
-              <span>Store Settings</span>
-            </button>
-          ` : ''}
-
-          ${isMainAdmin ? `
-            <button class="admin-tab-btn ${activeAdminTab === 'subadmins' ? 'is-active' : ''}" data-tab="subadmins">
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
-              <span>Sub-Admins & Access</span>
-              <span class="admin-tab-badge">${(subAdmins || []).length} Staff</span>
-            </button>
-          ` : ''}
-        </div>
-
-        <!-- Dynamic Active Tab Content Container -->
-        <div class="admin-pane-container" id="admin-pane-content">
-          ${renderActiveAdminPaneContent(activeAdminTab)}
-        </div>
+        <!-- Main Content Area -->
+        <main class="admin-main-content">
+          <div class="admin-pane-container" id="admin-pane-content">
+            ${renderActiveAdminPaneContent(activeAdminTab)}
+          </div>
+        </main>
       </div>
 
     </div>
   `;
+
 
   attachAdminDashboardEvents(container);
 }
@@ -1005,9 +1067,41 @@ function renderSettingsTab() {
  * 4. Attach Event Listeners to Dashboard Components
  */
 function attachAdminDashboardEvents(container) {
+  // Mobile Sidebar Drawer Toggle & Backdrop Events
+  const sidebarEl = container.querySelector('#admin-sidebar');
+  const backdropEl = container.querySelector('#admin-sidebar-backdrop');
+  const toggleBtn = container.querySelector('#admin-sidebar-toggle-btn');
+  const closeBtn = container.querySelector('#admin-sidebar-close-btn');
+
+  const openSidebar = () => {
+    sounds.playClick();
+    sidebarEl?.classList.add('is-open');
+    backdropEl?.classList.add('is-active');
+    document.body.classList.add('no-scroll');
+  };
+
+  const closeSidebar = () => {
+    sidebarEl?.classList.remove('is-open');
+    backdropEl?.classList.remove('is-active');
+    document.body.classList.remove('no-scroll');
+  };
+
+  toggleBtn?.addEventListener('click', openSidebar);
+  closeBtn?.addEventListener('click', closeSidebar);
+  backdropEl?.addEventListener('click', closeSidebar);
+
+  container.querySelectorAll('.admin-sidebar-storefront-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      sounds.playClick();
+      closeSidebar();
+      store.setView('catalog');
+    });
+  });
+
   // Return to Storefront
   container.querySelector('#admin-view-storefront-btn')?.addEventListener('click', () => {
     sounds.playClick();
+    document.body.classList.remove('no-scroll');
     store.setView('catalog');
   });
 
@@ -1026,6 +1120,7 @@ function attachAdminDashboardEvents(container) {
     if (!confirmed) return;
 
     sounds.playClick();
+    document.body.classList.remove('no-scroll');
     store.logout();
     ui.showToast({
       title: 'Signed Out',
@@ -1341,6 +1436,15 @@ function switchToTab(container, tabName) {
   container.querySelectorAll('.admin-tab-btn').forEach(b => {
     b.classList.toggle('is-active', b.dataset.tab === tabName);
   });
+  // Auto-close mobile sidebar if open
+  const sidebarEl = container.querySelector('#admin-sidebar');
+  const backdropEl = container.querySelector('#admin-sidebar-backdrop');
+  if (sidebarEl?.classList.contains('is-open')) {
+    sidebarEl.classList.remove('is-open');
+    backdropEl?.classList.remove('is-active');
+    document.body.classList.remove('no-scroll');
+  }
+
   const pane = container.querySelector('#admin-pane-content');
   if (pane) {
     pane.innerHTML = renderActiveAdminPaneContent(tabName);

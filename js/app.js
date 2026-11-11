@@ -208,10 +208,11 @@ function updateHeaderLayoutForView(page) {
   siteHeader?.classList.remove('is-mobile-search-open');
 
   if (page === 'admin') {
-    // Hide storefront nav bar (with 7th June Computers, search, currency, bag) & announcement bar in admin
+    // Hide storefront nav bar (with 7th June Computers, search, currency, bag), announcement bar, mobile bottom nav & footer in admin portal
     if (siteHeader) siteHeader.style.display = 'none';
     if (announcementBar) announcementBar.style.display = 'none';
     if (mobileBottomNav) mobileBottomNav.style.display = 'none';
+    if (siteFooter) siteFooter.style.display = 'none';
   } else {
     if (siteHeader) siteHeader.style.display = '';
     if (mobileBottomNav) mobileBottomNav.style.display = '';
@@ -223,8 +224,8 @@ function updateHeaderLayoutForView(page) {
     if (searchTriggerBtn) searchTriggerBtn.style.display = (page === 'account' || page === 'auth' || page === 'login') ? 'none' : '';
   }
 
-  // Hide footer on checkout page
-  if (siteFooter) siteFooter.style.display = page === 'checkout' ? 'none' : '';
+  // Hide footer on checkout and admin portal pages
+  if (siteFooter) siteFooter.style.display = (page === 'checkout' || page === 'admin') ? 'none' : '';
 
   // Ensure mini-cart subtotal menu is closed and hidden on cart page, delivery/checkout process, admin section, and account profile page
   if (page === 'cart' || page === 'checkout' || page === 'admin' || page === 'auth' || page === 'login' || page === 'account') {
