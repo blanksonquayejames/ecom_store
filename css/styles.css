@@ -6583,6 +6583,17 @@ body.no-scroll .site-header {
     padding-top: 58px !important;
   }
 
+  /* Admin Portal on Mobile: completely remove top & bottom padding offsets */
+  body[data-view="admin"] #app-main-view,
+  body[data-view="admin"] .main-content-wrap,
+  body:has(.admin-portal-wrapper) #app-main-view,
+  body:has(.admin-portal-wrapper) .main-content-wrap,
+  body:has(.admin-auth-wrapper) #app-main-view,
+  body:has(.admin-auth-wrapper) .main-content-wrap {
+    padding-top: 0 !important;
+    padding-bottom: 0 !important;
+  }
+
   /* Mobile Bottom App Navigation Bar (Removed) */
   .mobile-bottom-nav,
   #mobile-bottom-nav {
@@ -9686,6 +9697,17 @@ body[data-view="account"] .header-inner {
   margin-top: 1.5rem;
 }
 
+/* Zero out root offsets on Admin page across all viewports */
+body[data-view="admin"] #app-main-view,
+body[data-view="admin"] .main-content-wrap,
+body:has(.admin-portal-wrapper) #app-main-view,
+body:has(.admin-portal-wrapper) .main-content-wrap,
+body:has(.admin-auth-wrapper) #app-main-view,
+body:has(.admin-auth-wrapper) .main-content-wrap {
+  padding-top: 0 !important;
+  padding-bottom: 0 !important;
+}
+
 /* ==========================================================================
    ADMIN EXECUTIVE DASHBOARD & SIDEBAR NAVIGATION
    ========================================================================== */
@@ -10274,8 +10296,21 @@ body[data-view="account"] .header-inner {
     display: inline-flex;
   }
 
+  .admin-portal-wrapper {
+    padding-top: 0 !important;
+    margin-top: 0 !important;
+  }
+
   .admin-main-content {
-    padding: 1.25rem 1rem;
+    padding: 0.75rem 0.85rem 1.5rem;
+  }
+
+  .admin-pane-container {
+    padding-top: 0;
+  }
+
+  .admin-kpi-grid {
+    margin-top: 0.5rem;
   }
 }
 
