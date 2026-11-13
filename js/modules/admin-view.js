@@ -1106,7 +1106,6 @@ function renderCustomersTab() {
                 <th>Customer</th>
                 <th>Contact Email</th>
                 <th>Membership Tier</th>
-                <th>Loyalty Pts</th>
                 <th style="text-align: center;">Orders</th>
                 <th>Total Spent</th>
                 <th style="text-align: right;">Status</th>
@@ -1132,12 +1131,6 @@ function renderCustomersTab() {
                     <span class="tier-pill-modern ${c.tierClass}">
                       <span>${c.tierIcon}</span>
                       <span>${c.tier}</span>
-                    </span>
-                  </td>
-                  <td>
-                    <span class="loyalty-pts-badge">
-                      <strong>${c.points.toLocaleString()}</strong>
-                      <small>PTS</small>
                     </span>
                   </td>
                   <td style="text-align: center;">

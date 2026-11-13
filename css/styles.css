@@ -10835,40 +10835,35 @@ body:has(.admin-portal-wrapper).has-cart-rail {
 
 .admin-customers-table th:nth-child(1),
 .admin-customers-table td:nth-child(1) {
-  width: 21%;
+  width: 25%;
 }
 
 .admin-customers-table th:nth-child(2),
 .admin-customers-table td:nth-child(2) {
-  width: 17%;
+  width: 21%;
 }
 
 .admin-customers-table th:nth-child(3),
 .admin-customers-table td:nth-child(3) {
-  width: 16%;
+  width: 18%;
 }
 
 .admin-customers-table th:nth-child(4),
 .admin-customers-table td:nth-child(4) {
   width: 10%;
+  text-align: center;
+  text-overflow: clip;
 }
 
 .admin-customers-table th:nth-child(5),
 .admin-customers-table td:nth-child(5) {
-  width: 9%;
-  text-align: center;
+  width: 15%;
   text-overflow: clip;
 }
 
 .admin-customers-table th:nth-child(6),
 .admin-customers-table td:nth-child(6) {
-  width: 15%;
-  text-overflow: clip;
-}
-
-.admin-customers-table th:nth-child(7),
-.admin-customers-table td:nth-child(7) {
-  width: 12%;
+  width: 11%;
   text-align: right;
 }
 
