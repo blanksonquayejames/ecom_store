@@ -14,7 +14,7 @@ import { renderCheckoutView } from './modules/checkout-view.js';
 import { renderCartView } from './modules/cart-view.js';
 import { renderAccountView } from './modules/account-view.js';
 import { initAuthModal, openAuthModal } from './modules/auth-modal.js';
-import { renderAdminView } from './modules/admin-view.js?v=20261113g';
+import { renderAdminView } from './modules/admin-view.js?v=20261113h';
 import { renderAuthView } from './modules/auth-view.js';
 import { syncAllCartButtons } from './modules/cart-icon.js';
 

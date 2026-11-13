@@ -922,10 +922,6 @@ function renderSubAdminsTab() {
             </div>
           </div>
           <div class="subadmin-header-actions d-flex align-center gap-2">
-            <button type="button" class="btn btn-secondary btn-sm" id="subadmin-quick-add-btn">
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
-              <span>+ Add Staff</span>
-            </button>
             <span class="subadmin-badge-count">${subAdmins.length} Active Staff</span>
           </div>
         </div>
@@ -1578,7 +1574,7 @@ function attachPaneSpecificEvents(container, tab) {
         container.querySelector('#new-sub-name')?.focus();
       } else {
         formCard.classList.add('is-collapsed');
-        if (toggleText) toggleText.textContent = 'Show Form';
+        if (toggleText) toggleText.textContent = 'Add Form';
       }
     };
 
