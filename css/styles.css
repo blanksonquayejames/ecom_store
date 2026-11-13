@@ -9708,6 +9708,11 @@ body:has(.admin-auth-wrapper) .main-content-wrap {
   padding-bottom: 0 !important;
 }
 
+body[data-view="admin"].has-cart-rail,
+body:has(.admin-portal-wrapper).has-cart-rail {
+  padding-right: 0 !important;
+}
+
 /* ==========================================================================
    ADMIN EXECUTIVE DASHBOARD & SIDEBAR NAVIGATION
    ========================================================================== */
@@ -10134,9 +10139,15 @@ body:has(.admin-auth-wrapper) .main-content-wrap {
 .admin-main-content {
   flex: 1;
   min-width: 0;
-  padding: 1.75rem 2.25rem;
+  padding: 1.25rem 1.75rem;
   background: transparent;
   overflow-x: hidden;
+}
+
+@media (max-width: 1366px) {
+  .admin-main-content {
+    padding: 1rem 1.25rem;
+  }
 }
 
 .admin-pane-container {
@@ -10240,12 +10251,34 @@ body:has(.admin-auth-wrapper) .main-content-wrap {
     border: 2px solid rgba(255, 255, 255, 0.15);
   }
 
+  .admin-logout-label {
+    display: none !important;
+  }
+
+  .admin-logout-svg {
+    display: inline-block !important;
+  }
+
   #admin-logout-btn {
-    padding: 0.35rem 0.55rem;
-    font-size: 0.75rem;
-    display: inline-flex;
-    align-items: center;
-    gap: 0.3rem;
+    width: 34px !important;
+    height: 34px !important;
+    min-width: 34px !important;
+    padding: 0 !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    border-radius: 8px !important;
+    color: #ef4444 !important;
+    background: rgba(239, 68, 68, 0.12) !important;
+    border: 1px solid rgba(239, 68, 68, 0.25) !important;
+    flex-shrink: 0 !important;
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+
+  #admin-logout-btn:hover {
+    background: rgba(239, 68, 68, 0.22) !important;
+    color: #fca5a5 !important;
   }
 
   .admin-hamburger-btn {
@@ -10524,8 +10557,17 @@ body:has(.admin-auth-wrapper) .main-content-wrap {
   background: #FFFFFF;
   border: 1px solid #e2e8f0;
   border-radius: var(--radius-lg);
-  padding: 1.75rem;
+  padding: 1.25rem 1.5rem;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.02);
+  width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
+}
+
+@media (max-width: 1366px) {
+  .admin-card-section {
+    padding: 1rem 1.25rem;
+  }
 }
 
 .section-title-row {
@@ -10539,14 +10581,14 @@ body:has(.admin-auth-wrapper) .main-content-wrap {
 .section-title-row h3,
 .admin-card-section h3 {
   font-family: var(--font-display);
-  font-size: 1.25rem;
+  font-size: 1.15rem;
   font-weight: 800;
   color: #111827;
   margin: 0;
 }
 
 .section-desc {
-  font-size: 0.85rem;
+  font-size: 0.825rem;
   color: #64748b;
   margin: 0.25rem 0 0 0;
 }
@@ -10554,36 +10596,65 @@ body:has(.admin-auth-wrapper) .main-content-wrap {
 /* Admin Data Tables */
 .admin-table-wrap {
   overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
   border: 1px solid #e2e8f0;
   border-radius: var(--radius-md);
   background: #FFFFFF;
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
+  scrollbar-width: thin;
+  scrollbar-color: #cbd5e1 #f8fafc;
+}
+
+.admin-table-wrap::-webkit-scrollbar {
+  height: 6px;
+}
+
+.admin-table-wrap::-webkit-scrollbar-track {
+  background: #f1f5f9;
+  border-radius: 9999px;
+}
+
+.admin-table-wrap::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 9999px;
+}
+
+.admin-table-wrap::-webkit-scrollbar-thumb:hover {
+  background: #94a3b8;
 }
 
 .admin-data-table {
   width: 100%;
+  min-width: 0;
   border-collapse: collapse;
-  font-size: 0.875rem;
+  font-size: 0.825rem;
 }
 
 .admin-data-table th {
   background: #f8fafc;
-  color: #111827;
+  color: #334155;
   font-weight: 700;
-  padding: 0.85rem 1rem;
+  padding: 0.65rem 0.85rem;
   border-bottom: 2px solid #e2e8f0;
   text-align: left;
   white-space: nowrap;
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
 }
 
 .admin-data-table td {
-  padding: 0.85rem 1rem;
+  padding: 0.65rem 0.85rem;
   border-bottom: 1px solid #f1f5f9;
   color: #334155;
   vertical-align: middle;
 }
 
 .admin-data-table tr:hover td {
-  background: #fafafa;
+  background: #fafbfc;
 }
 
 .admin-table-thumb {
@@ -10733,22 +10804,91 @@ body:has(.admin-auth-wrapper) .main-content-wrap {
 /* ==========================================================================
    ADMIN CUSTOMER MANAGEMENT & DIRECTORY TABLE STYLING
    ========================================================================== */
+.admin-customers-table {
+  table-layout: fixed;
+  width: 100%;
+  min-width: 0;
+}
+
+@media (max-width: 860px) {
+  .admin-customers-table {
+    table-layout: auto !important;
+    min-width: 780px !important;
+    width: max-content !important;
+  }
+
+  .admin-customers-table th,
+  .admin-customers-table td {
+    overflow: visible;
+    text-overflow: clip;
+    white-space: nowrap;
+    padding: 0.75rem 0.85rem;
+  }
+}
+
+.admin-customers-table th,
+.admin-customers-table td {
+  padding: 0.65rem 0.55rem;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.admin-customers-table th:nth-child(1),
+.admin-customers-table td:nth-child(1) {
+  width: 21%;
+}
+
+.admin-customers-table th:nth-child(2),
+.admin-customers-table td:nth-child(2) {
+  width: 17%;
+}
+
+.admin-customers-table th:nth-child(3),
+.admin-customers-table td:nth-child(3) {
+  width: 16%;
+}
+
+.admin-customers-table th:nth-child(4),
+.admin-customers-table td:nth-child(4) {
+  width: 10%;
+}
+
+.admin-customers-table th:nth-child(5),
+.admin-customers-table td:nth-child(5) {
+  width: 9%;
+  text-align: center;
+  text-overflow: clip;
+}
+
+.admin-customers-table th:nth-child(6),
+.admin-customers-table td:nth-child(6) {
+  width: 15%;
+  text-overflow: clip;
+}
+
+.admin-customers-table th:nth-child(7),
+.admin-customers-table td:nth-child(7) {
+  width: 12%;
+  text-align: right;
+}
+
 .customer-info-cell {
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: 8px;
+  min-width: 0;
 }
 
 .customer-avatar-sm {
-  width: 44px;
-  height: 44px;
-  min-width: 44px;
-  max-width: 44px;
-  max-height: 44px;
+  width: 34px;
+  height: 34px;
+  min-width: 34px;
+  max-width: 34px;
+  max-height: 34px;
   border-radius: 50%;
   object-fit: cover;
-  border: 2px solid #E2E8F0;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+  border: 1.5px solid #E2E8F0;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
   flex-shrink: 0;
   display: block;
 }
@@ -10756,36 +10896,54 @@ body:has(.admin-auth-wrapper) .main-content-wrap {
 .customer-details {
   display: flex;
   flex-direction: column;
-  gap: 2px;
+  gap: 1px;
+  min-width: 0;
+  overflow: hidden;
 }
 
 .customer-name {
-  font-size: 0.9rem;
+  font-size: 0.85rem;
   font-weight: 700;
   color: #0F172A;
   line-height: 1.25;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .customer-sub {
-  font-size: 0.75rem;
+  font-size: 0.685rem;
   color: #64748B;
-  line-height: 1.2;
+  line-height: 1.15;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.customer-location {
+  font-size: 0.675rem;
+  color: #94A3B8;
+  line-height: 1.15;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .customer-email {
-  font-size: 0.85rem;
+  font-size: 0.8rem;
   color: #475569;
   font-weight: 500;
+  white-space: nowrap;
 }
 
 /* Modern Tier Badges */
 .tier-pill-modern {
   display: inline-flex;
   align-items: center;
-  gap: 6px;
-  padding: 0.25rem 0.75rem;
+  gap: 4px;
+  padding: 0.2rem 0.55rem;
   border-radius: 9999px;
-  font-size: 0.75rem;
+  font-size: 0.725rem;
   font-weight: 700;
   letter-spacing: 0.015em;
   white-space: nowrap;
@@ -10819,14 +10977,15 @@ body:has(.admin-auth-wrapper) .main-content-wrap {
 .loyalty-pts-badge {
   display: inline-flex;
   align-items: center;
-  gap: 5px;
-  font-size: 0.875rem;
+  gap: 4px;
+  font-size: 0.825rem;
   font-weight: 700;
   color: #0F172A;
+  white-space: nowrap;
 }
 
 .loyalty-pts-badge small {
-  font-size: 0.7rem;
+  font-size: 0.675rem;
   color: #64748B;
   font-weight: 600;
   letter-spacing: 0.04em;
@@ -10836,26 +10995,30 @@ body:has(.admin-auth-wrapper) .main-content-wrap {
 .order-count-badge {
   display: inline-flex;
   align-items: center;
-  gap: 4px;
-  padding: 0.2rem 0.6rem;
+  gap: 3px;
+  padding: 0.15rem 0.45rem;
   border-radius: 6px;
   background: #F8FAFC;
   border: 1px solid #E2E8F0;
-  font-size: 0.775rem;
+  font-size: 0.725rem;
   font-weight: 600;
   color: #334155;
+  white-space: nowrap;
 }
 
 .customer-total-spent {
   font-weight: 700;
   color: #0F172A;
-  font-size: 0.875rem;
+  font-size: 0.8125rem;
+  white-space: nowrap;
+  letter-spacing: -0.01em;
 }
 
 .status-active {
   background: #ECFDF5;
   color: #059669;
   border: 1px solid #A7F3D0;
+  white-space: nowrap;
 }
 
 /* Dark Theme Adaptations */
@@ -10922,6 +11085,64 @@ body:has(.admin-auth-wrapper) .main-content-wrap {
   background: rgba(16, 185, 129, 0.18);
   color: #6EE7B7;
   border-color: rgba(16, 185, 129, 0.35);
+}
+
+[data-theme="dark"] .admin-card-section {
+  background: #0f172a;
+  border-color: #1e293b;
+}
+
+[data-theme="dark"] .admin-card-section h3 {
+  color: #f8fafc;
+}
+
+[data-theme="dark"] .admin-table-wrap {
+  background: #0f172a;
+  border-color: #1e293b;
+  scrollbar-color: #334155 #0f172a;
+}
+
+[data-theme="dark"] .admin-table-wrap::-webkit-scrollbar-track {
+  background: #0f172a;
+}
+
+[data-theme="dark"] .admin-table-wrap::-webkit-scrollbar-thumb {
+  background: #334155;
+}
+
+[data-theme="dark"] .admin-data-table th {
+  background: #1e293b;
+  color: #94a3b8;
+  border-bottom-color: #334155;
+}
+
+[data-theme="dark"] .admin-data-table td {
+  border-bottom-color: #1e293b;
+  color: #cbd5e1;
+}
+
+[data-theme="dark"] .admin-data-table tr:hover td {
+  background: #17233c;
+}
+
+[data-theme="dark"] .admin-stat-card {
+  background: #0f172a;
+  border-color: #1e293b;
+}
+
+[data-theme="dark"] .stat-value {
+  color: #f8fafc;
+}
+
+[data-theme="dark"] .momo-config-card {
+  background: #0b1120;
+  border-color: #1e293b;
+}
+
+[data-theme="dark"] .momo-net-row {
+  background: #1e293b;
+  border-color: #334155;
+  color: #f8fafc;
 }
 
 /* Toolbar Rows */
@@ -11606,9 +11827,9 @@ body:has(.admin-auth-wrapper) .main-content-wrap {
    ========================================================================== */
 body:has(.admin-portal-wrapper) #site-footer,
 body:has(.admin-auth-wrapper) #site-footer,
-.admin-portal-wrapper ~ #site-footer,
-#app-main-view:has(.admin-portal-wrapper) ~ #site-footer,
-#app-main-view:has(.admin-auth-wrapper) ~ #site-footer {
+.admin-portal-wrapper~#site-footer,
+#app-main-view:has(.admin-portal-wrapper)~#site-footer,
+#app-main-view:has(.admin-auth-wrapper)~#site-footer {
   display: none !important;
 }
 
@@ -14900,7 +15121,7 @@ body[data-view="account"].has-cart-rail .site-header {
   pointer-events: none;
   opacity: 0;
   transition: opacity 0.22s cubic-bezier(0.16, 1, 0.3, 1),
-              transform 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+    transform 0.25s cubic-bezier(0.16, 1, 0.3, 1);
   max-width: calc(100vw - 32px);
 }
 
@@ -14979,6 +15200,7 @@ body[data-view="account"].has-cart-rail .site-header {
   text-underline-offset: 3px;
   transition: color 0.15s ease, opacity 0.15s ease;
 }
+
 .nav-toast-action:hover {
   color: #FCA5A5;
 }
@@ -14997,6 +15219,7 @@ body[data-view="account"].has-cart-rail .site-header {
   justify-content: center;
   transition: color 0.15s ease;
 }
+
 .nav-toast-close:hover {
   color: #FFFFFF;
 }
@@ -15006,12 +15229,1366 @@ body[data-view="account"].has-cart-rail .site-header {
     top: max(10px, env(safe-area-inset-top, 10px));
     max-width: calc(100vw - 24px);
   }
+
   .nav-toast-content {
     font-size: 12.5px;
     padding: 7px 12px 7px 10px;
     gap: 8px;
   }
+
   .nav-toast-msg {
     max-width: 180px;
   }
 }
+
+/* ==========================================================================
+   ENTERPRISE SUB-ADMIN PROVISIONING & GRANULAR ACCESS CONTROL SUITE
+   Clean, modern, enterprise-grade interface for delegated staff credentials,
+   custom permission toggle cards, directory audit tables, and security modals.
+   ========================================================================== */
+
+.admin-subadmins-section {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  width: 100%;
+}
+
+/* 1. Executive Hero Header Banner */
+.subadmin-hero-banner {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1.25rem;
+  background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 14px;
+  padding: 0.95rem 1.35rem;
+  box-shadow: 0 10px 25px -5px rgba(15, 23, 42, 0.25), 0 8px 10px -6px rgba(15, 23, 42, 0.1);
+  position: relative;
+  overflow: hidden;
+}
+
+.subadmin-hero-banner::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 280px;
+  height: 100%;
+  background: radial-gradient(circle at 100% 50%, rgba(37, 99, 235, 0.18), transparent 70%);
+  pointer-events: none;
+}
+
+.subadmin-hero-content {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  z-index: 1;
+}
+
+.subadmin-hero-icon {
+  width: 42px;
+  height: 42px;
+  min-width: 42px;
+  border-radius: 11px;
+  background: rgba(37, 99, 235, 0.22);
+  border: 1px solid rgba(96, 165, 250, 0.4);
+  color: #60a5fa;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 14px rgba(37, 99, 235, 0.2);
+}
+
+.subadmin-hero-title {
+  font-family: var(--font-display, inherit);
+  font-size: 1.15rem;
+  font-weight: 800;
+  color: #FFFFFF;
+  letter-spacing: -0.015em;
+  line-height: 1.2;
+  margin: 0 0 0.15rem 0;
+}
+
+.subadmin-hero-sub {
+  font-size: 0.8rem;
+  color: #94a3b8;
+  line-height: 1.35;
+  margin: 0;
+  max-width: 620px;
+}
+
+.subadmin-hero-meta {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  flex-shrink: 0;
+  z-index: 1;
+}
+
+.subadmin-hero-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 0.3rem 0.75rem;
+  border-radius: 9999px;
+  background: rgba(16, 185, 129, 0.16);
+  border: 1px solid rgba(52, 211, 153, 0.35);
+  color: #34d399;
+  font-size: 0.725rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.subadmin-hero-count {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 0.3rem 0.75rem;
+  border-radius: 9999px;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  color: #e2e8f0;
+  font-size: 0.75rem;
+  font-weight: 600;
+}
+
+.subadmin-hero-count strong {
+  color: #FFFFFF;
+  font-weight: 800;
+}
+
+.subadmin-hero-toggle-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 0.35rem 0.85rem;
+  border-radius: 9999px;
+  background: rgba(255, 255, 255, 0.12);
+  border: 1px solid rgba(255, 255, 255, 0.22);
+  color: #FFFFFF;
+  font-size: 0.75rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.18s ease;
+  white-space: nowrap;
+}
+
+.subadmin-hero-toggle-btn:hover {
+  background: rgba(255, 255, 255, 0.24);
+  border-color: rgba(255, 255, 255, 0.4);
+  transform: translateY(-1px);
+}
+
+/* 2. Main Sub-Admin Provision Form Card & Console */
+.subadmin-form-card,
+.subadmin-directory-card {
+  background: #FFFFFF;
+  border: 1px solid #e2e8f0;
+  border-radius: 14px;
+  padding: 1.25rem 1.45rem;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04), 0 8px 24px -4px rgba(0, 0, 0, 0.04);
+}
+
+.subadmin-console-card {
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.subadmin-console-card.is-collapsed .subadmin-provision-form {
+  display: none !important;
+}
+
+.subadmin-console-card.is-collapsed .subadmin-card-header {
+  border-bottom: none;
+  padding-bottom: 0;
+}
+
+.subadmin-card-header {
+  padding-bottom: 0.85rem;
+  border-bottom: 1px solid #f1f5f9;
+}
+
+.subadmin-card-header-icon {
+  width: 34px;
+  height: 34px;
+  min-width: 34px;
+  border-radius: 9px;
+  background: #eff6ff;
+  color: #2563eb;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.18s ease;
+  user-select: none;
+}
+
+.subadmin-card-header-icon:hover {
+  background: #dbeafe;
+  transform: scale(1.06);
+  box-shadow: 0 2px 8px rgba(37, 99, 235, 0.2);
+}
+
+.subadmin-card-header-icon:active {
+  transform: scale(0.96);
+}
+
+.subadmin-toggle-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.28rem 0.75rem;
+  font-size: 0.725rem;
+  font-weight: 700;
+  border-radius: 8px;
+  background: #f1f5f9;
+  border: 1px solid #cbd5e1;
+  color: #334155;
+  cursor: pointer;
+  transition: all 0.18s ease;
+  white-space: nowrap;
+}
+
+.subadmin-toggle-btn:hover {
+  background: #e2e8f0;
+  color: #0f172a;
+  border-color: #94a3b8;
+}
+
+.subadmin-toggle-icon {
+  transition: transform 0.22s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.subadmin-console-card.is-collapsed .subadmin-toggle-icon {
+  transform: rotate(180deg);
+}
+
+.subadmin-icon-team {
+  background: #f5f3ff;
+  color: #7c3aed;
+}
+
+.subadmin-card-title {
+  font-family: var(--font-display, inherit);
+  font-size: 1.05rem;
+  font-weight: 800;
+  color: #0f172a;
+  letter-spacing: -0.01em;
+  line-height: 1.2;
+  margin: 0;
+}
+
+.subadmin-card-desc {
+  font-size: 0.785rem;
+  color: #64748b;
+  margin: 0.15rem 0 0 0;
+}
+
+.subadmin-badge-direct {
+  font-size: 0.7rem;
+  font-weight: 700;
+  color: #2563eb;
+  background: #eff6ff;
+  border: 1px solid #bfdbfe;
+  padding: 0.2rem 0.6rem;
+  border-radius: 9999px;
+  letter-spacing: 0.02em;
+}
+
+/* 3. Streamlined 2-Column Provisioning Columns */
+.subadmin-provision-columns {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.25rem;
+  align-items: stretch;
+  width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
+}
+
+@media (max-width: 880px) {
+  .subadmin-provision-columns {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+}
+
+.subadmin-provision-col {
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  padding: 1rem 1.15rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  min-width: 0;
+  overflow: hidden;
+  box-sizing: border-box;
+}
+
+.subadmin-block-header {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+  margin-bottom: 0.75rem;
+}
+
+.subadmin-step-num {
+  width: 22px;
+  height: 22px;
+  min-width: 22px;
+  border-radius: 50%;
+  background: #0f172a;
+  color: #FFFFFF;
+  font-size: 0.725rem;
+  font-weight: 800;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 1px;
+}
+
+.subadmin-step-title {
+  font-size: 0.875rem;
+  font-weight: 700;
+  color: #0f172a;
+  display: block;
+  line-height: 1.25;
+}
+
+.subadmin-step-desc {
+  font-size: 0.75rem;
+  color: #64748b;
+  margin: 1px 0 0 0;
+}
+
+/* 4. Compact 2x2 Field Inputs Grid */
+.subadmin-compact-fields-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.55rem 0.75rem;
+  width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
+}
+
+@media (max-width: 600px) {
+  .subadmin-compact-fields-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.subadmin-input-label {
+  display: block;
+  font-size: 0.775rem;
+  font-weight: 600;
+  color: #334155;
+  margin-bottom: 0.25rem;
+  letter-spacing: 0.01em;
+}
+
+.subadmin-input-wrap {
+  position: relative;
+  display: flex;
+  align-items: center;
+  width: 100%;
+}
+
+.subadmin-input-icon {
+  position: absolute;
+  left: 11px;
+  color: #94a3b8;
+  pointer-events: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.85rem;
+  font-weight: 600;
+  z-index: 2;
+  transition: color 0.15s ease;
+}
+
+.subadmin-input {
+  width: 100%;
+  height: 38px;
+  padding: 0 12px 0 34px;
+  border-radius: 8px;
+  border: 1.5px solid #cbd5e1;
+  background: #FFFFFF;
+  color: #0f172a;
+  font-size: 0.825rem;
+  font-family: var(--font-body, inherit);
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.03);
+}
+
+.subadmin-input[type="password"],
+.subadmin-input-wrap:has(.subadmin-pwd-toggle) .subadmin-input {
+  padding-right: 38px;
+}
+
+.subadmin-input::placeholder {
+  color: #94a3b8;
+}
+
+.subadmin-input:hover {
+  border-color: #94a3b8;
+}
+
+.subadmin-input:focus {
+  outline: none;
+  border-color: #2563eb;
+  background: #FFFFFF;
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.14);
+}
+
+.subadmin-input:focus ~ .subadmin-input-icon,
+.subadmin-input-wrap:focus-within .subadmin-input-icon {
+  color: #2563eb;
+}
+
+/* Password Utilities */
+.subadmin-gen-pwd-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 0.2rem 0.55rem;
+  border-radius: 5px;
+  font-size: 0.7rem;
+  font-weight: 700;
+  background: #eff6ff;
+  color: #2563eb;
+  border: 1px solid #bfdbfe;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.subadmin-gen-pwd-btn:hover {
+  background: #2563eb;
+  color: #FFFFFF;
+  border-color: #2563eb;
+}
+
+.subadmin-pwd-toggle {
+  position: absolute;
+  right: 6px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 28px;
+  height: 28px;
+  border-radius: 5px;
+  border: none;
+  background: transparent;
+  color: #64748b;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.15s ease;
+  z-index: 2;
+}
+
+.subadmin-pwd-toggle:hover {
+  color: #0f172a;
+  background: #f1f5f9;
+}
+
+.subadmin-hint-text {
+  display: block;
+  font-size: 0.725rem;
+  color: #64748b;
+  margin-top: 0.35rem;
+  line-height: 1.35;
+}
+
+/* 5. Permission Modules Selection (Full-Width Clean Horizontal Cards) */
+.subadmin-perm-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+}
+
+.btn-subtle-xs {
+  padding: 0.2rem 0.55rem;
+  font-size: 0.7rem;
+  font-weight: 700;
+  border-radius: 5px;
+  border: 1px solid #e2e8f0;
+  background: #FFFFFF;
+  color: #475569;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.btn-subtle-xs:hover {
+  background: #0f172a;
+  color: #FFFFFF;
+  border-color: #0f172a;
+}
+
+.subadmin-permissions-list,
+.subadmin-permissions-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 0.45rem;
+  width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
+}
+
+.perm-option-card {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  padding: 0.45rem 0.75rem;
+  border-radius: 9px;
+  border: 1.5px solid #e2e8f0;
+  background: #FFFFFF;
+  cursor: pointer;
+  transition: all 0.18s cubic-bezier(0.16, 1, 0.3, 1);
+  user-select: none;
+  min-height: 42px;
+  width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
+}
+
+.perm-option-card:hover {
+  border-color: #cbd5e1;
+  background: #fafbfc;
+  transform: translateY(-1px);
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.04);
+}
+
+.perm-option-card.is-selected {
+  border-color: #2563eb;
+  background: #f0f7ff;
+  box-shadow: 0 2px 8px rgba(37, 99, 235, 0.08);
+}
+
+.perm-checkbox-input {
+  position: absolute;
+  opacity: 0;
+  pointer-events: none;
+  width: 0;
+  height: 0;
+}
+
+.perm-custom-check {
+  width: 16px;
+  height: 16px;
+  min-width: 16px;
+  border-radius: 5px;
+  border: 1.5px solid #cbd5e1;
+  background: #FFFFFF;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: transparent;
+  transition: all 0.15s ease;
+  flex-shrink: 0;
+}
+
+.perm-option-card.is-selected .perm-custom-check {
+  border-color: #2563eb;
+  background: #2563eb;
+  color: #FFFFFF;
+  box-shadow: 0 2px 6px rgba(37, 99, 235, 0.28);
+}
+
+.perm-module-icon {
+  width: 28px;
+  height: 28px;
+  min-width: 28px;
+  border-radius: 7px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.perm-icon-orders {
+  background: #eff6ff;
+  color: #2563eb;
+  border: 1px solid #bfdbfe;
+}
+
+.perm-icon-products {
+  background: #ecfdf5;
+  color: #059669;
+  border: 1px solid #a7f3d0;
+}
+
+.perm-icon-customers {
+  background: #f5f3ff;
+  color: #7c3aed;
+  border: 1px solid #ddd6fe;
+}
+
+.perm-icon-overview {
+  background: #fffbeb;
+  color: #d97706;
+  border: 1px solid #fde68a;
+}
+
+.perm-icon-settings {
+  background: #f1f5f9;
+  color: #475569;
+  border: 1px solid #cbd5e1;
+}
+
+.perm-option-info {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  overflow: hidden;
+}
+
+.perm-title-row {
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+  flex-wrap: wrap;
+  min-width: 0;
+}
+
+.perm-title {
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: #0f172a;
+  line-height: 1.25;
+}
+
+.perm-code-tag {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  font-size: 0.65rem;
+  font-weight: 700;
+  padding: 1px 5px;
+  border-radius: 4px;
+  background: #e2e8f0;
+  color: #334155;
+  letter-spacing: 0.01em;
+}
+
+.perm-option-card.is-selected .perm-code-tag {
+  background: #dbeafe;
+  color: #1e40af;
+}
+
+.perm-desc {
+  font-size: 0.7rem;
+  color: #64748b;
+  line-height: 1.35;
+  margin-top: 1px;
+}
+
+/* 6. Form Submission Bar */
+.subadmin-submit-bar {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  width: 100%;
+  padding-top: 0.5rem;
+  box-sizing: border-box;
+}
+
+.subadmin-create-submit-btn {
+  width: 100%;
+  height: 40px;
+  padding: 0 1.25rem;
+  font-size: 0.85rem;
+  font-weight: 700;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  border-radius: 9px;
+  box-shadow: 0 3px 10px rgba(220, 38, 38, 0.22);
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  box-sizing: border-box;
+}
+
+.subadmin-create-submit-btn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 5px 16px rgba(220, 38, 38, 0.32);
+}
+
+.subadmin-submit-note {
+  text-align: center;
+  font-size: 0.725rem;
+  color: #64748b;
+  line-height: 1.35;
+}
+
+.subadmin-badge-count {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.25rem 0.65rem;
+  border-radius: 9999px;
+  background: #eff6ff;
+  border: 1px solid #bfdbfe;
+  color: #1e40af;
+  font-size: 0.725rem;
+  font-weight: 700;
+  letter-spacing: 0.01em;
+}
+
+/* 7. Sub-Admin Directory Table & Empty State */
+.subadmin-empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 2.25rem 1.5rem;
+  background: #f8fafc;
+  border: 1.5px dashed #cbd5e1;
+  border-radius: 12px;
+}
+
+.subadmin-empty-icon {
+  width: 46px;
+  height: 46px;
+  border-radius: 50%;
+  background: #eff6ff;
+  color: #2563eb;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 0.75rem;
+  box-shadow: 0 4px 12px rgba(37, 99, 235, 0.12);
+}
+
+.subadmin-empty-title {
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: #0f172a;
+  margin: 0 0 0.25rem 0;
+}
+
+.subadmin-empty-desc {
+  font-size: 0.825rem;
+  color: #64748b;
+  max-width: 380px;
+  margin: 0;
+  line-height: 1.5;
+}
+
+.subadmin-table-wrap {
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  overflow-x: auto;
+  background: #FFFFFF;
+}
+
+.subadmin-data-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.85rem;
+}
+
+.subadmin-data-table th {
+  background: #f8fafc;
+  font-size: 0.725rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: #64748b;
+  padding: 0.85rem 1rem;
+  border-bottom: 1.5px solid #e2e8f0;
+  white-space: nowrap;
+}
+
+.subadmin-data-table td {
+  padding: 0.95rem 1rem;
+  border-bottom: 1px solid #f1f5f9;
+  vertical-align: middle;
+  color: #334155;
+}
+
+.subadmin-row:hover td {
+  background: #f8fafc;
+}
+
+.subadmin-profile-cell {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.subadmin-table-avatar {
+  width: 36px;
+  height: 36px;
+  min-width: 36px;
+  border-radius: 10px;
+  background: linear-gradient(135deg, #0f172a, #334155);
+  color: #FFFFFF;
+  font-size: 0.775rem;
+  font-weight: 800;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.subadmin-profile-meta {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.subadmin-profile-name {
+  font-size: 0.875rem;
+  font-weight: 700;
+  color: #0f172a;
+  line-height: 1.25;
+}
+
+.subadmin-profile-status {
+  font-size: 0.7rem;
+  color: #059669;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.status-dot-xs {
+  width: 6px;
+  height: 6px;
+}
+
+.subadmin-cred-cell {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.subadmin-username-code {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  font-size: 0.775rem;
+  font-weight: 700;
+  background: #f1f5f9;
+  color: #0f172a;
+  padding: 2px 7px;
+  border-radius: 5px;
+  display: inline-block;
+  align-self: flex-start;
+  border: 1px solid #e2e8f0;
+}
+
+.subadmin-email-text {
+  font-size: 0.775rem;
+  color: #64748b;
+}
+
+/* Permission Badges in Table */
+.perm-badge-orders {
+  background: #eff6ff;
+  color: #1d4ed8;
+  border: 1px solid #bfdbfe;
+  font-size: 0.7rem;
+  font-weight: 700;
+  padding: 0.2rem 0.55rem;
+  border-radius: 9999px;
+  display: inline-block;
+}
+
+.perm-badge-products {
+  background: #ecfdf5;
+  color: #047857;
+  border: 1px solid #a7f3d0;
+  font-size: 0.7rem;
+  font-weight: 700;
+  padding: 0.2rem 0.55rem;
+  border-radius: 9999px;
+  display: inline-block;
+}
+
+.perm-badge-customers {
+  background: #f5f3ff;
+  color: #6d28d9;
+  border: 1px solid #ddd6fe;
+  font-size: 0.7rem;
+  font-weight: 700;
+  padding: 0.2rem 0.55rem;
+  border-radius: 9999px;
+  display: inline-block;
+}
+
+.perm-badge-overview {
+  background: #fffbeb;
+  color: #b45309;
+  border: 1px solid #fde68a;
+  font-size: 0.7rem;
+  font-weight: 700;
+  padding: 0.2rem 0.55rem;
+  border-radius: 9999px;
+  display: inline-block;
+}
+
+.perm-badge-settings {
+  background: #f1f5f9;
+  color: #334155;
+  border: 1px solid #cbd5e1;
+  font-size: 0.7rem;
+  font-weight: 700;
+  padding: 0.2rem 0.55rem;
+  border-radius: 9999px;
+  display: inline-block;
+}
+
+.subadmin-action-btns {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 0.4rem;
+  flex-wrap: nowrap;
+  white-space: nowrap;
+}
+
+.subadmin-action-btns .btn {
+  white-space: nowrap;
+}
+
+/* 8. Enterprise Guidance & Security Callout */
+.subadmin-guidance-card {
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-left: 3.5px solid #2563eb;
+  border-radius: 10px;
+  padding: 0.75rem 1rem;
+}
+
+.subadmin-guidance-icon {
+  color: #2563eb;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  margin-top: 1px;
+}
+
+.subadmin-guidance-title {
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: #0f172a;
+  display: block;
+}
+
+.subadmin-guidance-text {
+  font-size: 0.8rem;
+  color: #475569;
+  line-height: 1.55;
+  margin: 0.25rem 0 0 0;
+}
+
+/* 9. Sub-Admin Edit Modal Specifics */
+.subadmin-edit-modal-wrap {
+  padding: 2rem 2.25rem;
+  background: #FFFFFF;
+  border-radius: var(--radius-xl);
+}
+
+.subadmin-edit-modal-wrap .admin-modal-header {
+  border-bottom: 1px solid #f1f5f9;
+  padding-bottom: 1rem;
+  padding-right: 2.75rem; /* Space for modal-close-btn so title never overlaps */
+  margin-bottom: 1.25rem;
+}
+
+@media (max-width: 768px) {
+  /* 1. Sub-Admin Hero Banner Responsive Stacking */
+  .subadmin-hero-banner {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.85rem;
+    padding: 1.15rem 1rem;
+    border-radius: 12px;
+  }
+
+  .subadmin-hero-content {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.75rem;
+    width: 100%;
+  }
+
+  .subadmin-hero-icon {
+    width: 38px;
+    height: 38px;
+    min-width: 38px;
+    border-radius: 9px;
+    margin-top: 2px;
+  }
+
+  .subadmin-hero-title {
+    font-family: var(--font-display, inherit);
+    font-size: 1.05rem;
+    line-height: 1.25;
+    margin-bottom: 0.25rem;
+  }
+
+  .subadmin-hero-sub {
+    font-size: 0.775rem;
+    line-height: 1.4;
+    color: #94a3b8;
+    max-width: 100%;
+  }
+
+  .subadmin-hero-meta {
+    display: flex;
+    align-items: center;
+    gap: 0.45rem;
+    flex-wrap: wrap;
+    width: 100%;
+    justify-content: flex-start;
+    padding-top: 0.7rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.08);
+  }
+
+  .subadmin-hero-pill,
+  .subadmin-hero-count,
+  .subadmin-hero-toggle-btn {
+    font-size: 0.7rem;
+    padding: 0.25rem 0.65rem;
+  }
+
+  /* 2. Provisioning Cards & Columns */
+  .subadmin-form-card,
+  .subadmin-directory-card {
+    padding: 1.15rem 0.95rem;
+    border-radius: 12px;
+  }
+
+  .subadmin-card-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.75rem;
+    width: 100%;
+  }
+
+  .subadmin-card-header .subadmin-badge-direct {
+    align-self: flex-start;
+  }
+
+  .subadmin-card-header .subadmin-header-actions {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    gap: 0.5rem;
+  }
+
+  .subadmin-provision-col {
+    padding: 0.95rem 0.85rem;
+  }
+
+  .subadmin-compact-fields-grid {
+    grid-template-columns: 1fr;
+    gap: 0.5rem;
+  }
+
+  .perm-option-card {
+    padding: 0.55rem 0.7rem;
+    gap: 0.55rem;
+  }
+
+  .subadmin-create-submit-btn {
+    height: 42px;
+    font-size: 0.825rem;
+  }
+
+  /* 3. Staff Directory Table */
+  .subadmin-data-table {
+    min-width: 540px;
+  }
+
+  .subadmin-table-wrap {
+    scrollbar-width: thin;
+    scrollbar-color: #cbd5e1 #f8fafc;
+  }
+
+  .subadmin-table-wrap::-webkit-scrollbar {
+    height: 6px;
+  }
+
+  .subadmin-table-wrap::-webkit-scrollbar-track {
+    background: #f1f5f9;
+  }
+
+  .subadmin-table-wrap::-webkit-scrollbar-thumb {
+    background: #cbd5e1;
+    border-radius: 9999px;
+  }
+
+  .subadmin-edit-modal-wrap {
+    padding: 1.5rem 1.15rem;
+  }
+
+  .subadmin-edit-modal-wrap .admin-modal-header {
+    padding-right: 2.5rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .admin-logout-label {
+    display: none !important;
+  }
+
+  #admin-logout-btn {
+    width: 34px;
+    height: 34px;
+    padding: 0;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 8px;
+  }
+
+  .subadmin-hero-banner {
+    padding: 0.95rem 0.85rem;
+  }
+
+  .subadmin-hero-icon {
+    width: 34px;
+    height: 34px;
+    min-width: 34px;
+  }
+
+  .subadmin-hero-title {
+    font-size: 0.975rem;
+  }
+
+  .subadmin-hero-sub {
+    font-size: 0.725rem;
+  }
+
+  .subadmin-form-card,
+  .subadmin-directory-card {
+    padding: 0.95rem 0.75rem;
+    border-radius: 10px;
+  }
+
+  .subadmin-provision-col {
+    padding: 0.75rem;
+    border-radius: 10px;
+  }
+
+  .perm-option-card {
+    padding: 0.45rem 0.55rem;
+    gap: 0.5rem;
+  }
+
+  .perm-module-icon {
+    width: 26px;
+    height: 26px;
+    min-width: 26px;
+  }
+
+  .perm-title {
+    font-size: 0.75rem;
+  }
+
+  .perm-desc {
+    font-size: 0.675rem;
+  }
+}
+
+/* ==========================================================================
+   DARK MODE OVERRIDES FOR SUB-ADMIN & ACCESS CONTROL SUITE
+   ========================================================================== */
+[data-theme="dark"] .subadmin-hero-banner {
+  background: linear-gradient(135deg, #090d16 0%, #0f172a 100%);
+  border-color: #1e293b;
+  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.45);
+}
+
+[data-theme="dark"] .subadmin-form-card,
+[data-theme="dark"] .subadmin-directory-card,
+[data-theme="dark"] .subadmin-edit-modal-wrap {
+  background: #0f172a;
+  border-color: #1e293b;
+  box-shadow: 0 8px 24px -4px rgba(0, 0, 0, 0.4);
+}
+
+[data-theme="dark"] .subadmin-card-header {
+  border-bottom-color: #1e293b;
+}
+
+[data-theme="dark"] .subadmin-card-title,
+[data-theme="dark"] .subadmin-empty-title,
+[data-theme="dark"] .subadmin-profile-name,
+[data-theme="dark"] .subadmin-guidance-title,
+[data-theme="dark"] .perm-title {
+  color: #f8fafc;
+}
+
+[data-theme="dark"] .subadmin-form-block,
+[data-theme="dark"] .subadmin-provision-col {
+  background: #131d31;
+  border-color: #1e293b;
+}
+
+[data-theme="dark"] .subadmin-badge-direct {
+  background: rgba(37, 99, 235, 0.15);
+  border-color: rgba(59, 130, 246, 0.3);
+  color: #93c5fd;
+}
+
+[data-theme="dark"] .subadmin-submit-note {
+  color: #94a3b8;
+}
+
+[data-theme="dark"] .subadmin-step-num {
+  background: #2563eb;
+  color: #FFFFFF;
+}
+
+[data-theme="dark"] .subadmin-step-title {
+  color: #f8fafc;
+}
+
+[data-theme="dark"] .subadmin-input-label {
+  color: #cbd5e1;
+}
+
+[data-theme="dark"] .subadmin-input {
+  background: #090d16;
+  border-color: #334155;
+  color: #f8fafc;
+}
+
+[data-theme="dark"] .subadmin-input:hover {
+  border-color: #475569;
+}
+
+[data-theme="dark"] .subadmin-input:focus {
+  border-color: #3b82f6;
+  background: #090d16;
+  box-shadow: 0 0 0 3.5px rgba(59, 130, 246, 0.2);
+}
+
+[data-theme="dark"] .btn-subtle-xs {
+  background: #1e293b;
+  border-color: #334155;
+  color: #cbd5e1;
+}
+
+[data-theme="dark"] .btn-subtle-xs:hover {
+  background: #334155;
+  color: #FFFFFF;
+  border-color: #475569;
+}
+
+[data-theme="dark"] .perm-option-card {
+  background: #131d31;
+  border-color: #1e293b;
+}
+
+[data-theme="dark"] .perm-option-card:hover {
+  border-color: #334155;
+  background: #17233c;
+}
+
+[data-theme="dark"] .perm-option-card.is-selected {
+  background: rgba(37, 99, 235, 0.12);
+  border-color: #3b82f6;
+}
+
+[data-theme="dark"] .perm-custom-check {
+  border-color: #475569;
+  background: #090d16;
+}
+
+[data-theme="dark"] .perm-option-card.is-selected .perm-custom-check {
+  border-color: #3b82f6;
+  background: #3b82f6;
+  color: #FFFFFF;
+}
+
+[data-theme="dark"] .perm-code-tag {
+  background: #1e293b;
+  color: #94a3b8;
+}
+
+[data-theme="dark"] .perm-option-card.is-selected .perm-code-tag {
+  background: rgba(37, 99, 235, 0.25);
+  color: #93c5fd;
+}
+
+[data-theme="dark"] .perm-desc {
+  color: #94a3b8;
+}
+
+[data-theme="dark"] .subadmin-table-wrap {
+  border-color: #1e293b;
+  background: #0f172a;
+}
+
+[data-theme="dark"] .subadmin-data-table th {
+  background: #131d31;
+  border-bottom-color: #1e293b;
+  color: #94a3b8;
+}
+
+[data-theme="dark"] .subadmin-data-table td {
+  border-bottom-color: #1e293b;
+  color: #cbd5e1;
+}
+
+[data-theme="dark"] .subadmin-row:hover td {
+  background: #131d31;
+}
+
+[data-theme="dark"] .subadmin-username-code {
+  background: #1e293b;
+  color: #f8fafc;
+  border-color: #334155;
+}
+
+[data-theme="dark"] .subadmin-empty-state {
+  background: #131d31;
+  border-color: #334155;
+}
+
+[data-theme="dark"] .subadmin-guidance-card {
+  background: #131d31;
+  border-color: #1e293b;
+  border-left-color: #3b82f6;
+}
+
+[data-theme="dark"] .subadmin-guidance-text {
+  color: #cbd5e1;
+}
+
+[data-theme="dark"] .subadmin-badge-count {
+  background: #1e293b;
+  border-color: #334155;
+  color: #93c5fd;
+}
+
+[data-theme="dark"] .subadmin-card-header-icon {
+  background: rgba(37, 99, 235, 0.2);
+  color: #60a5fa;
+}
+
+[data-theme="dark"] .subadmin-card-header-icon:hover {
+  background: rgba(37, 99, 235, 0.32);
+}
+
+[data-theme="dark"] .subadmin-toggle-btn {
+  background: #1e293b;
+  border-color: #334155;
+  color: #cbd5e1;
+}
+
+[data-theme="dark"] .subadmin-toggle-btn:hover {
+  background: #334155;
+  color: #ffffff;
+}

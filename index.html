@@ -19,7 +19,7 @@
     rel="stylesheet">
 
   <!-- Main Stylesheet -->
-  <link rel="stylesheet" href="css/styles.css">
+  <link rel="stylesheet" href="css/styles.css?v=20261113g">
 
   <!-- Amazon-Style Right Docked Mini-Cart Rail — Inline styles survive editor overwrites -->
   <style id="mini-cart-rail-styles">
@@ -896,7 +896,8 @@
         <form class="auth-form-body" id="auth-form-login">
           <div class="form-group">
             <label>Email Address or Username</label>
-            <input type="text" class="custom-input" id="login-email" placeholder="name@example.com or admin" required autocomplete="username" />
+            <input type="text" class="custom-input" id="login-email" placeholder="name@example.com or admin" required
+              autocomplete="username" />
           </div>
           <div class="form-group">
             <label>Password</label>
@@ -1100,162 +1101,161 @@
             </div>
           </div>
 
-            <!-- Hidden field holding active base64 Data URL or image path -->
-            <input type="hidden" id="modal-prod-img" required />
+          <!-- Hidden field holding active base64 Data URL or image path -->
+          <input type="hidden" id="modal-prod-img" required />
 
-            <!-- Technical Specifications & Engineered Highlights Builder (Matches Storefront PDP) -->
-            <div class="form-group admin-specs-builder-group mt-3" id="admin-specs-builder-group">
-                  <div class="specs-builder-header-row">
-                    <div class="specs-builder-titles">
-                      <label class="form-label-bold">Technical Specifications &amp; Highlights Builder</label>
-                      <span class="specs-builder-subtitle">Configure structured specs table and engineered feature
-                        checklist</span>
-                    </div>
-                    <div class="specs-mode-toggle-wrap">
-                      <button type="button" class="specs-mode-btn is-active" id="specs-mode-edit-btn" data-mode="edit">
-                        <span>📝 Table Editor</span>
-                      </button>
-                      <button type="button" class="specs-mode-btn" id="specs-mode-preview-btn" data-mode="preview">
-                        <span>👁️ Storefront Live Preview</span>
-                      </button>
-                    </div>
-                  </div>
-
-                  <!-- VIEW 1: Interactive Table & Checklist Editor -->
-                  <div class="specs-editor-pane" id="specs-editor-pane">
-
-                    <!-- Section 1: Specifications Table -->
-                    <div class="specs-table-card">
-                      <div class="specs-card-header">
-                        <div class="specs-card-title-wrap">
-                          <span class="specs-card-badge-icon">📐</span>
-                          <strong class="specs-card-title">Technical Specifications Table</strong>
-                          <span class="specs-count-badge" id="admin-specs-count-badge">7 specs</span>
-                        </div>
-                        <button type="button" class="btn btn-secondary btn-xs" id="admin-add-spec-row-btn">
-                          + Add Spec Row
-                        </button>
-                      </div>
-
-                      <div class="specs-table-scroll-container">
-                        <table class="admin-specs-editor-table" id="admin-specs-editor-table">
-                          <thead>
-                            <tr>
-                              <th style="width: 38%;">Specification Attribute</th>
-                              <th style="width: 54%;">Specification Details / Value</th>
-                              <th style="width: 8%; text-align: center;">Remove</th>
-                            </tr>
-                          </thead>
-                          <tbody id="admin-specs-tbody">
-                            <!-- Dynamically injected rows -->
-                          </tbody>
-                        </table>
-                      </div>
-
-                      <!-- Autocomplete Datalist for Common Spec Keys -->
-                      <datalist id="common-spec-keys">
-                        <option value="Switch Type"></option>
-                        <option value="Actuation Point"></option>
-                        <option value="Polling Rate"></option>
-                        <option value="Chassis"></option>
-                        <option value="Keycaps"></option>
-                        <option value="Connectivity"></option>
-                        <option value="Battery"></option>
-                        <option value="Sensor"></option>
-                        <option value="Resolution / DPI"></option>
-                        <option value="Max Speed / Acceleration"></option>
-                        <option value="Weight"></option>
-                        <option value="Driver Diameter"></option>
-                        <option value="Frequency Response"></option>
-                        <option value="Impedance"></option>
-                        <option value="Processor (CPU)"></option>
-                        <option value="Graphics (GPU)"></option>
-                        <option value="Memory (RAM)"></option>
-                        <option value="Storage (SSD)"></option>
-                        <option value="Display / Resolution"></option>
-                        <option value="Refresh Rate &amp; Response"></option>
-                        <option value="Power Delivery"></option>
-                        <option value="Cooling Architecture"></option>
-                        <option value="Operating System"></option>
-                        <option value="Warranty"></option>
-                      </datalist>
-
-
-                    </div>
-
-                    <!-- Section 2: Engineered Highlights & Features -->
-                    <div class="features-checklist-card mt-3">
-                      <div class="specs-card-header">
-                        <div class="specs-card-title-wrap">
-                          <span class="specs-card-badge-icon">✨</span>
-                          <strong class="specs-card-title">Engineered Highlights &amp; Features</strong>
-                          <span class="specs-count-badge" id="admin-features-count-badge">4 highlights</span>
-                        </div>
-                        <button type="button" class="btn btn-secondary btn-xs" id="admin-add-feature-row-btn">
-                          + Add Highlight
-                        </button>
-                      </div>
-
-                      <div class="admin-features-list" id="admin-features-list">
-                        <!-- Dynamically injected feature highlight rows -->
-                      </div>
-
-
-                    </div>
-
-                  </div>
-
-                  <!-- VIEW 2: Storefront Live Preview Card (Matches User's Screenshot) -->
-                  <div class="specs-live-preview-pane" id="specs-live-preview-pane" style="display: none;">
-                    <div class="specs-preview-showcase-box">
-                      <!-- Tab pills replicating Storefront PDP -->
-                      <div class="specs-preview-tabs-nav">
-                        <div class="specs-preview-tab-pill is-active">
-                          <span class="pill-icon">📐</span>
-                          <span>Technical Specifications</span>
-                        </div>
-                        <div class="specs-preview-tab-pill">
-                          <span class="pill-icon">⭐</span>
-                          <span>Client Reviews (184)</span>
-                        </div>
-                        <div class="specs-preview-tab-pill">
-                          <span class="pill-icon">🚚</span>
-                          <span>Shipping &amp; Returns</span>
-                        </div>
-                      </div>
-
-                      <!-- Replicated Specs Table -->
-                      <table class="specs-preview-table" id="specs-preview-table">
-                        <tbody id="specs-preview-tbody">
-                          <!-- Populated dynamically -->
-                        </tbody>
-                      </table>
-
-                      <!-- Replicated Highlights Section -->
-                      <div class="specs-preview-features-box">
-                        <h4 class="specs-preview-features-title">Engineered Highlights &amp; Features</h4>
-                        <ul class="specs-preview-features-list" id="specs-preview-features-list">
-                          <!-- Populated dynamically -->
-                        </ul>
-                      </div>
-                    </div>
-                  </div>
-
-                  <!-- Short Overview Description Input -->
-                  <div class="specs-desc-wrap mt-3">
-                    <label for="modal-prod-desc" class="form-label-bold">Product Short Overview &amp; Tagline</label>
-                    <textarea class="custom-input custom-textarea" id="modal-prod-desc" rows="2"
-                      placeholder="Brief 1-2 sentence executive summary of the hardware..." required></textarea>
-                  </div>
+          <!-- Technical Specifications & Engineered Highlights Builder (Matches Storefront PDP) -->
+          <div class="form-group admin-specs-builder-group mt-3" id="admin-specs-builder-group">
+            <div class="specs-builder-header-row">
+              <div class="specs-builder-titles">
+                <label class="form-label-bold">Technical Specifications &amp; Highlights Builder</label>
+                <span class="specs-builder-subtitle">Configure structured specs table and engineered feature
+                  checklist</span>
               </div>
-
-              <div class="admin-modal-actions mt-3">
-                <button type="button" class="btn btn-ghost"
-                  onclick="ui.closeModal('admin-product-modal')">Cancel</button>
-                <button type="submit" class="btn btn-primary btn-lg" id="modal-prod-save-btn">
-                  Save Product to Catalog
+              <div class="specs-mode-toggle-wrap">
+                <button type="button" class="specs-mode-btn is-active" id="specs-mode-edit-btn" data-mode="edit">
+                  <span>📝 Table Editor</span>
+                </button>
+                <button type="button" class="specs-mode-btn" id="specs-mode-preview-btn" data-mode="preview">
+                  <span>👁️ Storefront Live Preview</span>
                 </button>
               </div>
+            </div>
+
+            <!-- VIEW 1: Interactive Table & Checklist Editor -->
+            <div class="specs-editor-pane" id="specs-editor-pane">
+
+              <!-- Section 1: Specifications Table -->
+              <div class="specs-table-card">
+                <div class="specs-card-header">
+                  <div class="specs-card-title-wrap">
+                    <span class="specs-card-badge-icon">📐</span>
+                    <strong class="specs-card-title">Technical Specifications Table</strong>
+                    <span class="specs-count-badge" id="admin-specs-count-badge">7 specs</span>
+                  </div>
+                  <button type="button" class="btn btn-secondary btn-xs" id="admin-add-spec-row-btn">
+                    + Add Spec Row
+                  </button>
+                </div>
+
+                <div class="specs-table-scroll-container">
+                  <table class="admin-specs-editor-table" id="admin-specs-editor-table">
+                    <thead>
+                      <tr>
+                        <th style="width: 38%;">Specification Attribute</th>
+                        <th style="width: 54%;">Specification Details / Value</th>
+                        <th style="width: 8%; text-align: center;">Remove</th>
+                      </tr>
+                    </thead>
+                    <tbody id="admin-specs-tbody">
+                      <!-- Dynamically injected rows -->
+                    </tbody>
+                  </table>
+                </div>
+
+                <!-- Autocomplete Datalist for Common Spec Keys -->
+                <datalist id="common-spec-keys">
+                  <option value="Switch Type"></option>
+                  <option value="Actuation Point"></option>
+                  <option value="Polling Rate"></option>
+                  <option value="Chassis"></option>
+                  <option value="Keycaps"></option>
+                  <option value="Connectivity"></option>
+                  <option value="Battery"></option>
+                  <option value="Sensor"></option>
+                  <option value="Resolution / DPI"></option>
+                  <option value="Max Speed / Acceleration"></option>
+                  <option value="Weight"></option>
+                  <option value="Driver Diameter"></option>
+                  <option value="Frequency Response"></option>
+                  <option value="Impedance"></option>
+                  <option value="Processor (CPU)"></option>
+                  <option value="Graphics (GPU)"></option>
+                  <option value="Memory (RAM)"></option>
+                  <option value="Storage (SSD)"></option>
+                  <option value="Display / Resolution"></option>
+                  <option value="Refresh Rate &amp; Response"></option>
+                  <option value="Power Delivery"></option>
+                  <option value="Cooling Architecture"></option>
+                  <option value="Operating System"></option>
+                  <option value="Warranty"></option>
+                </datalist>
+
+
+              </div>
+
+              <!-- Section 2: Engineered Highlights & Features -->
+              <div class="features-checklist-card mt-3">
+                <div class="specs-card-header">
+                  <div class="specs-card-title-wrap">
+                    <span class="specs-card-badge-icon">✨</span>
+                    <strong class="specs-card-title">Engineered Highlights &amp; Features</strong>
+                    <span class="specs-count-badge" id="admin-features-count-badge">4 highlights</span>
+                  </div>
+                  <button type="button" class="btn btn-secondary btn-xs" id="admin-add-feature-row-btn">
+                    + Add Highlight
+                  </button>
+                </div>
+
+                <div class="admin-features-list" id="admin-features-list">
+                  <!-- Dynamically injected feature highlight rows -->
+                </div>
+
+
+              </div>
+
+            </div>
+
+            <!-- VIEW 2: Storefront Live Preview Card (Matches User's Screenshot) -->
+            <div class="specs-live-preview-pane" id="specs-live-preview-pane" style="display: none;">
+              <div class="specs-preview-showcase-box">
+                <!-- Tab pills replicating Storefront PDP -->
+                <div class="specs-preview-tabs-nav">
+                  <div class="specs-preview-tab-pill is-active">
+                    <span class="pill-icon">📐</span>
+                    <span>Technical Specifications</span>
+                  </div>
+                  <div class="specs-preview-tab-pill">
+                    <span class="pill-icon">⭐</span>
+                    <span>Client Reviews (184)</span>
+                  </div>
+                  <div class="specs-preview-tab-pill">
+                    <span class="pill-icon">🚚</span>
+                    <span>Shipping &amp; Returns</span>
+                  </div>
+                </div>
+
+                <!-- Replicated Specs Table -->
+                <table class="specs-preview-table" id="specs-preview-table">
+                  <tbody id="specs-preview-tbody">
+                    <!-- Populated dynamically -->
+                  </tbody>
+                </table>
+
+                <!-- Replicated Highlights Section -->
+                <div class="specs-preview-features-box">
+                  <h4 class="specs-preview-features-title">Engineered Highlights &amp; Features</h4>
+                  <ul class="specs-preview-features-list" id="specs-preview-features-list">
+                    <!-- Populated dynamically -->
+                  </ul>
+                </div>
+              </div>
+            </div>
+
+            <!-- Short Overview Description Input -->
+            <div class="specs-desc-wrap mt-3">
+              <label for="modal-prod-desc" class="form-label-bold">Product Short Overview &amp; Tagline</label>
+              <textarea class="custom-input custom-textarea" id="modal-prod-desc" rows="2"
+                placeholder="Brief 1-2 sentence executive summary of the hardware..." required></textarea>
+            </div>
+          </div>
+
+          <div class="admin-modal-actions mt-3">
+            <button type="button" class="btn btn-ghost" onclick="ui.closeModal('admin-product-modal')">Cancel</button>
+            <button type="submit" class="btn btn-primary btn-lg" id="modal-prod-save-btn">
+              Save Product to Catalog
+            </button>
+          </div>
         </form>
       </div>
     </div>
@@ -1341,6 +1341,199 @@
     </div>
   </div>
 
+  <!-- Sub-Admin Edit & Permissions Modal -->
+  <div class="modal" id="subadmin-edit-modal" role="dialog" aria-modal="true" aria-labelledby="subadmin-edit-modal-title">
+    <div class="modal-dialog modal-md" style="max-width: 620px;">
+      <button class="modal-close-btn" id="subadmin-edit-modal-close" aria-label="Close Modal"
+        onclick="document.getElementById('subadmin-edit-modal').classList.remove('is-open'); document.getElementById('global-backdrop').classList.remove('is-active'); document.body.classList.remove('no-scroll');">&times;</button>
+      <div class="subadmin-edit-modal-wrap">
+        <div class="admin-modal-header">
+          <div class="d-flex align-center gap-2 mb-1">
+            <span class="subadmin-card-header-icon">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
+                <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
+              </svg>
+            </span>
+            <h2 id="subadmin-edit-modal-title" class="subadmin-card-title">Edit Sub-Administrator</h2>
+          </div>
+          <p class="subadmin-card-desc">Modify authorized consoles, profile credentials, and access limits for this staff account.</p>
+        </div>
+
+        <form id="admin-edit-subadmin-form" class="admin-form subadmin-provision-form">
+          <input type="hidden" id="edit-sub-id" />
+
+          <!-- Staff Identity & Credentials -->
+          <div class="subadmin-form-block mb-3">
+            <div class="form-group mb-3">
+              <label class="subadmin-input-label" for="edit-sub-name">Sub-Admin Full Name</label>
+              <div class="subadmin-input-wrap">
+                <span class="subadmin-input-icon">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+                </span>
+                <input type="text" class="custom-input subadmin-input" id="edit-sub-name" placeholder="Staff Name" required />
+              </div>
+            </div>
+
+            <div class="subadmin-inputs-row">
+              <div class="form-group flex-1">
+                <label class="subadmin-input-label" for="edit-sub-username">Username / Handle</label>
+                <div class="subadmin-input-wrap">
+                  <span class="subadmin-input-icon">@</span>
+                  <input type="text" class="custom-input subadmin-input" id="edit-sub-username" placeholder="username" required />
+                </div>
+              </div>
+              <div class="form-group flex-1">
+                <label class="subadmin-input-label" for="edit-sub-email">Staff Work Email</label>
+                <div class="subadmin-input-wrap">
+                  <span class="subadmin-input-icon">
+                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+                  </span>
+                  <input type="email" class="custom-input subadmin-input" id="edit-sub-email" placeholder="staff@7thjune.com" required />
+                </div>
+              </div>
+            </div>
+
+            <div class="form-group mb-0">
+              <div class="d-flex justify-between align-center mb-1">
+                <label class="subadmin-input-label mb-0" for="edit-sub-password">Update Password</label>
+                <button type="button" class="subadmin-gen-pwd-btn" id="edit-sub-gen-pwd-btn" title="Generate random secure password">
+                  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 4 23 10 17 10"/><polyline points="1 20 1 14 7 14"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/></svg>
+                  <span>Generate</span>
+                </button>
+              </div>
+              <div class="subadmin-input-wrap">
+                <span class="subadmin-input-icon">
+                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+                </span>
+                <input type="password" class="custom-input subadmin-input" id="edit-sub-password" placeholder="Leave unchanged or type new password" />
+                <button type="button" class="subadmin-pwd-toggle" id="edit-sub-pwd-toggle" aria-label="Toggle password visibility">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Permission Modules Selection -->
+          <div class="subadmin-form-block mb-3">
+            <div class="d-flex justify-between align-center mb-2 flex-wrap gap-2">
+              <div class="subadmin-block-header mb-0">
+                <span class="subadmin-step-num">✓</span>
+                <div>
+                  <span class="subadmin-step-title">Authorized Consoles &amp; Permissions</span>
+                  <p class="subadmin-step-desc">Toggle the modules this sub-admin is authorized to manage.</p>
+                </div>
+              </div>
+              <div class="subadmin-perm-actions">
+                <button type="button" class="btn-subtle-xs" id="edit-perm-select-all-btn">Select All</button>
+                <button type="button" class="btn-subtle-xs" id="edit-perm-reset-orders-btn">Orders Only</button>
+              </div>
+            </div>
+
+            <div class="subadmin-permissions-list">
+              <!-- Order Status & Fulfillment -->
+              <label class="perm-option-card" for="edit-perm-orders">
+                <input type="checkbox" id="edit-perm-orders" class="perm-checkbox-input edit-perm-checkbox" />
+                <span class="perm-custom-check">
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+                </span>
+                <div class="perm-module-icon perm-icon-orders">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
+                </div>
+                <div class="perm-option-info">
+                  <div class="perm-title-row">
+                    <strong class="perm-title">Orders &amp; MoMo Verification</strong>
+                    <span class="perm-code-tag">orders</span>
+                  </div>
+                  <span class="perm-desc">Verify transactions, inspect slips, fulfill customer orders, and issue delivery waybills.</span>
+                </div>
+              </label>
+
+              <!-- Products & Inventory -->
+              <label class="perm-option-card" for="edit-perm-products">
+                <input type="checkbox" id="edit-perm-products" class="perm-checkbox-input edit-perm-checkbox" />
+                <span class="perm-custom-check">
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+                </span>
+                <div class="perm-module-icon perm-icon-products">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
+                </div>
+                <div class="perm-option-info">
+                  <div class="perm-title-row">
+                    <strong class="perm-title">Products &amp; Inventory Stock</strong>
+                    <span class="perm-code-tag">products</span>
+                  </div>
+                  <span class="perm-desc">Hardware catalog CRUD, stock quantity stepper, specs builder, and pricing.</span>
+                </div>
+              </label>
+
+              <!-- Customers & VIP Concierge -->
+              <label class="perm-option-card" for="edit-perm-customers">
+                <input type="checkbox" id="edit-perm-customers" class="perm-checkbox-input edit-perm-checkbox" />
+                <span class="perm-custom-check">
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+                </span>
+                <div class="perm-module-icon perm-icon-customers">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+                </div>
+                <div class="perm-option-info">
+                  <div class="perm-title-row">
+                    <strong class="perm-title">Customer Concierge &amp; VIPs</strong>
+                    <span class="perm-code-tag">customers</span>
+                  </div>
+                  <span class="perm-desc">Client account directories, lifetime spend audit, and saved destinations.</span>
+                </div>
+              </label>
+
+              <!-- Overview Analytics -->
+              <label class="perm-option-card" for="edit-perm-overview">
+                <input type="checkbox" id="edit-perm-overview" class="perm-checkbox-input edit-perm-checkbox" />
+                <span class="perm-custom-check">
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+                </span>
+                <div class="perm-module-icon perm-icon-overview">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+                </div>
+                <div class="perm-option-info">
+                  <div class="perm-title-row">
+                    <strong class="perm-title">Overview KPIs &amp; Sales Revenue</strong>
+                    <span class="perm-code-tag">overview</span>
+                  </div>
+                  <span class="perm-desc">Revenue charts, sales statistics, category splits, and conversion metrics.</span>
+                </div>
+              </label>
+
+              <!-- Store Operations & Settings -->
+              <label class="perm-option-card" for="edit-perm-settings">
+                <input type="checkbox" id="edit-perm-settings" class="perm-checkbox-input edit-perm-checkbox" />
+                <span class="perm-custom-check">
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+                </span>
+                <div class="perm-module-icon perm-icon-settings">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+                </div>
+                <div class="perm-option-info">
+                  <div class="perm-title-row">
+                    <strong class="perm-title">Store Operations &amp; Gateway</strong>
+                    <span class="perm-code-tag">settings</span>
+                  </div>
+                  <span class="perm-desc">Manage MoMo merchant numbers, delivery tiers, and operating details.</span>
+                </div>
+              </label>
+            </div>
+          </div>
+
+          <div class="admin-modal-actions mt-3">
+            <button type="button" class="btn btn-ghost" onclick="ui.closeModal('subadmin-edit-modal')">Cancel</button>
+            <button type="submit" class="btn btn-primary" id="subadmin-edit-save-btn">
+              Save Sub-Admin Changes
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
   <!-- Modern Confirmation Prompt Modal -->
   <div class="modal confirm-dialog-modal" id="confirm-modal" role="dialog" aria-modal="true"
     aria-labelledby="confirm-modal-title">
@@ -1383,13 +1576,16 @@
     <div class="nav-toast-content">
       <span class="nav-toast-icon" id="nav-toast-icon">
         <svg width="18" height="18" viewBox="0 0 20 20" fill="currentColor">
-          <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
+          <path fill-rule="evenodd"
+            d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+            clip-rule="evenodd" />
         </svg>
       </span>
       <img id="nav-toast-thumb" class="nav-toast-thumb" src="" alt="" style="display: none;" />
       <span class="nav-toast-msg" id="nav-toast-msg">Added to cart</span>
       <button type="button" class="nav-toast-action" id="nav-toast-action" style="display: none;">View Cart</button>
-      <button type="button" class="nav-toast-close" id="nav-toast-close" aria-label="Close notification">&times;</button>
+      <button type="button" class="nav-toast-close" id="nav-toast-close"
+        aria-label="Close notification">&times;</button>
     </div>
   </aside>
 
@@ -1459,7 +1655,7 @@
             <button type="submit" class="btn btn-primary btn-sm">Subscribe</button>
           </form>
           <div class="footer-guarantee">
-            <span>🔒 Strict Confidentiality • Zero Spam Policy</span>
+            <span>Strict Confidentiality • Zero Spam Policy</span>
           </div>
         </div>
 
@@ -1469,19 +1665,19 @@
         <div class="footer-copy">
           &copy; 2026 7th June Computers. All rights reserved.
         </div>
-        <div class="footer-badges">
+        <!--<div class="footer-badges">
           <span>256-Bit Quantum TLS</span>
           <span class="dot-sep">•</span>
           <span>Ghana Mobile Money (MoMo) Gateway</span>
           <span class="dot-sep">•</span>
           <span>White Glove Logistics</span>
-        </div>
+        </div>-->
       </div>
     </div>
 
 
     <!-- Main JavaScript Application Module Entry -->
-    <script type="module" src="js/app.js"></script>
+    <script type="module" src="js/app.js?v=20261113g"></script>
 </body>
 
 </html>

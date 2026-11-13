@@ -665,176 +665,358 @@ function renderSubAdminsTab() {
   return `
     <div class="admin-subadmins-section animate-fade-in">
       
-      <div class="admin-two-col-grid">
-        
-        <!-- Left: Create New Sub-Admin Form -->
-        <div class="admin-card-section">
-          <div class="section-title-row">
-            <div>
-              <h3>Provision New Sub-Admin Login</h3>
-              <p class="section-desc">Create staff credentials with custom access permissions.</p>
-            </div>
-            <span class="staff-role-badge">👑 Main Admin Only</span>
+      <!-- Top Section Executive Hero Banner -->
+      <div class="subadmin-hero-banner">
+        <div class="subadmin-hero-content">
+          <div class="subadmin-hero-icon">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+              <circle cx="9" cy="7" r="4"/>
+              <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
+              <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+            </svg>
           </div>
+          <div>
+            <h2 class="subadmin-hero-title">Staff Provisioning &amp; Access Control</h2>
+            <p class="subadmin-hero-sub">Delegate sub-admin credentials with role-based module clearance. Sub-admins are restricted strictly to authorized consoles.</p>
+          </div>
+        </div>
+        <div class="subadmin-hero-meta">
+          <span class="subadmin-hero-pill">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+            RBAC Enforced
+          </span>
+          <span class="subadmin-hero-count"><strong>${subAdmins.length}</strong> Active Account${subAdmins.length === 1 ? '' : 's'}</span>
+        </div>
+      </div>
 
-          <form class="admin-form mt-3" id="admin-create-subadmin-form">
-            <div class="form-group">
-              <label>Sub-Admin Full Name</label>
-              <input type="text" class="custom-input" id="new-sub-name" placeholder="e.g. John" required />
+      <!-- 1. Provision New Sub-Admin Console (All Inputs Visible at a Glance) -->
+      <div class="admin-card-section subadmin-form-card subadmin-console-card" id="subadmin-provision-card">
+        <div class="subadmin-card-header d-flex justify-between align-center">
+          <div class="d-flex align-center gap-2">
+            <span class="subadmin-card-header-icon" title="Toggle Provisioning Form" id="subadmin-header-icon-toggle">
+              <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+                <circle cx="8.5" cy="7" r="4"/>
+                <line x1="20" y1="8" x2="20" y2="14"/>
+                <line x1="23" y1="11" x2="17" y2="11"/>
+              </svg>
+            </span>
+            <div>
+              <h3 class="subadmin-card-title">Provision New Sub-Admin</h3>
+              <p class="subadmin-card-desc">Assign identity credentials and configure granular module permissions.</p>
             </div>
-
-            <div class="form-row">
-              <div class="form-group flex-1">
-                <label>Login Username / Handle</label>
-                <input type="text" class="custom-input" id="new-sub-username" placeholder="e.g. john" required />
-              </div>
-              <div class="form-group flex-1">
-                <label>Staff Email</label>
-                <input type="email" class="custom-input" id="new-sub-email" placeholder="john@7thjune.com" required />
-              </div>
-            </div>
-
-            <div class="form-group">
-              <label>Initial Login Password</label>
-              <input type="password" class="custom-input" id="new-sub-password" placeholder="••••••••" value="password123" required />
-            </div>
-
-            <!-- Permission Checkboxes -->
-            <div class="form-group mt-3">
-              <label style="font-weight: 700; color: #1e293b;">Access Limits & Authorized Modules:</label>
-              <p class="text-xs text-muted mb-2">Check the specific consoles this sub-admin is authorized to view:</p>
-              
-              <div class="subadmin-permissions-list">
-                <label class="custom-checkbox perm-option-card">
-                  <input type="checkbox" id="perm-orders" checked />
-                  <span class="checkmark"></span>
-                  <div class="perm-option-info">
-                    <strong>📦 Order Status & Fulfillment (orders)</strong>
-                    <span>Manage live customer orders, verify MoMo transactions, inspect receipts, and update shipping status</span>
-                  </div>
-                </label>
-
-                <label class="custom-checkbox perm-option-card mt-2">
-                  <input type="checkbox" id="perm-products" />
-                  <span class="checkmark"></span>
-                  <div class="perm-option-info">
-                    <strong>🖥️ Products & Inventory (products)</strong>
-                    <span>Catalog CRUD, stock management, and pricing adjustments</span>
-                  </div>
-                </label>
-
-                <label class="custom-checkbox perm-option-card mt-2">
-                  <input type="checkbox" id="perm-customers" />
-                  <span class="checkmark"></span>
-                  <div class="perm-option-info">
-                    <strong>👥 Customers & VIP Concierge (customers)</strong>
-                    <span>Access customer profiles, order totals, and loyalty tier points</span>
-                  </div>
-                </label>
-
-                <label class="custom-checkbox perm-option-card mt-2">
-                  <input type="checkbox" id="perm-overview" />
-                  <span class="checkmark"></span>
-                  <div class="perm-option-info">
-                    <strong>📊 Overview Analytics (overview)</strong>
-                    <span>Store KPIs, gross revenue metrics, and order volume stats</span>
-                  </div>
-                </label>
-
-                <label class="custom-checkbox perm-option-card mt-2">
-                  <input type="checkbox" id="perm-settings" />
-                  <span class="checkmark"></span>
-                  <div class="perm-option-info">
-                    <strong>⚙️ Store Settings (settings)</strong>
-                    <span>Store headquarters configuration, currencies, and payment parameters</span>
-                  </div>
-                </label>
-              </div>
-            </div>
-
-            <button type="submit" class="btn btn-primary w-100 mt-4 btn-lg">
-              ✓ Save & Create Sub-Admin Login
+          </div>
+          <div class="subadmin-header-actions d-flex align-center gap-2">
+            <span class="subadmin-badge-direct">Direct Provisioning</span>
+            <button type="button" class="btn btn-secondary btn-sm subadmin-toggle-btn" id="toggle-subadmin-form-btn" title="Toggle Provisioning Form Visibility">
+              <svg class="subadmin-toggle-icon" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M18 15l-6-6-6 6"/></svg>
+              <span id="toggle-form-btn-text">Hide Form</span>
             </button>
-          </form>
+          </div>
         </div>
 
-        <!-- Right: Active Sub-Admins Table -->
-        <div class="admin-card-section">
-          <div class="section-title-row">
+        <form class="admin-form subadmin-provision-form mt-2" id="admin-create-subadmin-form">
+          <div class="subadmin-provision-columns">
+            
+            <!-- Left Column: Step 1 Staff Identity & Login (All 4 Inputs Visible Side-by-Side) -->
+            <div class="subadmin-provision-col">
+              <div class="subadmin-block-header mb-2">
+                <span class="subadmin-step-num">1</span>
+                <div>
+                  <span class="subadmin-step-title">Staff Identity &amp; Login</span>
+                  <p class="subadmin-step-desc">Login credentials &amp; executive auditing</p>
+                </div>
+              </div>
+
+              <div class="subadmin-compact-fields-grid">
+                <div class="form-group mb-2" style="grid-column: 1 / -1;">
+                  <label class="subadmin-input-label" for="new-sub-name">Sub-Admin Full Name</label>
+                  <div class="subadmin-input-wrap">
+                    <span class="subadmin-input-icon">
+                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+                    </span>
+                    <input type="text" class="custom-input subadmin-input" id="new-sub-name" placeholder="e.g. John Blankson" required autocomplete="name" />
+                  </div>
+                </div>
+
+                <div class="form-group mb-2">
+                  <label class="subadmin-input-label" for="new-sub-username">Username / Handle</label>
+                  <div class="subadmin-input-wrap">
+                    <span class="subadmin-input-icon">@</span>
+                    <input type="text" class="custom-input subadmin-input" id="new-sub-username" placeholder="e.g. john" required autocomplete="username" />
+                  </div>
+                </div>
+
+                <div class="form-group mb-2">
+                  <label class="subadmin-input-label" for="new-sub-email">Staff Work Email</label>
+                  <div class="subadmin-input-wrap">
+                    <span class="subadmin-input-icon">
+                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+                    </span>
+                    <input type="email" class="custom-input subadmin-input" id="new-sub-email" placeholder="john@7thjune.com" required autocomplete="email" />
+                  </div>
+                </div>
+
+                <div class="form-group mb-2" style="grid-column: 1 / -1;">
+                  <div class="d-flex justify-between align-center mb-1">
+                    <label class="subadmin-input-label mb-0" for="new-sub-password">Initial Password</label>
+                    <button type="button" class="subadmin-gen-pwd-btn" id="subadmin-gen-pwd-btn" title="Generate random secure password">
+                      <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 4 23 10 17 10"/><polyline points="1 20 1 14 7 14"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/></svg>
+                      <span>Generate</span>
+                    </button>
+                  </div>
+                  <div class="subadmin-input-wrap">
+                    <span class="subadmin-input-icon">
+                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+                    </span>
+                    <input type="password" class="custom-input subadmin-input" id="new-sub-password" placeholder="••••••••••••" value="password123" required />
+                    <button type="button" class="subadmin-pwd-toggle" id="subadmin-pwd-toggle" aria-label="Toggle password visibility">
+                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+                    </button>
+                  </div>
+                </div>
+              </div>
+              <span class="subadmin-hint-text">Staff member can sign in using either username or email with this initial password.</span>
+            </div>
+
+            <!-- Right Column: Step 2 Access Limits & Permissions -->
+            <div class="subadmin-provision-col">
+              <div class="d-flex justify-between align-center mb-2 flex-wrap gap-2">
+                <div class="subadmin-block-header mb-0">
+                  <span class="subadmin-step-num">2</span>
+                  <div>
+                    <span class="subadmin-step-title">Access Limits &amp; Permissions</span>
+                    <p class="subadmin-step-desc">Designate authorized console tabs for this sub-admin</p>
+                  </div>
+                </div>
+                <div class="subadmin-perm-actions">
+                  <button type="button" class="btn-subtle-xs" id="perm-select-all-btn">Select All</button>
+                  <button type="button" class="btn-subtle-xs" id="perm-reset-orders-btn">Orders Only</button>
+                </div>
+              </div>
+              
+              <div class="subadmin-permissions-list subadmin-permissions-stack">
+                
+                <!-- Order Status & Fulfillment -->
+                <label class="perm-option-card is-selected" for="perm-orders">
+                  <input type="checkbox" id="perm-orders" class="perm-checkbox-input" checked />
+                  <span class="perm-custom-check">
+                    <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+                  </span>
+                  <div class="perm-module-icon perm-icon-orders">
+                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
+                  </div>
+                  <div class="perm-option-info">
+                    <div class="perm-title-row">
+                      <strong class="perm-title">Orders &amp; MoMo Verification</strong>
+                      <span class="perm-code-tag">orders</span>
+                    </div>
+                    <span class="perm-desc">Verify slips, update order fulfillment status &amp; waybills</span>
+                  </div>
+                </label>
+
+                <!-- Products & Inventory -->
+                <label class="perm-option-card" for="perm-products">
+                  <input type="checkbox" id="perm-products" class="perm-checkbox-input" />
+                  <span class="perm-custom-check">
+                    <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+                  </span>
+                  <div class="perm-module-icon perm-icon-products">
+                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
+                  </div>
+                  <div class="perm-option-info">
+                    <div class="perm-title-row">
+                      <strong class="perm-title">Products &amp; Stock Inventory</strong>
+                      <span class="perm-code-tag">products</span>
+                    </div>
+                    <span class="perm-desc">Manage catalog, specifications &amp; live warehouse stock</span>
+                  </div>
+                </label>
+
+                <!-- Customers & VIP Concierge -->
+                <label class="perm-option-card" for="perm-customers">
+                  <input type="checkbox" id="perm-customers" class="perm-checkbox-input" />
+                  <span class="perm-custom-check">
+                    <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+                  </span>
+                  <div class="perm-module-icon perm-icon-customers">
+                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+                  </div>
+                  <div class="perm-option-info">
+                    <div class="perm-title-row">
+                      <strong class="perm-title">Customers &amp; Concierge</strong>
+                      <span class="perm-code-tag">customers</span>
+                    </div>
+                    <span class="perm-desc">Client account lifetime spends, delivery addresses &amp; history</span>
+                  </div>
+                </label>
+
+                <!-- Overview Analytics -->
+                <label class="perm-option-card" for="perm-overview">
+                  <input type="checkbox" id="perm-overview" class="perm-checkbox-input" />
+                  <span class="perm-custom-check">
+                    <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+                  </span>
+                  <div class="perm-module-icon perm-icon-overview">
+                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+                  </div>
+                  <div class="perm-option-info">
+                    <div class="perm-title-row">
+                      <strong class="perm-title">Overview KPIs &amp; Revenue</strong>
+                      <span class="perm-code-tag">overview</span>
+                    </div>
+                    <span class="perm-desc">Turnover statistics, revenue trends &amp; conversion metrics</span>
+                  </div>
+                </label>
+
+                <!-- Store Operations & Settings -->
+                <label class="perm-option-card" for="perm-settings">
+                  <input type="checkbox" id="perm-settings" class="perm-checkbox-input" />
+                  <span class="perm-custom-check">
+                    <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+                  </span>
+                  <div class="perm-module-icon perm-icon-settings">
+                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+                  </div>
+                  <div class="perm-option-info">
+                    <div class="perm-title-row">
+                      <strong class="perm-title">Store Operations &amp; Settings</strong>
+                      <span class="perm-code-tag">settings</span>
+                    </div>
+                    <span class="perm-desc">MoMo gateway phone numbers, delivery fee rules &amp; currency</span>
+                  </div>
+                </label>
+
+              </div>
+
+              <!-- Submit Action Row -->
+              <div class="subadmin-submit-bar mt-2">
+                <button type="submit" class="btn btn-primary subadmin-create-submit-btn w-100" id="subadmin-submit-btn">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="8.5" cy="7" r="4"/><line x1="20" y1="8" x2="20" y2="14"/><line x1="23" y1="11" x2="17" y2="11"/></svg>
+                  <span>Provision &amp; Save Sub-Admin</span>
+                </button>
+                <span class="subadmin-submit-note">Account activates immediately with enforced boundary limits.</span>
+              </div>
+            </div>
+
+          </div>
+        </form>
+      </div>
+
+      <!-- 2. Full-Width Active Staff Directory & Sessions -->
+      <div class="admin-card-section subadmin-directory-card">
+        <div class="subadmin-card-header d-flex justify-between align-center">
+          <div class="d-flex align-center gap-2">
+            <span class="subadmin-card-header-icon subadmin-icon-team">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+                <circle cx="9" cy="7" r="4"/>
+                <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
+                <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+              </svg>
+            </span>
             <div>
-              <h3>Active Sub-Administrators (${subAdmins.length})</h3>
-              <p class="section-desc">Provisioned staff accounts and enforced access restrictions.</p>
+              <h3 class="subadmin-card-title">Staff Directory &amp; Active Logins</h3>
+              <p class="subadmin-card-desc">Review provisioned staff logins, test their access limits, or revoke permissions.</p>
             </div>
           </div>
+          <div class="subadmin-header-actions d-flex align-center gap-2">
+            <button type="button" class="btn btn-secondary btn-sm" id="subadmin-quick-add-btn">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+              <span>+ Add Staff</span>
+            </button>
+            <span class="subadmin-badge-count">${subAdmins.length} Active Staff</span>
+          </div>
+        </div>
 
-          <div class="admin-table-wrap mt-3">
-            <table class="admin-data-table">
+        ${subAdmins.length === 0 ? `
+          <div class="subadmin-empty-state mt-3">
+            <div class="subadmin-empty-icon">
+              <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+                <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/>
+              </svg>
+            </div>
+            <h4 class="subadmin-empty-title">No Sub-Administrators Yet</h4>
+            <p class="subadmin-empty-desc">Use the provisioning console above to create dedicated staff credentials with customized module access limits.</p>
+          </div>
+        ` : `
+          <div class="admin-table-wrap mt-3 subadmin-table-wrap">
+            <table class="admin-data-table subadmin-data-table">
               <thead>
                 <tr>
-                  <th>Staff Profile</th>
-                  <th>Login ID & Email</th>
-                  <th>Access Limits</th>
-                  <th style="text-align: right;">Action</th>
+                  <th style="min-width: 170px;">Staff Profile</th>
+                  <th style="min-width: 170px;">Credentials</th>
+                  <th style="min-width: 200px;">Authorized Modules</th>
+                  <th style="text-align: right; min-width: 220px; white-space: nowrap;">Session Actions</th>
                 </tr>
               </thead>
               <tbody>
                 ${subAdmins.map(sub => {
-    const permBadges = (sub.permissions || []).map(p => {
-      const label = p === 'orders' ? 'Order Status' : (p.charAt(0).toUpperCase() + p.slice(1));
-      return `<span class="badge-pill bg-red-subtle text-red">${label}</span>`;
-    }).join(' ');
+                  const permBadges = (sub.permissions || []).map(p => {
+                    const label = p === 'orders' ? 'Orders' : (p.charAt(0).toUpperCase() + p.slice(1));
+                    return `<span class="badge-pill perm-badge-${p}">${label}</span>`;
+                  }).join(' ');
 
-    const initials = sub.name.split(' ').map(n => n[0]).join('').substring(0, 2).toUpperCase() || 'SA';
+                  const initials = sub.name.split(' ').map(n => n[0]).join('').substring(0, 2).toUpperCase() || 'SA';
 
-    return `
-                    <tr data-sub-id="${sub.id}">
+                  return `
+                    <tr data-sub-id="${sub.id}" class="subadmin-row">
                       <td>
-                        <div class="d-flex align-center gap-2">
-                          <span class="admin-avatar-sm">${initials}</span>
-                          <div>
-                            <strong>${sub.name}</strong>
-                            <div class="text-xs text-red">● Active Sub-Admin</div>
+                        <div class="subadmin-profile-cell">
+                          <span class="admin-avatar subadmin-table-avatar">${initials}</span>
+                          <div class="subadmin-profile-meta">
+                            <strong class="subadmin-profile-name">${sub.name}</strong>
+                            <span class="subadmin-profile-status"><span class="status-live-dot status-dot-xs"></span> Active Staff</span>
                           </div>
                         </div>
                       </td>
                       <td>
-                        <div><strong>@${sub.username}</strong></div>
-                        <div class="text-xs text-muted">${sub.email}</div>
+                        <div class="subadmin-cred-cell">
+                          <code class="subadmin-username-code">@${sub.username}</code>
+                          <span class="subadmin-email-text">${sub.email}</span>
+                        </div>
                       </td>
                       <td>
                         <div class="d-flex flex-wrap gap-1">
-                          ${permBadges || '<span class="text-muted text-xs">No Access Assigned</span>'}
+                          ${permBadges || '<span class="text-muted text-xs">No Access</span>'}
                         </div>
                       </td>
                       <td style="text-align: right;">
-                        <div class="d-flex justify-end gap-1">
-                          <button class="btn btn-secondary btn-xs admin-switch-subadmin-btn" data-sub-id="${sub.id}" title="Switch to this Sub-Admin session to test their access limits">
-                            🔑 Test Login
+                        <div class="subadmin-action-btns">
+                          <button class="btn btn-secondary btn-sm admin-switch-subadmin-btn" data-sub-id="${sub.id}" title="Test login as ${sub.name}">
+                            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 2l-2 2m-1-1l-2 2m-2-2l-2 2m-2-2l-2 2m-2-2l-2 2M3 21l10-10"/><circle cx="7.5" cy="16.5" r="3.5"/></svg>
+                            <span>Test Login</span>
                           </button>
-                          <button class="btn btn-danger-ghost btn-xs admin-del-subadmin-btn" data-sub-id="${sub.id}" title="Revoke Sub-Admin Access">
-                            ✕
+                          <button class="btn btn-secondary btn-sm admin-edit-subadmin-btn" data-sub-id="${sub.id}" title="Edit ${sub.name}'s permissions &amp; credentials">
+                            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+                            <span>Edit</span>
+                          </button>
+                          <button class="btn btn-danger-ghost btn-sm admin-del-subadmin-btn" data-sub-id="${sub.id}" title="Revoke sub-admin access">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/><line x1="10" y1="11" x2="10" y2="17"/><line x1="14" y1="11" x2="14" y2="17"/></svg>
                           </button>
                         </div>
                       </td>
                     </tr>
                   `;
-  }).join('')}
+                }).join('')}
               </tbody>
             </table>
           </div>
+        `}
 
-          <div class="subadmin-guidance-card mt-4">
-            <div class="d-flex align-start gap-2">
-              <span style="font-size: 1.5rem; line-height: 1;">💡</span>
-              <div>
-                <strong>Role & Access Limits Enforced:</strong>
-                <p class="text-xs text-muted mt-1">
-                  Sub-Admins such as <strong>John</strong> only have visibility into authorized tabs (e.g., <strong>Order Status & Fulfillment</strong>). Overview stats, product catalog controls, store settings, and staff provisioning are completely hidden from their workspace.
-                </p>
-              </div>
+        <div class="subadmin-guidance-card mt-3">
+          <div class="d-flex align-center gap-2">
+            <span class="subadmin-guidance-icon">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+            </span>
+            <div>
+              <strong class="subadmin-guidance-title">Role-Based Access Enforcement:</strong>
+              <p class="subadmin-guidance-text">
+                Sub-Admins strictly see only authorized tabs (e.g. <strong>Orders &amp; MoMo Verification</strong>). Turnover statistics, catalog editing, customer CRM, store settings, and staff provisioning remain completely restricted and hidden from their session.
+              </p>
             </div>
           </div>
-
         </div>
 
       </div>
@@ -922,20 +1104,21 @@ function renderCustomersTab() {
       <div class="admin-card-section">
         <div class="section-title-row">
           <div>
-            <h3>Client Concierge & Loyalty Directory</h3>
+            <h3>Client Concierge &amp; Loyalty Directory</h3>
             <p class="section-desc">Manage verified client profiles, loyalty point allocations, order histories, and sovereign tiers.</p>
           </div>
+          <span class="subadmin-badge-count">${customers.length} Verified Accounts</span>
         </div>
 
         <div class="admin-table-wrap mt-3">
-          <table class="admin-data-table">
+          <table class="admin-data-table admin-customers-table">
             <thead>
               <tr>
                 <th>Customer</th>
                 <th>Contact Email</th>
                 <th>Membership Tier</th>
-                <th>Loyalty Balance</th>
-                <th>Orders Placed</th>
+                <th>Loyalty Pts</th>
+                <th style="text-align: center;">Orders</th>
                 <th>Total Spent</th>
                 <th style="text-align: right;">Status</th>
               </tr>
@@ -945,10 +1128,11 @@ function renderCustomersTab() {
                 <tr>
                   <td>
                     <div class="customer-info-cell">
-                      <img src="${c.avatar}" alt="${c.name}" class="customer-avatar-sm" loading="lazy" />
+                      <img src="${c.avatar}" alt="${c.name}" class="customer-avatar-sm" onerror="this.onerror=null; this.src='https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=100&q=80';" loading="lazy" />
                       <div class="customer-details">
                         <span class="customer-name">${c.name}</span>
-                        <span class="customer-sub">${c.phone} • ${c.location}</span>
+                        <span class="customer-sub">${c.phone}</span>
+                        <span class="customer-location">${c.location}</span>
                       </div>
                     </div>
                   </td>
@@ -967,7 +1151,7 @@ function renderCustomersTab() {
                       <small>PTS</small>
                     </span>
                   </td>
-                  <td>
+                  <td style="text-align: center;">
                     <span class="order-count-badge">
                       ${c.ordersCount} ${c.ordersCount === 1 ? 'order' : 'orders'}
                     </span>
@@ -1281,6 +1465,67 @@ function attachPaneSpecificEvents(container, tab) {
 
   // Sub-Admins Tab Actions (Main Admin Only)
   if (tab === 'subadmins') {
+    // Permission Quick Actions
+    container.querySelector('#perm-select-all-btn')?.addEventListener('click', () => {
+      sounds.playClick();
+      ['orders', 'products', 'customers', 'overview', 'settings'].forEach(id => {
+        const el = container.querySelector(`#perm-${id}`);
+        if (el) {
+          el.checked = true;
+          el.closest('.perm-option-card')?.classList.add('is-selected');
+        }
+      });
+    });
+
+    container.querySelector('#perm-reset-orders-btn')?.addEventListener('click', () => {
+      sounds.playClick();
+      ['products', 'customers', 'overview', 'settings'].forEach(id => {
+        const el = container.querySelector(`#perm-${id}`);
+        if (el) {
+          el.checked = false;
+          el.closest('.perm-option-card')?.classList.remove('is-selected');
+        }
+      });
+      const ordersEl = container.querySelector('#perm-orders');
+      if (ordersEl) {
+        ordersEl.checked = true;
+        ordersEl.closest('.perm-option-card')?.classList.add('is-selected');
+      }
+    });
+
+    // Checkbox visual sync
+    container.querySelectorAll('.perm-checkbox-input').forEach(chk => {
+      chk.addEventListener('change', () => {
+        chk.closest('.perm-option-card')?.classList.toggle('is-selected', chk.checked);
+      });
+    });
+
+    // Password Tools
+    container.querySelector('#subadmin-gen-pwd-btn')?.addEventListener('click', () => {
+      sounds.playClick();
+      const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnpqrstuvwxyz23456789!@#$%';
+      let pwd = 'Staff#';
+      for (let i = 0; i < 6; i++) {
+        pwd += chars.charAt(Math.floor(Math.random() * chars.length));
+      }
+      const pwdInput = container.querySelector('#new-sub-password');
+      if (pwdInput) {
+        pwdInput.value = pwd;
+        pwdInput.type = 'text';
+        ui.showToast({
+          title: 'Generated Password',
+          message: `Temporary password set to: ${pwd}`,
+          type: 'info'
+        });
+      }
+    });
+
+    container.querySelector('#subadmin-pwd-toggle')?.addEventListener('click', () => {
+      const pwdInput = container.querySelector('#new-sub-password');
+      if (!pwdInput) return;
+      pwdInput.type = pwdInput.type === 'password' ? 'text' : 'password';
+    });
+
     const form = container.querySelector('#admin-create-subadmin-form');
     form?.addEventListener('submit', (e) => {
       e.preventDefault();
@@ -1315,6 +1560,45 @@ function attachPaneSpecificEvents(container, tab) {
 
       container.querySelector('#admin-pane-content').innerHTML = renderSubAdminsTab();
       attachPaneSpecificEvents(container, 'subadmins');
+    });
+
+    // Toggle Provisioning Form Collapse / Expand
+    const toggleBtn = container.querySelector('#toggle-subadmin-form-btn');
+    const headerIconToggle = container.querySelector('#subadmin-header-icon-toggle');
+    const quickAddBtn = container.querySelector('#subadmin-quick-add-btn');
+    const formCard = container.querySelector('#subadmin-provision-card');
+    const toggleText = container.querySelector('#toggle-form-btn-text');
+
+    const toggleForm = (forceOpen = false) => {
+      if (!formCard) return;
+      const isHidden = formCard.classList.contains('is-collapsed');
+      if (forceOpen || isHidden) {
+        formCard.classList.remove('is-collapsed');
+        if (toggleText) toggleText.textContent = 'Hide Form';
+        container.querySelector('#new-sub-name')?.focus();
+      } else {
+        formCard.classList.add('is-collapsed');
+        if (toggleText) toggleText.textContent = 'Show Form';
+      }
+    };
+
+    toggleBtn?.addEventListener('click', (e) => {
+      e.stopPropagation();
+      sounds.playClick();
+      toggleForm();
+    });
+
+    headerIconToggle?.addEventListener('click', (e) => {
+      e.stopPropagation();
+      sounds.playClick();
+      toggleForm();
+    });
+
+    quickAddBtn?.addEventListener('click', () => {
+      sounds.playClick();
+      toggleForm(true);
+      formCard?.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+      container.querySelector('#new-sub-name')?.focus();
     });
 
     // Test Login / Switch to Sub-Admin Session
@@ -1380,6 +1664,143 @@ function attachPaneSpecificEvents(container, tab) {
         }
       });
     });
+
+    // Edit Sub-Admin
+    container.querySelectorAll('.admin-edit-subadmin-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        sounds.playClick();
+        const subId = btn.dataset.subId;
+        const sub = (store.state.subAdmins || []).find(s => s.id === subId);
+        if (!sub) return;
+
+        const modal = document.getElementById('subadmin-edit-modal');
+        if (!modal) return;
+
+        modal.querySelector('#edit-sub-id').value = sub.id;
+        modal.querySelector('#edit-sub-name').value = sub.name || '';
+        modal.querySelector('#edit-sub-username').value = sub.username || '';
+        modal.querySelector('#edit-sub-email').value = sub.email || '';
+        modal.querySelector('#edit-sub-password').value = '';
+
+        const perms = sub.permissions || ['orders'];
+        ['orders', 'products', 'customers', 'overview', 'settings'].forEach(p => {
+          const chk = modal.querySelector(`#edit-perm-${p}`);
+          if (chk) {
+            chk.checked = perms.includes(p);
+            chk.closest('.perm-option-card')?.classList.toggle('is-selected', chk.checked);
+          }
+        });
+
+        ui.openModal('subadmin-edit-modal');
+      });
+    });
+
+    // Edit modal utilities & form submit
+    const editModal = document.getElementById('subadmin-edit-modal');
+    if (editModal && !editModal.dataset.eventsBound) {
+      editModal.dataset.eventsBound = 'true';
+
+      editModal.querySelector('#edit-sub-gen-pwd-btn')?.addEventListener('click', () => {
+        sounds.playClick();
+        const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnpqrstuvwxyz23456789!@#$%';
+        let pwd = 'Staff#';
+        for (let i = 0; i < 6; i++) {
+          pwd += chars.charAt(Math.floor(Math.random() * chars.length));
+        }
+        const pwdInput = editModal.querySelector('#edit-sub-password');
+        if (pwdInput) {
+          pwdInput.value = pwd;
+          pwdInput.type = 'text';
+          ui.showToast({
+            title: 'Generated Password',
+            message: `New temporary password set to: ${pwd}`,
+            type: 'info'
+          });
+        }
+      });
+
+      editModal.querySelector('#edit-sub-pwd-toggle')?.addEventListener('click', () => {
+        const pwdInput = editModal.querySelector('#edit-sub-password');
+        if (!pwdInput) return;
+        pwdInput.type = pwdInput.type === 'password' ? 'text' : 'password';
+      });
+
+      editModal.querySelector('#edit-perm-select-all-btn')?.addEventListener('click', () => {
+        ['orders', 'products', 'customers', 'overview', 'settings'].forEach(id => {
+          const el = editModal.querySelector(`#edit-perm-${id}`);
+          if (el) {
+            el.checked = true;
+            el.closest('.perm-option-card')?.classList.add('is-selected');
+          }
+        });
+      });
+
+      editModal.querySelector('#edit-perm-reset-orders-btn')?.addEventListener('click', () => {
+        ['products', 'customers', 'overview', 'settings'].forEach(id => {
+          const el = editModal.querySelector(`#edit-perm-${id}`);
+          if (el) {
+            el.checked = false;
+            el.closest('.perm-option-card')?.classList.remove('is-selected');
+          }
+        });
+        const ordersEl = editModal.querySelector('#edit-perm-orders');
+        if (ordersEl) {
+          ordersEl.checked = true;
+          ordersEl.closest('.perm-option-card')?.classList.add('is-selected');
+        }
+      });
+
+      editModal.querySelectorAll('.edit-perm-checkbox').forEach(chk => {
+        chk.addEventListener('change', () => {
+          chk.closest('.perm-option-card')?.classList.toggle('is-selected', chk.checked);
+        });
+      });
+
+      editModal.querySelector('#admin-edit-subadmin-form')?.addEventListener('submit', (e) => {
+        e.preventDefault();
+        const subId = editModal.querySelector('#edit-sub-id')?.value;
+        const name = editModal.querySelector('#edit-sub-name')?.value.trim();
+        const username = editModal.querySelector('#edit-sub-username')?.value.trim();
+        const email = editModal.querySelector('#edit-sub-email')?.value.trim();
+        const password = editModal.querySelector('#edit-sub-password')?.value;
+
+        const perms = [];
+        if (editModal.querySelector('#edit-perm-orders')?.checked) perms.push('orders');
+        if (editModal.querySelector('#edit-perm-products')?.checked) perms.push('products');
+        if (editModal.querySelector('#edit-perm-customers')?.checked) perms.push('customers');
+        if (editModal.querySelector('#edit-perm-overview')?.checked) perms.push('overview');
+        if (editModal.querySelector('#edit-perm-settings')?.checked) perms.push('settings');
+
+        if (perms.length === 0) {
+          ui.showToast({
+            title: 'Permission Required',
+            message: 'Please designate at least one authorized module limit.',
+            type: 'warning'
+          });
+          return;
+        }
+
+        const updates = { name, username, email, permissions: perms };
+        if (password && password.trim().length > 0) {
+          updates.password = password.trim();
+        }
+
+        store.updateSubAdmin(subId, updates);
+        sounds.playSuccess();
+        ui.showToast({
+          title: 'Sub-Admin Updated',
+          message: `Permissions and credentials saved for "${name}".`,
+          type: 'success'
+        });
+        ui.closeModal('subadmin-edit-modal');
+
+        const paneContent = document.getElementById('admin-pane-content');
+        if (paneContent) {
+          paneContent.innerHTML = renderSubAdminsTab();
+          attachPaneSpecificEvents(document.querySelector('.admin-portal-wrapper') || document.body, 'subadmins');
+        }
+      });
+    }
   }
 
   // Handle return button on restricted access card
