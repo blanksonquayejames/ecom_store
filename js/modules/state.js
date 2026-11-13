@@ -85,49 +85,72 @@ class Store {
       theme: savedTheme || 'light',
       appliedPromo: savedPromo ? JSON.parse(savedPromo) : null,
       recentSearches: savedSearches ? JSON.parse(savedSearches) : ['hall effect keyboard', '8k mouse', 'monitor arm', 'desk mat'],
-      orders: savedOrders ? JSON.parse(savedOrders) : [
-        {
-          orderId: '7TH-892419',
-          date: 'Aug 18, 2026',
-          status: 'In Transit',
-          carrier: 'FedEx Express Courier',
-          trackingNumber: 'FX-84920412A',
-          items: [
+      orders: (() => {
+        let list = savedOrders ? JSON.parse(savedOrders) : null;
+        if (!list || !Array.isArray(list) || list.length === 0) {
+          list = [
             {
-              name: 'ViperStrike Ultra 8K Wireless Gaming Mouse',
-              selectedColor: 'Matte Stealth Black',
-              selectedOption: 'Standard 8K Receiver Edition',
-              quantity: 1,
-              price: 149,
-              heroImage: 'https://images.unsplash.com/photo-1615663245857-ac93bb7c39e7?auto=format&fit=crop&w=1000&q=85'
+              orderId: '7TH-892419',
+              date: 'Aug 18, 2026',
+              status: 'Delivered',
+              carrier: 'FedEx Express Courier',
+              trackingNumber: 'FX-84920412A',
+              items: [
+                {
+                  name: 'ViperStrike Ultra 8K Wireless Gaming Mouse',
+                  selectedColor: 'Matte Stealth Black',
+                  selectedOption: 'Standard 8K Receiver Edition',
+                  quantity: 1,
+                  price: 149,
+                  heroImage: 'https://images.unsplash.com/photo-1615663245857-ac93bb7c39e7?auto=format&fit=crop&w=1000&q=85'
+                }
+              ],
+              subtotal: 149,
+              discount: 0,
+              shipping: 0,
+              tax: 11.92,
+              total: 160.92,
+              shippingAddress: {
+                fullName: 'Julian Vance',
+                address: '742 Evergreen Terrace, Suite 400',
+                city: 'San Francisco',
+                state: 'CA',
+                zip: '94107',
+                country: 'United States',
+                phone: '+233 24 555 7788'
+              },
+              paymentMethod: 'Mobile Money (MTN MoMo)',
+              momoNetwork: 'MTN MoMo',
+              momoPhone: '024 555 7788',
+              momoTransactionId: 'MM-TX-984210',
+              timeline: [
+                { step: 'Processing', time: 'Aug 18, 09:30 AM', completed: true },
+                { step: 'Delivered', time: 'Aug 18, 02:15 PM', completed: true },
+                { step: 'Arrived', time: 'Aug 19, 08:00 AM', completed: false },
+                { step: 'Received', time: 'Estimated Aug 19, 04:00 PM', completed: false }
+              ]
             }
-          ],
-          subtotal: 149,
-          discount: 0,
-          shipping: 0,
-          tax: 11.92,
-          total: 160.92,
-          shippingAddress: {
-            fullName: 'Julian Vance',
-            address: '742 Evergreen Terrace, Suite 400',
-            city: 'San Francisco',
-            state: 'CA',
-            zip: '94107',
-            country: 'United States',
-            phone: '+233 24 555 7788'
-          },
-          paymentMethod: 'Mobile Money (MTN MoMo)',
-          momoNetwork: 'MTN MoMo',
-          momoPhone: '024 555 7788',
-          momoTransactionId: 'MM-TX-984210',
-          timeline: [
-            { step: 'Order Placed', time: 'Aug 14, 10:30 AM', completed: true },
-            { step: 'Handcrafted Assembly & QA', time: 'Aug 14, 04:15 PM', completed: true },
-            { step: 'Dispatched from Zurich Vault', time: 'Aug 15, 08:00 AM', completed: true },
-            { step: 'Out for Priority Delivery', time: 'In Progress (Estimated Today)', completed: false }
-          ]
+          ];
+        } else {
+          // Normalize legacy orders to the new 4-stage shipping process
+          list.forEach(ord => {
+            if (ord.status === 'In Transit') {
+              ord.status = 'Delivered';
+            }
+            if (!ord.timeline || ord.timeline[0]?.step !== 'Processing' || ord.timeline.length !== 4) {
+              const s = ord.status || 'Processing';
+              ord.timeline = [
+                { step: 'Processing', time: ord.timeline?.[0]?.time || ord.date || 'Aug 18, 09:30 AM', completed: true },
+                { step: 'Delivered', time: ord.timeline?.[1]?.time || 'Aug 18, 02:15 PM', completed: s === 'Delivered' || s === 'Arrived' || s === 'Received' },
+                { step: 'Arrived', time: ord.timeline?.[2]?.time || 'Pending', completed: s === 'Arrived' || s === 'Received' },
+                { step: 'Received', time: ord.timeline?.[3]?.time || 'Pending', completed: s === 'Received' }
+              ];
+            }
+          });
+          localStorage.setItem('aura_orders', JSON.stringify(list));
         }
-      ],
+        return list;
+      })(),
       user: (() => {
         let parsed = savedUser ? JSON.parse(savedUser) : null;
         const defaultAddresses = [
@@ -429,10 +452,10 @@ class Store {
       momoPhone: orderData.momoPhone || '',
       momoTransactionId: `MM-${Math.floor(10000000 + Math.random() * 90000000)}`,
       timeline: [
-        { step: 'Order Placed & Verified', time: 'Just now', completed: true },
-        { step: 'Aura Artisan Vault Allocation', time: 'In Progress', completed: false },
-        { step: 'Order Dispatch & Transit', time: 'Estimated 24-48 hours', completed: false },
-        { step: 'Delivery at Concierge', time: 'Estimated 3-4 business days', completed: false }
+        { step: 'Processing', time: 'Just now', completed: true },
+        { step: 'Delivered', time: 'Estimated 24-48 hours', completed: false },
+        { step: 'Arrived', time: 'Estimated 3-4 business days', completed: false },
+        { step: 'Received', time: 'Pending final handover', completed: false }
       ]
     };
 
@@ -708,21 +731,47 @@ class Store {
     const order = this.state.orders.find(o => o.orderId === orderId);
     if (order) {
       order.status = newStatus;
-      if (order.timeline) {
-        if (newStatus === 'Delivered') {
-          order.timeline.forEach(t => t.completed = true);
-        } else if (newStatus === 'In Transit') {
-          if (order.timeline[0]) order.timeline[0].completed = true;
-          if (order.timeline[1]) order.timeline[1].completed = true;
-          if (order.timeline[2]) order.timeline[2].completed = true;
-          if (order.timeline[3]) order.timeline[3].completed = false;
-        } else if (newStatus === 'Processing') {
-          if (order.timeline[0]) order.timeline[0].completed = true;
-          if (order.timeline[1]) order.timeline[1].completed = false;
-          if (order.timeline[2]) order.timeline[2].completed = false;
-          if (order.timeline[3]) order.timeline[3].completed = false;
-        }
+      if (!order.timeline || order.timeline.length !== 4) {
+        order.timeline = [
+          { step: 'Processing', time: 'Completed', completed: true },
+          { step: 'Delivered', time: 'Pending', completed: false },
+          { step: 'Arrived', time: 'Pending', completed: false },
+          { step: 'Received', time: 'Pending', completed: false }
+        ];
       }
+
+      const nowTime = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) + ' Today';
+      if (newStatus === 'Received') {
+        order.timeline[0].completed = true;
+        order.timeline[1].completed = true;
+        order.timeline[2].completed = true;
+        order.timeline[3].completed = true;
+        if (!order.timeline[3].time || order.timeline[3].time.includes('Pending') || order.timeline[3].time.includes('Estimated')) {
+          order.timeline[3].time = nowTime;
+        }
+      } else if (newStatus === 'Arrived') {
+        order.timeline[0].completed = true;
+        order.timeline[1].completed = true;
+        order.timeline[2].completed = true;
+        order.timeline[3].completed = false;
+        if (!order.timeline[2].time || order.timeline[2].time.includes('Pending') || order.timeline[2].time.includes('Estimated')) {
+          order.timeline[2].time = nowTime;
+        }
+      } else if (newStatus === 'Delivered') {
+        order.timeline[0].completed = true;
+        order.timeline[1].completed = true;
+        order.timeline[2].completed = false;
+        order.timeline[3].completed = false;
+        if (!order.timeline[1].time || order.timeline[1].time.includes('Pending') || order.timeline[1].time.includes('Estimated')) {
+          order.timeline[1].time = nowTime;
+        }
+      } else if (newStatus === 'Processing') {
+        order.timeline[0].completed = true;
+        order.timeline[1].completed = false;
+        order.timeline[2].completed = false;
+        order.timeline[3].completed = false;
+      }
+
       localStorage.setItem('aura_orders', JSON.stringify(this.state.orders));
       this.notify('orders_updated', this.state.orders);
       return order;

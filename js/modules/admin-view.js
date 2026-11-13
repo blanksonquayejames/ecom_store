@@ -584,8 +584,9 @@ function renderOrdersTab() {
           <select class="custom-select custom-select-sm" id="admin-order-status-filter">
             <option value="All">All Statuses (${orders.length})</option>
             <option value="Processing">Processing</option>
-            <option value="In Transit">In Transit</option>
             <option value="Delivered">Delivered</option>
+            <option value="Arrived">Arrived</option>
+            <option value="Received">Received</option>
           </select>
         </div>
       </div>
@@ -637,8 +638,9 @@ function renderOrdersTab() {
                 <td>
                   <select class="admin-status-select" data-order-id="${order.orderId}">
                     <option value="Processing" ${order.status === 'Processing' ? 'selected' : ''}>Processing</option>
-                    <option value="In Transit" ${order.status === 'In Transit' ? 'selected' : ''}>In Transit</option>
                     <option value="Delivered" ${order.status === 'Delivered' ? 'selected' : ''}>Delivered</option>
+                    <option value="Arrived" ${order.status === 'Arrived' ? 'selected' : ''}>Arrived</option>
+                    <option value="Received" ${order.status === 'Received' ? 'selected' : ''}>Received</option>
                   </select>
                 </td>
                 <td style="text-align: right;">

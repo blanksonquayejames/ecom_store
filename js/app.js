@@ -12,9 +12,9 @@ import { renderProductDetailPage, renderQuickViewModal } from './modules/pdp-vie
 import { initCartDrawer, updateCartBadges } from './modules/cart-drawer.js';
 import { renderCheckoutView } from './modules/checkout-view.js';
 import { renderCartView } from './modules/cart-view.js';
-import { renderAccountView } from './modules/account-view.js';
+import { renderAccountView } from './modules/account-view.js?v=20261113l';
 import { initAuthModal, openAuthModal } from './modules/auth-modal.js';
-import { renderAdminView } from './modules/admin-view.js?v=20261113k';
+import { renderAdminView } from './modules/admin-view.js?v=20261113l';
 import { renderAuthView } from './modules/auth-view.js';
 import { syncAllCartButtons } from './modules/cart-icon.js';
 

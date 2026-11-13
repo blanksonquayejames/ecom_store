@@ -145,7 +145,7 @@ function renderAccountPane(tab, user, orders, currency, defaultAddress) {
  * TAB 1: OVERVIEW & DASHBOARD SUMMARY
  */
 function renderOverviewTab(user, orders, currency, defaultAddress) {
-  const inTransitOrders = orders.filter(o => o.status === 'In Transit');
+  const activeOrders = orders.filter(o => o.status !== 'Received');
   const recentOrder = orders[0] || null;
 
   return `
@@ -160,8 +160,8 @@ function renderOverviewTab(user, orders, currency, defaultAddress) {
         </div>
         <div class="account-metric-card">
           <span class="metric-label">ACTIVE DELIVERIES</span>
-          <div class="metric-number text-red">${inTransitOrders.length}</div>
-          <span class="metric-sub">In transit via Courier</span>
+          <div class="metric-number text-red">${activeOrders.length}</div>
+          <span class="metric-sub">In shipping pipeline</span>
         </div>
         <div class="account-metric-card">
           <span class="metric-label">SAVED ADDRESSES</span>
@@ -289,9 +289,10 @@ function renderOrdersTab(orders, currency) {
         </div>
         <div class="orders-filter-chips" id="orders-status-filters">
           <button class="filter-chip-btn is-active" data-status="All">All (${orders.length})</button>
-          <button class="filter-chip-btn" data-status="In Transit">In Transit</button>
           <button class="filter-chip-btn" data-status="Processing">Processing</button>
           <button class="filter-chip-btn" data-status="Delivered">Delivered</button>
+          <button class="filter-chip-btn" data-status="Arrived">Arrived</button>
+          <button class="filter-chip-btn" data-status="Received">Received</button>
         </div>
       </div>
 
@@ -327,34 +328,26 @@ function renderOrdersTab(orders, currency) {
 
               <!-- Interactive Timeline -->
               <div class="order-timeline-track">
-                <div class="timeline-step ${ord.timeline && ord.timeline[0]?.completed ? 'is-complete' : 'is-active'}">
-                  <div class="step-dot">✓</div>
-                  <div class="step-meta">
-                    <span class="step-title">Order Placed</span>
-                    <span class="step-time">${ord.timeline ? ord.timeline[0]?.time : 'Verified'}</span>
-                  </div>
-                </div>
-                <div class="timeline-step ${ord.timeline && ord.timeline[1]?.completed ? 'is-complete' : (ord.status === 'Processing' ? 'is-active' : '')}">
-                  <div class="step-dot">2</div>
-                  <div class="step-meta">
-                    <span class="step-title">Assembly & QA</span>
-                    <span class="step-time">${ord.timeline ? ord.timeline[1]?.time : 'Pending'}</span>
-                  </div>
-                </div>
-                <div class="timeline-step ${ord.timeline && ord.timeline[2]?.completed ? 'is-complete' : (ord.status === 'In Transit' ? 'is-active' : '')}">
-                  <div class="step-dot">3</div>
-                  <div class="step-meta">
-                    <span class="step-title">Vault Dispatch</span>
-                    <span class="step-time">${ord.timeline ? ord.timeline[2]?.time : 'Pending'}</span>
-                  </div>
-                </div>
-                <div class="timeline-step ${ord.status === 'Delivered' ? 'is-complete' : ''}">
-                  <div class="step-dot">4</div>
-                  <div class="step-meta">
-                    <span class="step-title">Delivery</span>
-                    <span class="step-time">${ord.status === 'Delivered' ? 'Delivered' : 'In Transit'}</span>
-                  </div>
-                </div>
+                ${(() => {
+                  const stages = ['Processing', 'Delivered', 'Arrived', 'Received'];
+                  const curIdx = stages.indexOf(ord.status);
+                  return stages.map((stageName, sIdx) => {
+                    const isComplete = (curIdx > sIdx) || (curIdx === 3 && sIdx === 3) || (ord.timeline && ord.timeline[sIdx]?.completed);
+                    const isActive = (curIdx === sIdx && sIdx !== 3);
+                    const stateClass = isComplete ? 'is-complete' : (isActive ? 'is-active' : '');
+                    const dotContent = isComplete ? '✓' : (sIdx + 1);
+                    const timeContent = ord.timeline?.[sIdx]?.time || (isComplete ? 'Completed' : (isActive ? 'In Progress' : 'Pending'));
+                    return `
+                      <div class="timeline-step ${stateClass}">
+                        <div class="step-dot">${dotContent}</div>
+                        <div class="step-meta">
+                          <span class="step-title">${stageName}</span>
+                          <span class="step-time">${timeContent}</span>
+                        </div>
+                      </div>
+                    `;
+                  }).join('');
+                })()}
               </div>
 
               <!-- Items in Order -->

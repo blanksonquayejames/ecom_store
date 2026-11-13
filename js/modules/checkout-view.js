@@ -636,20 +636,23 @@ export function renderOrderConfirmation(container, order) {
 
         <!-- Real-Time Delivery Tracking Stepper -->
         <div class="tracking-stepper-card">
-          <h3 class="tracking-card-title">Live Vault Dispatch Timeline</h3>
+          <h3 class="tracking-card-title">Live Shipping & Delivery Process</h3>
           
           <div class="tracking-timeline-bar">
-            ${order.timeline.map((step, idx) => `
-              <div class="timeline-step ${step.completed ? 'is-completed' : (idx === 1 ? 'is-current' : '')}">
-                <div class="timeline-dot">
-                  ${step.completed ? '✓' : idx + 1}
+            ${(() => {
+              const currentStepIdx = order.timeline ? order.timeline.findIndex(s => !s.completed) : 1;
+              return (order.timeline || []).map((step, idx) => `
+                <div class="timeline-step ${step.completed ? 'is-completed' : (idx === currentStepIdx ? 'is-current' : '')}">
+                  <div class="timeline-dot">
+                    ${step.completed ? '✓' : idx + 1}
+                  </div>
+                  <div class="timeline-info">
+                    <strong class="timeline-title">${step.step}</strong>
+                    <span class="timeline-time">${step.time}</span>
+                  </div>
                 </div>
-                <div class="timeline-info">
-                  <strong class="timeline-title">${step.step}</strong>
-                  <span class="timeline-time">${step.time}</span>
-                </div>
-              </div>
-            `).join('')}
+              `).join('');
+            })()}
           </div>
         </div>
 
