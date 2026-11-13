@@ -681,13 +681,6 @@ function renderSubAdminsTab() {
             <p class="subadmin-hero-sub">Delegate sub-admin credentials with role-based module clearance. Sub-admins are restricted strictly to authorized consoles.</p>
           </div>
         </div>
-        <div class="subadmin-hero-meta">
-          <span class="subadmin-hero-pill">
-            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
-            RBAC Enforced
-          </span>
-          <span class="subadmin-hero-count"><strong>${subAdmins.length}</strong> Active Account${subAdmins.length === 1 ? '' : 's'}</span>
-        </div>
       </div>
 
       <!-- 1. Provision New Sub-Admin Console (All Inputs Visible at a Glance) -->
